@@ -39,9 +39,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 .di .dt{font-weight:700;font-size:13px;color:var(--t)}
 .di .ds{font-size:11px;color:var(--tl);margin-top:1px}
 .da{width:22px;height:22px;border:none;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .3s;color:var(--tl);font-size:12px;flex-shrink:0}
-.day.o .da{transform:rotate(180deg)}
+.day.open .da{transform:rotate(180deg)}
 .db{max-height:0;overflow:hidden;transition:max-height .4s ease}
-.day.o .db{max-height:5000px}
+.day.open .db{max-height:5000px}
 .dc{padding:0 17px 17px;border-top:1px solid var(--bd);padding-top:13px}
 .tl{position:relative;padding-left:20px}
 .tl::before{content:'';position:absolute;left:6px;top:4px;bottom:4px;width:2px;background:linear-gradient(to bottom,var(--p),#5dade2);border-radius:2px}
@@ -155,6 +155,7 @@ tr:nth-child(even){background:var(--bg)}
   <button class="tab" onclick="showTab('weather')">🌡️ 气温</button>
   <button class="tab" onclick="showTab('gear')">🎒 装备</button>
   <button class="tab" onclick="showTab('clothes')">👕 穿衣</button>
+  <button class="tab" onclick="showTab('mexico')">🇲🇽 边境</button>
   <button class="tab" onclick="showTab('apps')">📱 App</button>
 </div>
 
@@ -465,6 +466,68 @@ tr:nth-child(even){background:var(--bg)}
     </div>
   </div>
 </div>
+
+<!-- MEXICO TAB -->
+<div id="mexico" class="sec">
+  <div class="card">
+    <h2><span class="ic">🇲🇽</span>墨西哥边境攻略（蒂华纳）</h2>
+    <p style="font-size:12px;color:var(--tl);margin-bottom:14px">从加州圣迭戈 San Ysidro 口岸步行过境，车停在美方边境停车场，一日游完整体验下加利福尼亚风情 🇲🇽</p>
+    <div class="wb"><span class="ic">📋</span><div class="tx"><div class="tt">基本信息</div>签证：B1/B2 美签即可 · 护照必需 | 过境：步行约5-10分钟，无需预约 | 时差：无（蒂华纳与加州同区）| 货币：比索（部分地方也收美元）</div></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic">📍</span>蒂华纳必去景点</h2>
+    <div class="ig">
+      <div class="ii"><span class="ic">🏙️</span><div><div class="lb">Revolución 大道</div><div class="vl">步行街 · 2小时</div></div></div>
+      <div class="ii"><span class="ic">🌊</span><div><div class="lb">Playas de Tijuana</div><div class="vl">海滩 · 看边境线</div></div></div>
+      <div class="ii"><span class="ic">🎭</span><div><div class="lb">Juguetería El Centro</div><div class="vl">大型玩具店 · 可逛30分钟</div></div></div>
+      <div class="ii"><span class="ic">🍦</span><div><div class="lb">Helados正常</div><div class="vl">网红冰淇淋 · $2-3</div></div></div>
+      <div class="ii"><span class="ic">🛍️</span><div><div class="lb">Mercado Hildago</div><div class="vl">本地市场 · 工艺品/手信</div></div></div>
+      <div class="ii"><span class="ic">🎨</span><div><div class="lb">Paseo de los Heroes</div><div class="vl">英雄大道 · 纪念碑广场</div></div></div>
+      <div class="ii"><span class="ic">🍺</span><div><div class="lb">Cervecería Tijuana</div><div class="vl">精酿啤酒 · 本地品牌</div></div></div>
+      <div class="ii"><span class="ic">⛪</span><div><div class="lb">Catedral Metropolitana</div><div class="vl">大教堂 · 地标建筑</div></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic">🌮</span>美食推荐（必吃清单！）</h2>
+    <table>
+      <tr><th>美食</th><th>推荐</th><th>价格</th><th>备注</th></tr>
+      <tr><td>🌮 Fish Tacos</td><td>Taquería El Poblano</td><td>$3-5</td><td>鳕鱼炸 tacos，经典</td></tr>
+      <tr><td>🥙 Carnitas</td><td>Tacos Los Gil</td><td>$2-3/taco</td><td>慢烤猪肉，本地人推荐</td></tr>
+      <tr><td>🫕 Ceviche</td><td>La Casa de la Tía Reyna</td><td>$8-12</td><td>酸橘汁腌鱼，海鲜必吃</td></tr>
+      <tr><td>🌽 Elote / Esquites</td><td>街边摊</td><td>$1-2</td><td>墨西哥烤玉米/玉米沙拉</td></tr>
+      <tr><td>🍦 Helado（冰淇淋）</td><td>Helados正常 / La Casa de los Helados</td><td>$2-4</td><td>用新鲜水果和奶油制成</td></tr>
+      <tr><td>🥤 Aguachile</td><td>Mariscos El chilasco</td><td>$10-15</td><td>酸橘汁腌虾，超辣超爽</td></tr>
+      <tr><td>🍫 Chocolate（巧克力）</td><td>K cacao Market</td><td>$5-10</td><td>墨西哥本土巧克力，手信</td></tr>
+      <tr><td>🥃 Tequila 龙舌兰</td><td>Laroth 的礼品店</td><td>$15-30</td><td>可现场品尝</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic">💡</span>实用提示</h2>
+    <div class="ig">
+      <div class="ii"><span class="ic">💰</span><div><div class="lb">汇率参考</div><div class="vl">1美元 ≈ 17-18比索（2026年），美元在旅游区也普遍接受</div></div></div>
+      <div class="ii"><span class="ic">🅿</span><div><div class="lb">停车</div><div class="vl">San Ysidro 美方边境有大型停车场，约 $15-20/天</div></div></div>
+      <div class="ii"><span class="ic">📱</span><div><div class="lb">上网</div><div class="vl">美国手机在边境自动切换，流量较贵；蒂华纳有免费 WiFi</div></div></div>
+      <div class="ii"><span class="ic">🗣️</span><div><div class="lb">语言</div><div class="vl">西班牙语为主，英语在旅游区可用，简单的西班牙语很受欢迎</div></div></div>
+      <div class="ii"><span class="ic">🛡️</span><div><div class="lb">安全</div><div class="vl">旅游区（ Revolución 大道、Playas）白天很安全；晚上不宜去偏远地区</div></div></div>
+      <div class="ii"><span class="ic">⏰</span><div><div class="lb">过境时间</div><div class="vl">周二-周四上午最短（9-11点）；周五下午和周末较长（1-2小时）</div></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic">🇲🇽</span>要不要在蒂华纳住一晚？</h2>
+    <div class="tp"><span class="ic">💡</span><div class="tx"><div class="tt">过夜选项（适合时间充裕的旅行者）</div>如果想让墨西哥行程更深入，可以考虑在蒂华纳住1晚，体验不同的夜生活，第二天一早返回。以下是推荐区域：<br><br>
+      • <strong>Zona Rio</strong>：现代商业区，有很多好的餐厅和酒吧<br>
+      • <strong>Rumbo</strong>：步行街附近，经济型酒店集中<br>
+      • <strong>Playa de Tijuana</strong>：海滩区，可以看到加州海岸线<br><br>
+      推荐酒店：Hotel delnable / Hyatt Centric（较好）/ La Villa de Guia（性价比高）<br>
+      注意：如果过夜，需带护照原件，过境时告知 CBP 官员</div></div>
+    <div class="wb" style="margin-top:10px"><span class="ic">⚠️</span><div class="tx"><div class="tt">签证提醒</div>如果是中国护照持有者（没有美国绿卡/B1/B2签证），不能在墨西哥免签旅游，需要有效的美国签证才能从陆路进入墨西哥。请确认你的签证类型。</div></div>
+  </div>
+</div>
+
 <!-- APPS TAB -->
 <div id="apps" class="sec">
   <div class="card">
@@ -542,6 +605,7 @@ function showTab(id) {
     if (t.textContent.includes('装备') && id==='gear') t.classList.add('active');
     if (t.textContent.includes('穿衣') && id==='clothes') t.classList.add('active');
     if (t.textContent.includes('App') && id==='apps') t.classList.add('active');
+    if (t.textContent.includes('边境') && id==='mexico') t.classList.add('active');
   });
 }
 
