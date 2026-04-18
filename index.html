@@ -222,111 +222,111 @@ tr:nth-child(even){background:var(--bg)}
 <div id="route" class="sec">
   <div class="card">
     <h2><span class="ic">🗺️</span>整体路线地图</h2>
-    <div style="background:linear-gradient(135deg,#f8fafc,#e8f4f8);border-radius:16px;padding:20px;border:1px solid var(--bd);margin-bottom:12px;">
-      <div style="text-align:center;margin-bottom:16px;">
-        <svg width="100%" height="220" viewBox="0 0 800 220" style="max-width:800px;">
-          <!-- Route line segments -->
-          <!-- Segment 1: LAX to Tijuana (red - border) -->
-          <path d="M 50 180 Q 100 160 150 150" stroke="#e74c3c" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <!-- Segment 2: Tijuana to Santa Barbara (orange - CA1 south) -->
-          <path d="M 150 150 Q 200 120 250 100" stroke="#f39c12" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <!-- Segment 3: Santa Barbara to Big Sur (blue - CA1 north) -->
-          <path d="M 250 100 Q 320 80 400 70" stroke="#3498db" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <!-- Segment 4: Big Sur to Monterey -->
-          <path d="M 400 70 Q 440 65 480 60" stroke="#3498db" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <!-- Segment 5: Monterey to Bishop (purple - inland) -->
-          <path d="M 480 60 Q 550 50 620 45" stroke="#9b59b6" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <!-- Segment 6: Bishop to Alabama Hills -->
-          <path d="M 620 45 Q 640 42 660 40" stroke="#9b59b6" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <!-- Segment 7: Alabama to Mono Lake -->
-          <path d="M 660 40 Q 680 38 700 35" stroke="#9b59b6" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <!-- Segment 8: Mono Lake to Joshua Tree (orange - return) -->
-          <path d="M 700 35 Q 720 60 740 100 Q 760 140 780 170" stroke="#e67e22" stroke-width="4" fill="none" stroke-linecap="round"/>
-          
-          <!-- Waypoint markers -->
-          <!-- 1. LAX -->
-          <circle cx="50" cy="180" r="14" fill="#27ae60" stroke="#fff" stroke-width="3"/>
-          <text x="50" y="184" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">D1</text>
-          <text x="50" y="205" text-anchor="middle" font-size="9" fill="#666">LAX</text>
-          
-          <!-- 2. Tijuana -->
-          <circle cx="150" cy="150" r="12" fill="#e74c3c" stroke="#fff" stroke-width="2"/>
-          <text x="150" y="154" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">D2</text>
-          <text x="150" y="132" text-anchor="middle" font-size="9" fill="#666">TJ边境</text>
-          
-          <!-- 3. Santa Barbara -->
-          <circle cx="250" cy="100" r="12" fill="#f39c12" stroke="#fff" stroke-width="2"/>
-          <text x="250" y="104" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">D3</text>
-          <text x="250" y="82" text-anchor="middle" font-size="9" fill="#666">Santa Barbara</text>
-          
-          <!-- 4. Morro Bay -->
-          <circle cx="320" cy="82" r="12" fill="#3498db" stroke="#fff" stroke-width="2"/>
-          <text x="320" y="86" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">D4</text>
-          <text x="320" y="65" text-anchor="middle" font-size="9" fill="#666">Morro Bay</text>
-          
-          <!-- 5. Big Sur -->
-          <circle cx="400" cy="70" r="12" fill="#3498db" stroke="#fff" stroke-width="2"/>
-          <text x="400" y="74" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">D5</text>
-          <text x="400" y="53" text-anchor="middle" font-size="9" fill="#666">Big Sur</text>
-          
-          <!-- 6. Monterey -->
-          <circle cx="480" cy="60" r="12" fill="#3498db" stroke="#fff" stroke-width="2"/>
-          <text x="480" y="64" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">D6</text>
-          <text x="480" y="43" text-anchor="middle" font-size="9" fill="#666">Monterey</text>
-          
-          <!-- 7. Bishop -->
-          <circle cx="620" cy="45" r="12" fill="#9b59b6" stroke="#fff" stroke-width="2"/>
-          <text x="620" y="49" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">D7</text>
-          <text x="620" y="28" text-anchor="middle" font-size="9" fill="#666">Bishop</text>
-          
-          <!-- 8. Alabama Hills -->
-          <circle cx="660" cy="40" r="12" fill="#9b59b6" stroke="#fff" stroke-width="2"/>
-          <text x="660" y="44" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">D8</text>
-          <text x="660" y="22" text-anchor="middle" font-size="8" fill="#666">Alabama Hills</text>
-          
-          <!-- 9. Mono Lake -->
-          <circle cx="700" cy="35" r="12" fill="#9b59b6" stroke="#fff" stroke-width="2"/>
-          <text x="700" y="39" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">D9</text>
-          <text x="700" y="18" text-anchor="middle" font-size="9" fill="#666">Mono Lake</text>
-          
-          <!-- 10. Joshua Tree -->
-          <circle cx="760" cy="140" r="14" fill="#e67e22" stroke="#fff" stroke-width="3"/>
-          <text x="760" y="144" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">D10</text>
-          <text x="760" y="165" text-anchor="middle" font-size="10" fill="#666" font-weight="600">🌵 JT</text>
-          
-          <!-- 11. LAX Return -->
-          <circle cx="780" cy="180" r="14" fill="#27ae60" stroke="#fff" stroke-width="3"/>
-          <text x="780" y="184" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">D11</text>
-          
-          <!-- Legend -->
-          <rect x="20" y="10" width="12" height="12" fill="#e74c3c" rx="2"/>
-          <text x="38" y="20" font-size="9" fill="#666">边境</text>
-          
-          <rect x="80" y="10" width="12" height="12" fill="#f39c12" rx="2"/>
-          <text x="98" y="20" font-size="9" fill="#666">CA-1南</text>
-          
-          <rect x="150" y="10" width="12" height="12" fill="#3498db" rx="2"/>
-          <text x="168" y="20" font-size="9" fill="#666">CA-1北</text>
-          
-          <rect x="220" y="10" width="12" height="12" fill="#9b59b6" rx="2"/>
-          <text x="238" y="20" font-size="9" fill="#666">US-395</text>
-          
-          <rect x="290" y="10" width="12" height="12" fill="#e67e22" rx="2"/>
-          <text x="308" y="20" font-size="9" fill="#666">返程</text>
-          
-          <circle cx="370" cy="16" r="6" fill="#27ae60"/>
-          <text x="382" y="20" font-size="9" fill="#666">起点/终点</text>
-        </svg>
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;font-size:11px;color:var(--tl);">
-        <span>🟢 LAX 出发</span>
-        <span>🔴 蒂华纳边境</span>
-        <span>🟠 CA-1 南段</span>
-        <span>🔵 CA-1 北段+Big Sur</span>
-        <span>🟣 US-395 东 Sierra</span>
-        <span>🟠 Joshua Tree 返回</span>
-        <span>🟢 LAX 返程</span>
-      </div>
+    <div style="background:#f0f4f8;border-radius:16px;padding:15px;border:1px solid #d0d8e0;margin-bottom:12px;">
+      <div style="text-align:center;margin-bottom:12px;font-size:12px;color:#666;">🗺️ 行程路线图（点击上方「Google Maps 全程导航」使用完整导航）</div>
+      <svg width="100%" height="260" viewBox="0 0 700 260" style="max-width:700px;display:block;margin:0 auto;">
+        <!-- Background grid for geographic reference -->
+        <defs>
+          <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e0e5ea" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="700" height="260" fill="url(#grid)" rx="8"/>
+        
+        <!-- ROUTE LINES - thicker and more visible -->
+        <!-- Segment 1: LAX to Tijuana (red) -->
+        <path d="M 60 200 L 120 200 L 170 180" stroke="#c0392b" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Segment 2: Tijuana to Santa Barbara via coast (orange) -->
+        <path d="M 170 180 L 220 150 L 270 120 L 300 100" stroke="#e67e22" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Segment 3: Santa Barbara to Morro Bay to Big Sur (blue) -->
+        <path d="M 300 100 L 340 95 L 380 90 L 420 85" stroke="#2980b9" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Segment 4: Big Sur to Monterey (blue) -->
+        <path d="M 420 85 L 450 80 L 480 75" stroke="#2980b9" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Segment 5: Monterey to Bishop - inland crossing (purple) - this is the long journey east -->
+        <path d="M 480 75 L 520 60 L 560 40 L 600 30" stroke="#8e44ad" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Segment 6: Bishop to Alabama Hills (purple) -->
+        <path d="M 600 30 L 610 28" stroke="#8e44ad" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- Segment 7: Alabama to Mono Lake (purple) -->
+        <path d="M 610 28 L 620 25 L 630 22" stroke="#8e44ad" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- Segment 8: Mono Lake to Joshua Tree - diagonal back southwest (orange) -->
+        <path d="M 630 22 L 640 50 L 650 90 L 660 130 L 670 170 L 680 200" stroke="#d35400" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Segment 9: Joshua Tree to LAX (orange dashed return) -->
+        <path d="M 680 200 L 690 200 L 700 200" stroke="#d35400" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="0"/>
+        
+        <!-- WAYPOINT MARKERS - larger and more prominent -->
+        <!-- 1. LAX - Day 1 - Start -->
+        <circle cx="60" cy="200" r="18" fill="#27ae60" stroke="#fff" stroke-width="3"/>
+        <text x="60" y="205" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">D1</text>
+        <text x="60" y="225" text-anchor="middle" font-size="10" fill="#2c3e50" font-weight="600">洛杉矶 LAX</text>
+        
+        <!-- 2. Tijuana - Day 2 - Border -->
+        <circle cx="170" cy="180" r="16" fill="#e74c3c" stroke="#fff" stroke-width="2"/>
+        <text x="170" y="185" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D2</text>
+        <text x="170" y="165" text-anchor="middle" font-size="9" fill="#c0392b" font-weight="600">🇲🇽 蒂华纳</text>
+        
+        <!-- 3. Santa Barbara - Day 3 -->
+        <circle cx="300" cy="100" r="16" fill="#f39c12" stroke="#fff" stroke-width="2"/>
+        <text x="300" y="105" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D3</text>
+        <text x="300" y="82" text-anchor="middle" font-size="9" fill="#d68910" font-weight="600">Santa Barbara</text>
+        
+        <!-- 4. Morro Bay - Day 4 -->
+        <circle cx="360" cy="92" r="14" fill="#3498db" stroke="#fff" stroke-width="2"/>
+        <text x="360" y="97" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D4</text>
+        <text x="360" y="75" text-anchor="middle" font-size="9" fill="#2980b9" font-weight="600">Morro Bay</text>
+        
+        <!-- 5. Big Sur - Day 5 -->
+        <circle cx="420" cy="85" r="16" fill="#2980b9" stroke="#fff" stroke-width="2"/>
+        <text x="420" y="90" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D5</text>
+        <text x="420" y="67" text-anchor="middle" font-size="9" fill="#1a5276" font-weight="600">🌊 Big Sur</text>
+        
+        <!-- 6. Monterey - Day 6 -->
+        <circle cx="480" cy="75" r="16" fill="#2980b9" stroke="#fff" stroke-width="2"/>
+        <text x="480" y="80" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D6</text>
+        <text x="480" y="57" text-anchor="middle" font-size="9" fill="#1a5276" font-weight="600">Monterey</text>
+        
+        <!-- 7. Bishop - Day 7 - transition to inland -->
+        <circle cx="600" cy="30" r="16" fill="#8e44ad" stroke="#fff" stroke-width="2"/>
+        <text x="600" y="35" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D7</text>
+        <text x="600" y="12" text-anchor="middle" font-size="9" fill="#6c3483" font-weight="600">🏔️ Bishop</text>
+        
+        <!-- 8. Alabama Hills - Day 8 -->
+        <circle cx="610" cy="28" r="12" fill="#9b59b6" stroke="#fff" stroke-width="2"/>
+        <text x="610" y="33" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">D8</text>
+        
+        <!-- 9. Mono Lake - Day 9 -->
+        <circle cx="630" cy="22" r="14" fill="#8e44ad" stroke="#fff" stroke-width="2"/>
+        <text x="630" y="27" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D9</text>
+        <text x="630" y="5" text-anchor="middle" font-size="9" fill="#6c3483" font-weight="600">Mono Lake</text>
+        
+        <!-- 10. Joshua Tree - Day 10 -->
+        <circle cx="680" cy="200" r="18" fill="#e67e22" stroke="#fff" stroke-width="3"/>
+        <text x="680" y="205" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">D10</text>
+        <text x="680" y="225" text-anchor="middle" font-size="10" fill="#d35400" font-weight="600">🌵 Joshua Tree</text>
+        
+        <!-- 11. LAX Return - Day 11 -->
+        <circle cx="700" cy="200" r="6" fill="#27ae60"/>
+        <text x="700" y="220" text-anchor="middle" font-size="9" fill="#27ae60" font-weight="bold">→LAX</text>
+        
+        <!-- LEGEND -->
+        <rect x="15" y="235" width="10" height="10" fill="#e74c3c" rx="2"/>
+        <text x="30" y="244" font-size="9" fill="#666">边境</text>
+        
+        <rect x="70" y="235" width="10" height="10" fill="#f39c12" rx="2"/>
+        <text x="85" y="244" font-size="9" fill="#666">CA-1 南</text>
+        
+        <rect x="135" y="235" width="10" height="10" fill="#2980b9" rx="2"/>
+        <text x="150" y="244" font-size="9" fill="#666">CA-1 北+BigSur</text>
+        
+        <rect x="230" y="235" width="10" height="10" fill="#8e44ad" rx="2"/>
+        <text x="245" y="244" font-size="9" fill="#666">US-395 Sierra</text>
+        
+        <rect x="315" y="235" width="10" height="10" fill="#e67e22" rx="2"/>
+        <text x="330" y="244" font-size="9" fill="#666">返程 JT→LA</text>
+        
+        <circle cx="400" cy="240" r="5" fill="#27ae60"/>
+        <text x="410" y="244" font-size="9" fill="#666">起点/终点</text>
+      </svg>
+    </div>
     </div>
     <div class="mc">
       <span>🗺️ 红色：CA-1 太平洋海岸 · 蓝色：US-395 内陆 · 绿色：Joshua Tree 返回路线</span>
