@@ -222,110 +222,74 @@ tr:nth-child(even){background:var(--bg)}
 <div id="route" class="sec">
   <div class="card">
     <h2><span class="ic">🗺️</span>整体路线地图</h2>
-    <div style="background:#f0f4f8;border-radius:16px;padding:15px;border:1px solid #d0d8e0;margin-bottom:12px;">
-      <div style="text-align:center;margin-bottom:12px;font-size:12px;color:#666;">🗺️ 行程路线图（点击上方「Google Maps 全程导航」使用完整导航）</div>
-      <svg width="100%" height="260" viewBox="0 0 700 260" style="max-width:700px;display:block;margin:0 auto;">
-        <!-- Background grid for geographic reference -->
-        <defs>
-          <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e0e5ea" stroke-width="0.5"/>
-          </pattern>
-        </defs>
-        <rect width="700" height="260" fill="url(#grid)" rx="8"/>
+    <div style="background:#f8fafc;border-radius:16px;padding:0;border:1px solid #d0d8e0;overflow:hidden;">
+      <div id="route-map" style="height:380px;width:100%;"></div>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Initialize map centered on the route
+        var map = L.map("route-map", {
+          center: [35.5, -118.5],
+          zoom: 6,
+          scrollWheelZoom: true
+        });
         
-        <!-- ROUTE LINES - thicker and more visible -->
-        <!-- Segment 1: LAX to Tijuana (red) -->
-        <path d="M 60 200 L 120 200 L 170 180" stroke="#c0392b" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Segment 2: Tijuana to Santa Barbara via coast (orange) -->
-        <path d="M 170 180 L 220 150 L 270 120 L 300 100" stroke="#e67e22" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Segment 3: Santa Barbara to Morro Bay to Big Sur (blue) -->
-        <path d="M 300 100 L 340 95 L 380 90 L 420 85" stroke="#2980b9" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Segment 4: Big Sur to Monterey (blue) -->
-        <path d="M 420 85 L 450 80 L 480 75" stroke="#2980b9" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Segment 5: Monterey to Bishop - inland crossing (purple) - this is the long journey east -->
-        <path d="M 480 75 L 520 60 L 560 40 L 600 30" stroke="#8e44ad" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Segment 6: Bishop to Alabama Hills (purple) -->
-        <path d="M 600 30 L 610 28" stroke="#8e44ad" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <!-- Segment 7: Alabama to Mono Lake (purple) -->
-        <path d="M 610 28 L 620 25 L 630 22" stroke="#8e44ad" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <!-- Segment 8: Mono Lake to Joshua Tree - diagonal back southwest (orange) -->
-        <path d="M 630 22 L 640 50 L 650 90 L 660 130 L 670 170 L 680 200" stroke="#d35400" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Segment 9: Joshua Tree to LAX (orange dashed return) -->
-        <path d="M 680 200 L 690 200 L 700 200" stroke="#d35400" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="0"/>
+        // Use CartoDB tiles - more reliable in China
+        L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+          attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> &copy; <a href='https://carto.com/'>CARTO</a>",
+          subdomains: "abcd",
+          maxZoom: 19
+        }).addTo(map);
         
-        <!-- WAYPOINT MARKERS - larger and more prominent -->
-        <!-- 1. LAX - Day 1 - Start -->
-        <circle cx="60" cy="200" r="18" fill="#27ae60" stroke="#fff" stroke-width="3"/>
-        <text x="60" y="205" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">D1</text>
-        <text x="60" y="225" text-anchor="middle" font-size="10" fill="#2c3e50" font-weight="600">洛杉矶 LAX</text>
+        // Route waypoints with actual coordinates
+        var stops = [
+          { name: "D1 洛杉矶 LAX", lat: 33.9416, lng: -118.4085, day: 1, color: "#27ae60" },
+          { name: "D2 蒂华纳边境", lat: 32.5347, lng: -117.1244, day: 2, color: "#e74c3c" },
+          { name: "D3 圣巴巴拉", lat: 34.4208, lng: -119.6982, day: 3, color: "#f39c12" },
+          { name: "D4 Morro Bay", lat: 35.3651, lng: -120.7482, day: 4, color: "#3498db" },
+          { name: "D5 Big Sur", lat: 36.2704, lng: -121.8081, day: 5, color: "#2980b9" },
+          { name: "D6 蒙特雷", lat: 36.6002, lng: -121.8951, day: 6, color: "#2980b9" },
+          { name: "D7 Bishop", lat: 37.3556, lng: -118.3876, day: 7, color: "#8e44ad" },
+          { name: "D8 Alabama Hills", lat: 36.6006, lng: -118.0629, day: 8, color: "#9b59b6" },
+          { name: "D9 Mono Lake", lat: 37.8651, lng: -118.8977, day: 9, color: "#8e44ad" },
+          { name: "D10 Joshua Tree", lat: 33.8734, lng: -116.3130, day: 10, color: "#e67e22" },
+          { name: "D11 返回LAX", lat: 33.9416, lng: -118.4085, day: 11, color: "#27ae60" }
+        ];
         
-        <!-- 2. Tijuana - Day 2 - Border -->
-        <circle cx="170" cy="180" r="16" fill="#e74c3c" stroke="#fff" stroke-width="2"/>
-        <text x="170" y="185" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D2</text>
-        <text x="170" y="165" text-anchor="middle" font-size="9" fill="#c0392b" font-weight="600">🇲🇽 蒂华纳</text>
+        // Draw route lines connecting stops
+        var routeCoords = stops.map(function(s) { return [s.lat, s.lng]; });
         
-        <!-- 3. Santa Barbara - Day 3 -->
-        <circle cx="300" cy="100" r="16" fill="#f39c12" stroke="#fff" stroke-width="2"/>
-        <text x="300" y="105" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D3</text>
-        <text x="300" y="82" text-anchor="middle" font-size="9" fill="#d68910" font-weight="600">Santa Barbara</text>
+        // Create polyline for the route
+        L.polyline(routeCoords, {
+          color: "#1a6b8a",
+          weight: 4,
+          opacity: 0.8,
+          smoothFactor: 1
+        }).addTo(map);
         
-        <!-- 4. Morro Bay - Day 4 -->
-        <circle cx="360" cy="92" r="14" fill="#3498db" stroke="#fff" stroke-width="2"/>
-        <text x="360" y="97" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D4</text>
-        <text x="360" y="75" text-anchor="middle" font-size="9" fill="#2980b9" font-weight="600">Morro Bay</text>
+        // Add markers for each stop
+        stops.forEach(function(stop, idx) {
+          // Custom marker with Day number
+          var markerIcon = L.divIcon({
+            className: "custom-marker",
+            html: "<div style=\"background:" + stop.color + ";color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3);\">D" + stop.day + "</div>",
+            iconSize: [28, 28],
+            iconAnchor: [14, 14]
+          });
+          
+          L.marker([stop.lat, stop.lng], { icon: markerIcon })
+            .bindPopup("<strong>" + stop.name + "</strong><br>Day " + stop.day)
+            .addTo(map);
+        });
         
-        <!-- 5. Big Sur - Day 5 -->
-        <circle cx="420" cy="85" r="16" fill="#2980b9" stroke="#fff" stroke-width="2"/>
-        <text x="420" y="90" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D5</text>
-        <text x="420" y="67" text-anchor="middle" font-size="9" fill="#1a5276" font-weight="600">🌊 Big Sur</text>
+        // Fit map to show the entire route
+        map.fitBounds(routeCoords, { padding: [30, 30] });
         
-        <!-- 6. Monterey - Day 6 -->
-        <circle cx="480" cy="75" r="16" fill="#2980b9" stroke="#fff" stroke-width="2"/>
-        <text x="480" y="80" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D6</text>
-        <text x="480" y="57" text-anchor="middle" font-size="9" fill="#1a5276" font-weight="600">Monterey</text>
-        
-        <!-- 7. Bishop - Day 7 - transition to inland -->
-        <circle cx="600" cy="30" r="16" fill="#8e44ad" stroke="#fff" stroke-width="2"/>
-        <text x="600" y="35" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D7</text>
-        <text x="600" y="12" text-anchor="middle" font-size="9" fill="#6c3483" font-weight="600">🏔️ Bishop</text>
-        
-        <!-- 8. Alabama Hills - Day 8 -->
-        <circle cx="610" cy="28" r="12" fill="#9b59b6" stroke="#fff" stroke-width="2"/>
-        <text x="610" y="33" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">D8</text>
-        
-        <!-- 9. Mono Lake - Day 9 -->
-        <circle cx="630" cy="22" r="14" fill="#8e44ad" stroke="#fff" stroke-width="2"/>
-        <text x="630" y="27" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">D9</text>
-        <text x="630" y="5" text-anchor="middle" font-size="9" fill="#6c3483" font-weight="600">Mono Lake</text>
-        
-        <!-- 10. Joshua Tree - Day 10 -->
-        <circle cx="680" cy="200" r="18" fill="#e67e22" stroke="#fff" stroke-width="3"/>
-        <text x="680" y="205" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">D10</text>
-        <text x="680" y="225" text-anchor="middle" font-size="10" fill="#d35400" font-weight="600">🌵 Joshua Tree</text>
-        
-        <!-- 11. LAX Return - Day 11 -->
-        <circle cx="700" cy="200" r="6" fill="#27ae60"/>
-        <text x="700" y="220" text-anchor="middle" font-size="9" fill="#27ae60" font-weight="bold">→LAX</text>
-        
-        <!-- LEGEND -->
-        <rect x="15" y="235" width="10" height="10" fill="#e74c3c" rx="2"/>
-        <text x="30" y="244" font-size="9" fill="#666">边境</text>
-        
-        <rect x="70" y="235" width="10" height="10" fill="#f39c12" rx="2"/>
-        <text x="85" y="244" font-size="9" fill="#666">CA-1 南</text>
-        
-        <rect x="135" y="235" width="10" height="10" fill="#2980b9" rx="2"/>
-        <text x="150" y="244" font-size="9" fill="#666">CA-1 北+BigSur</text>
-        
-        <rect x="230" y="235" width="10" height="10" fill="#8e44ad" rx="2"/>
-        <text x="245" y="244" font-size="9" fill="#666">US-395 Sierra</text>
-        
-        <rect x="315" y="235" width="10" height="10" fill="#e67e22" rx="2"/>
-        <text x="330" y="244" font-size="9" fill="#666">返程 JT→LA</text>
-        
-        <circle cx="400" cy="240" r="5" fill="#27ae60"/>
-        <text x="410" y="244" font-size="9" fill="#666">起点/终点</text>
-      </svg>
+        // Revalidate map size after loading
+        setTimeout(function() { map.invalidateSize(); }, 200);
+      });
+      </script>
     </div>
     </div>
     <div class="mc">
