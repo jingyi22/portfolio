@@ -698,30 +698,42 @@ tr:nth-child(even){background:var(--bg)}
 </div>
 
 <script>
-// Tab navigation
+// Tab navigation - explicit and direct
 function showTab(id) {
-  // Hide all sections first using inline style (most reliable)
-  document.querySelectorAll('.sec').forEach(s => {
-    s.style.display = 'none';
-    s.classList.remove('active');
-  });
-  // Show selected section
-  const sel = document.getElementById(id);
+  // 1. Hide ALL sections by setting display=none
+  var sections = document.getElementsByClassName('sec');
+  for (var i = 0; i < sections.length; i++) {
+    sections[i].style.display = 'none';
+    sections[i].classList.remove('active');
+  }
+  // 2. Show the selected section
+  var sel = document.getElementById(id);
   if (sel) {
     sel.style.display = 'block';
     sel.classList.add('active');
+    // 3. Scroll to top of section
+    sel.scrollIntoView({behavior: 'smooth', block: 'start'});
   }
-  // Update tab button states
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => {
-    if (t.textContent.includes('概览') && id==='overview') t.classList.add('active');
-    if (t.textContent.includes('路线') && id==='route') t.classList.add('active');
-    if (t.textContent.includes('每日') && id==='daily') t.classList.add('active');
-    if (t.textContent.includes('气温') && id==='weather') t.classList.add('active');
-    if (t.textContent.includes('穿衣') && id==='clothes') t.classList.add('active');
-    if (t.textContent.includes('App') && id==='apps') t.classList.add('active');
-    if (t.textContent.includes('边境') && id==='mexico') t.classList.add('active');
-  });
+  // 4. Update tab buttons
+  var tabs = document.getElementsByClassName('tab');
+  for (var j = 0; j < tabs.length; j++) {
+    tabs[j].classList.remove('active');
+  }
+  // Find and activate the clicked tab
+  var allTabs = document.querySelectorAll('.tab');
+  for (var k = 0; k < allTabs.length; k++) {
+    var t = allTabs[k];
+    var text = t.textContent || t.innerText || '';
+    var match = false;
+    if (id === 'overview' && text.indexOf('概览') > -1) match = true;
+    if (id === 'route' && text.indexOf('路线') > -1) match = true;
+    if (id === 'daily' && text.indexOf('每日') > -1) match = true;
+    if (id === 'weather' && text.indexOf('气温') > -1) match = true;
+    if (id === 'clothes' && text.indexOf('穿衣') > -1) match = true;
+    if (id === 'apps' && text.indexOf('App') > -1) match = true;
+    if (id === 'mexico' && text.indexOf('边境') > -1) match = true;
+    if (match) t.classList.add('active');
+  }
 }
 
 // Day accordion
@@ -730,16 +742,19 @@ function toggleDay(el) {
 }
 
 // Gear checkboxes - save state
-document.querySelectorAll('.gear-item input').forEach(cb => {
-  const key = 'gear_' + cb.id;
+var gearItems = document.querySelectorAll('.gear-item input');
+for (var g = 0; g < gearItems.length; g++) {
+  var cb = gearItems[g];
+  var key = 'gear_' + cb.id;
   if (localStorage.getItem(key) === '1') cb.checked = true;
   cb.addEventListener('change', function() {
     localStorage.setItem(key, this.checked ? '1' : '0');
   });
-});
+}
 
 // Open Day 1 by default
-document.querySelector('.day')?.classList.add('open');
+var firstDay = document.querySelector('.day');
+if (firstDay) firstDay.classList.add('open');
 </script>
 </body>
 
