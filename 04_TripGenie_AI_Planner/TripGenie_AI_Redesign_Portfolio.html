@@ -510,16 +510,11 @@ function ServiceScreen({ onBack, onRestart, accent }) {
       </div>
 
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent,white 28%)', padding: '20px 14px 18px', flexShrink: 0 }}>
-        {actionStage === 'done' && (
-          <button onClick={onBack} style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: accent, color: 'white', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 20px ' + accent + '55', animation: 'confirmPulse 2s ease-in-out infinite', marginBottom: 8 }}>
-            ← Back to Hotels
-          </button>
-        )}
         {actionStage === 'done' ? (
           <button onClick={onRestart} style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: 'white', color: '#374151', fontSize: 14, fontWeight: 600, cursor: 'pointer', border: '1.5px solid #E5E7EB' }}>
             ↩ Restart Demo
           </button>
-         : (
+        ) : (
           <button onClick={onBack} style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: '#6B7280', color: 'white', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
             ← Back to Hotels
           </button>
@@ -683,7 +678,7 @@ function App() {
             <PhoneFrame scale={phoneScale}>
               {screen === 'planning' && <PlanningScreen onContinue={() => setScreen('hotels')} accent={accent} />}
               {screen === 'hotels' && <HotelScreen onBack={() => setScreen('planning')} onContinue={() => setScreen('service')} accent={accent} />}
-              {screen === 'service' && <ServiceScreen onBack={() => setScreen('hotels')} onRestart={() => { setScreen('cover'); }} accent={accent} />}
+              {screen === 'service' && <ServiceScreen onBack={() => setScreen('hotels')} onRestart={() => setScreen('cover')} accent={accent} />}
             </PhoneFrame>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start', minWidth: 180 }}>
               {rightAnns.map((a, i) => <AnnotationCard key={i} {...a} delay={.12 + i * .1} />)}
