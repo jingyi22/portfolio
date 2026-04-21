@@ -1075,6 +1075,14 @@ const RIGHT_ANNS = {
   ]
 };
 
+
+const STEP_INFO = {
+  cover: { n: '01', label: 'Project Overview' },
+  search: { n: '02', label: 'Search Results SERP' },
+  fare: { n: '03', label: 'Fare Selection' },
+  checkout: { n: '04', label: 'Checkout' }
+};
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 function App() {
   const [screen, setScreen] = useLS('flight-fare-card-portfolio-v1', 'cover');
