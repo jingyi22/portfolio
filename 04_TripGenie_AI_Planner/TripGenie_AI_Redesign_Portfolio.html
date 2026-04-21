@@ -123,6 +123,59 @@ function PlanningScreen({ onContinue, accent }) {
   const [view, setView] = useState('after');
   const [stage, setStage] = useState('input'); // input -> thinking -> response
   const [detected, setDetected] = useState(null);
+  const [activeTemplate, setActiveTemplate] = useState('muslim');
+
+  const TEMPLATES = {
+    muslim: {
+      conditions: [
+        { icon: '🕌', label: 'Muslim family' },
+        { icon: '👨‍👩‍👧‍👦', label: '2 adults + 2 children' },
+        { icon: '📍', label: 'Kyoto — June' },
+        { icon: '💰', label: 'Moderate budget' }
+      ],
+      itinerary: [
+        { day: 'Day 1', title: 'Fushimi Inari & Gion', tags: ['🕌 Halal nearby', '🍽️ Muslim-friendly restaurant', '👨‍👩‍👧‍👦 Family scenic walk'], color: '#10B981', time: 'Full day' },
+        { day: 'Day 2', title: 'Arashiyama Bamboo & River', tags: ['🌸 Scenic family spot', '🍵 Vegetarian café', '⛩️ Cultural experience'], color: '#3B82F6', time: 'Full day' },
+        { day: 'Day 3', title: 'Kinkaku-ji & Shopping', tags: ['🛍️ Kid-friendly shopping', '🍜 Muslim-friendly area', '📸 Photo spots'], color: '#8B5CF6', time: 'Morning + afternoon' }
+      ]
+    },
+    business: {
+      conditions: [
+        { icon: '💼', label: 'Business traveler' },
+        { icon: '📍', label: 'Shanghai — 2 days' },
+        { icon: '⏱️', label: 'Tight schedule' },
+        { icon: '🏨', label: 'Central hotel preferred' }
+      ],
+      itinerary: [
+        { day: 'Day 1', title: 'The Bund & Lujiazui', tags: ['🏛️ Financial district', '☕ Business café', '📶 High-speed WiFi'], color: '#1B6EFD', time: 'Morning + afternoon' },
+        { day: 'Day 2', title: 'Nanjing Road & Yu Gardens', tags: ['🛍️ Quick shopping', '🍜 Efficient dining', '🚇 Metro accessible'], color: '#7C3AED', time: 'Morning only' }
+      ]
+    },
+    honeymoon: {
+      conditions: [
+        { icon: '💑', label: 'Couple' },
+        { icon: '📍', label: 'Paris — 5 days' },
+        { icon: '🌹', label: 'Romantic vibes' },
+        { icon: '🍷', label: 'Fine dining' }
+      ],
+      itinerary: [
+        { day: 'Day 1', title: 'Eiffel Tower & Champ de Mars', tags: ['🌅 Sunset view', '🍷 Champagne bar', '📸 Romantic photos'], color: '#EC4899', time: 'Evening' },
+        { day: 'Day 2', title: 'Montmartre & Sacré-Cœur', tags: ['🎨 Artist quarter', '☕ Le Consulat café', '🌹 Romantic stroll'], color: '#F59E0B', time: 'Full day' },
+        { day: 'Day 3', title: 'Seine River Cruise', tags: ['🚢 Boat ride', '🌃 Night view', '🍽️ Dinner cruise'], color: '#8B5CF6', time: 'Evening' },
+        { day: 'Day 4', title: 'Louvre & Tuileries Garden', tags: ['🏛️ Art & culture', '🌿 Garden walk', '📸 Iconic landmarks'], color: '#3B82F6', time: 'Full day' },
+        { day: 'Day 5', title: 'Le Marais & Shopping', tags: ['🛍️ Boutique shopping', '🍰 Ladurée macarons', '🎁 Souvenirs'], color: '#10B981', time: 'Morning + afternoon' }
+      ]
+    }
+  };
+
+  const handleTemplateClick = (tpl) => {
+    setActiveTemplate(tpl);
+    setStage('input');
+    setDetected(null);
+    if (tpl === 'muslim') setQuery('Muslim family, 2 adults 2 kids, Kyoto 3 days June, halal food');
+    else if (tpl === 'business') setQuery('Business trip, Shanghai 2 days, tight schedule, prefer central hotel');
+    else setQuery('Honeymoon couple, Paris 5 days, romantic, fine dining');
+  };
 
   const detectedConditions = [
     { icon: '🕌', label: 'Muslim family' },
@@ -131,16 +184,13 @@ function PlanningScreen({ onContinue, accent }) {
     { icon: '💰', label: 'Moderate budget' }
   ];
 
-  const itinerary = [
-    { day: 'Day 1', title: 'Fushimi Inari & Gion', tags: ['🕌 Halal nearby', '🍽️ Muslim-friendly restaurant', '👨‍👩‍👧‍👦 Family scenic walk'], color: '#10B981', time: 'Full day' },
-    { day: 'Day 2', title: 'Arashiyama Bamboo & River', tags: ['🌸 Scenic family spot', '🍵 Vegetarian café', '⛩️ Cultural experience'], color: '#3B82F6', time: 'Full day' },
-    { day: 'Day 3', title: 'Kinkaku-ji & Shopping', tags: ['🛍️ Kid-friendly shopping', '🍜 Muslim-friendly area', '📸 Photo spots'], color: '#8B5CF6', time: 'Morning + afternoon' }
-  ];
+  const currentTemplate = TEMPLATES[activeTemplate];
+  const visibleItinerary = detected && stage === 'response' ? currentTemplate.itinerary : [];
 
   const handleAskAI = () => {
     if (!query.trim()) return;
     setStage('thinking');
-    setDetected(detectedConditions);
+    setDetected(TEMPLATES[activeTemplate].conditions.map(c => ({ ...c, removed: false })));
     setTimeout(() => setStage('response'), 1800);
   };
 
@@ -164,7 +214,7 @@ function PlanningScreen({ onContinue, accent }) {
         {/* Before/After Toggle */}
         <div style={{ display: 'flex', background: '#F0F0F0', borderRadius: 10, padding: 3, marginBottom: 12 }}>
           {[['before', '✗ Before'], ['after', '✦ After']].map(([k, l]) =>
-            <button key={k} onClick={() => { setView(k); setStage('input'); setQuery(''); setDetected(null); }} style={{ flex: 1, padding: '8px', borderRadius: 8, border: 'none', background: view === k ? 'white' : 'transparent', color: view === k ? '#111827' : '#9CA3AF', fontSize: 13, fontWeight: view === k ? 600 : 400, cursor: 'pointer', transition: 'all .2s', boxShadow: view === k ? '0 1px 4px rgba(0,0,0,.1)' : 'none' }}>{l}</button>
+            <button key={k} onClick={() => { setView(k); setStage('input'); setQuery(''); setDetected(null); setActiveTemplate('muslim'); }} style={{ flex: 1, padding: '8px', borderRadius: 8, border: 'none', background: view === k ? 'white' : 'transparent', color: view === k ? '#111827' : '#9CA3AF', fontSize: 13, fontWeight: view === k ? 600 : 400, cursor: 'pointer', transition: 'all .2s', boxShadow: view === k ? '0 1px 4px rgba(0,0,0,.1)' : 'none' }}>{l}</button>
           )}
         </div>
 
@@ -205,9 +255,9 @@ function PlanningScreen({ onContinue, accent }) {
                 <button onClick={handleAskAI} disabled={stage !== 'input'} style={{ padding: '10px 16px', borderRadius: 10, border: 'none', background: stage === 'input' ? accent : '#C7D9FF', color: 'white', fontSize: 13, fontWeight: 600, cursor: stage === 'input' ? 'pointer' : 'default', transition: 'all .3s' }}>Ask AI</button>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                <button onClick={() => { setQuery('Muslim family, 2 adults 2 kids, Kyoto 3 days June, halal food'); setStage('input'); setDetected(null); }} style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid ' + accent, background: 'rgba(27,110,253,.06)', color: accent, fontSize: 11, fontWeight: 500, cursor: 'pointer' }}>🕌 Muslim family</button>
-                <button onClick={() => { setQuery('Business trip, Shanghai 2 days, tight schedule, prefer central hotel'); setStage('input'); setDetected(null); }} style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid #E5E7EB', background: 'white', color: '#6B7280', fontSize: 11, fontWeight: 500, cursor: 'pointer' }}>💼 Business trip</button>
-                <button onClick={() => { setQuery('Honeymoon couple, Paris 5 days, romantic, fine dining'); setStage('input'); setDetected(null); }} style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid #E5E7EB', background: 'white', color: '#6B7280', fontSize: 11, fontWeight: 500, cursor: 'pointer' }}>💑 Honeymoon</button>
+                <button onClick={() => handleTemplateClick('muslim')} style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid ' + (activeTemplate === 'muslim' ? accent : '#E5E7EB'), background: activeTemplate === 'muslim' ? 'rgba(27,110,253,.06)' : 'white', color: activeTemplate === 'muslim' ? accent : '#6B7280', fontSize: 11, fontWeight: activeTemplate === 'muslim' ? 600 : 400, cursor: 'pointer' }}>🕌 Muslim family</button>
+                <button onClick={() => handleTemplateClick('business')} style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid ' + (activeTemplate === 'business' ? accent : '#E5E7EB'), background: activeTemplate === 'business' ? 'rgba(27,110,253,.06)' : 'white', color: activeTemplate === 'business' ? accent : '#6B7280', fontSize: 11, fontWeight: activeTemplate === 'business' ? 600 : 400, cursor: 'pointer' }}>💼 Business trip</button>
+                <button onClick={() => handleTemplateClick('honeymoon')} style={{ padding: '5px 10px', borderRadius: 8, border: '1.5px solid ' + (activeTemplate === 'honeymoon' ? accent : '#E5E7EB'), background: activeTemplate === 'honeymoon' ? 'rgba(27,110,253,.06)' : 'white', color: activeTemplate === 'honeymoon' ? accent : '#6B7280', fontSize: 11, fontWeight: activeTemplate === 'honeymoon' ? 600 : 400, cursor: 'pointer' }}>💑 Honeymoon</button>
               </div>
             </div>
 
@@ -242,7 +292,7 @@ function PlanningScreen({ onContinue, accent }) {
             {/* Itinerary cards */}
             {stage === 'response' && (
               <div className="a-fsi">
-                {itinerary.map((day, i) => (
+                {visibleItinerary.map((day, i) => (
                   <div key={i} style={{ background: 'white', borderRadius: 14, padding: 14, boxShadow: '0 1px 4px rgba(0,0,0,.06)', marginBottom: i < 2 ? 8 : 10, borderLeft: '3px solid ' + day.color }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                       <span style={{ fontSize: 11, fontWeight: 700, color: day.color }}>{day.day}</span>
