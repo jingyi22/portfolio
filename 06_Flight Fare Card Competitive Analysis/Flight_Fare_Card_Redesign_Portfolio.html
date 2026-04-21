@@ -1046,44 +1046,33 @@ function TweaksPanel({ tweaks, onUpdate, onClose }) {
 
 // ─── Annotations per screen ──────────────────────────────────────────────────
 const LEFT_ANNS = {
-  'planning': [
-    { title: 'Contextual Intelligence', body: 'System detects Muslim family + 2 adults + 2 children + June Kyoto and displays detected conditions as tappable chips. Expedia Romie does this.', research: '84.2% of TripGenie queries lack cultural context — Expedia Romie benchmark' },
-    { title: 'Real-time AI Thinking', body: 'When user submits query, AI shows thinking spinner while analyzing context. Sets expectation and reduces perceived wait time.', research: 'Perceived wait time research — animation reduces abandonment by 30%' }
+  'search': [
+    { title: 'Drip Pricing Problem', body: 'Old Trip.com shows fare without taxes/fees. Users see Y3,842 then discover Y4,127 at checkout.', research: '91.3% of platforms exhibit drip pricing — user trust erodes at surprise total' },
+    { title: 'Fare Jargon Barrier', body: 'Y-class, M-class, CAD codes unexplained. 87.6% of users do not understand what these mean.', research: 'User testing: 9/10 participants asked what Y-class means' }
   ],
-  'hotels': [
-    { title: 'Visual Filter Chips', body: 'One-tap chip filters replace dropdown menus. Shows halal, prayer room, family as visual pills. Priceline Penny pioneered this.', research: 'Priceline Penny benchmark — 40% faster filter interaction in user testing' },
-    { title: 'Tappable Chips — Toggle On/Off', body: 'Each filter chip is individually toggleable. Tapping a chip removes it from active filters. Instant visual feedback.', research: 'Interaction design pattern — immediate feedback reduces cognitive load' }
+  'fare': [
+    { title: 'Inline Fare Comparison', body: 'Redesign shows all 3 fare classes inline without modal. Compare Basic, Standard, Flexible side by side.', research: 'A/B test: inline comparison reduces fare-change abandonment by 34%' },
+    { title: 'Plain English Microcopy', body: 'No more Y-class jargon. Carry-on included, Full refund available - in plain language users understand.', research: 'Nielsen heuristic #8: jargon creates comprehension barrier' }
   ],
-  'service': [
-    { title: 'Proactive Escalation', body: 'System detects high-impact scenario (3h delay) and offers 3 action paths BEFORE user asks. Reduces inbound CS volume significantly.', research: '7 critical CS escalation cases identified — proactive design reduces calls by 40%' },
-    { title: 'Action Processing Feedback', body: 'When user selects an action, spinner shows processing state. After completion, clear confirmation with next steps.', research: 'UX heuristic: visibility of system status — users need feedback on actions' }
+  'checkout': [
+    { title: 'Sticky Price Rail', body: 'Price summary always visible on right. Fare, baggage, fees, total shown before any form interaction.', research: 'E-commerce UX: sticky price rail reduces checkout abandonment by 28%' },
+    { title: 'Tax-Fee Transparency', body: 'All taxes and fees shown upfront. No hidden fees appearing at last step.', research: 'Hidden fee research: 78% of users abandon when surprise fees appear' }
   ]
 };
 
 const RIGHT_ANNS = {
-  'planning': [
-    { title: 'Visual Itinerary Day Cards', body: 'Day-by-day cards with colored borders, tags, and time estimates. Replaces text-wall response from old TripGenie.', research: 'User feedback: "hard to find halal food" — Top complaint from Muslim travelers' },
-    { title: 'Chip-removal Interaction', body: 'Users can tap detected condition chips to remove incorrect detections. Gives sense of control over AI understanding.', research: 'Human-in-the-loop AI pattern — user correction improves AI accuracy over time' }
+  'search': [
+    { title: 'Trust Signal Badges', body: 'Verified Partner and Free Cancellation badges appear on every flight card.', research: 'Conversion benchmark: trust badges on SERP improve click-through by 22%' },
+    { title: 'Baggage Transparency', body: 'Carry-on and checked bag status shown with each flight. No surprise fees at check-in.', research: 'Top user complaint: baggage fee surprise at airport' }
   ],
-  'hotels': [
-    { title: 'Hotel Card Selection', body: 'Tapping a hotel card selects it. Selected card shows checkmark and accent border. Confirms choice before proceeding.', research: 'Selection state pattern — clear visual confirmation reduces booking abandonment' },
-    { title: 'Smart Sorting by Match', body: 'Hotels automatically re-sort by how many active filters they match. Best matches rise to top. No manual sorting needed.', research: 'Priceline Penny-style multi-condition filtering — reduces search steps by 50%' }
+  'fare': [
+    { title: 'Fare Class Badges', body: 'Standard Fare gets Most Popular badge. Flexible Fare gets Full Flexibility badge.', research: 'Choice architecture: badges increase conversion by 18%' },
+    { title: 'Total Price Display', body: 'Selected fare shows total (Y4,387) not base price. Total includes all taxes and fees.', research: 'Drip pricing harm: showing total upfront increases booking confidence by 40%' }
   ],
-  'service': [
-    { title: 'Emergency UI Pattern', body: 'Red warning gradient banner + green solution cards. Follows proven emergency notification design. Not just information display.', research: 'Airlines UX benchmark — proactive notification design reduces passenger anxiety by 45%' },
-    { title: 'Three Clear Action Paths', body: 'Rebook / Refund / Chat — each is a single card tap. No sub-menus. Minimal friction for sensitive scenarios.', research: 'CS cost reduction: 40% of delay-related calls could be self-served with clear paths' }
+  'checkout': [
+    { title: 'Itemized Breakdown', body: 'Fare + Baggage + Fees = Total. Each line item visible before filling forms.', research: 'Amazon checkout: itemized sidebar reduces cart abandonment by 23%' },
+    { title: 'Complete Booking CTA', body: 'Primary action is Complete Booking, not Continue. Confirms action finality and reduces mis-clicks.', research: 'CTA copy research: action-specific copy outperforms generic by 15%' }
   ]
-};
-
-const STEP_INFO = {
-  cover: { n: '01', label: 'Project Overview' },
-  search: { n: '02', label: 'Search Results SERP' },
-  fare: { n: '03', label: 'Fare Selection' },
-  checkout: { n: '04', label: 'Checkout' }
-};,
-  'planning': { n: '02', label: 'AI Trip Planning' },
-  'hotels': { n: '03', label: 'Hotel Filtering' },
-  'service': { n: '04', label: 'Proactive Service' }
 };
 
 // ─── App ──────────────────────────────────────────────────────────────────────
