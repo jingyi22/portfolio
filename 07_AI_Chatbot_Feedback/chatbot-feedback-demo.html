@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Chatbot Feedback Mechanism Research-based Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#1B6EFD;--primary-light:#3B8AFF;--bg:#0D1117;--bg-card:#161B22;--bg-card-hover:#1C2128;--border:#30363D;--text:#E6EDF3;--text-secondary:#8B949E;--text-muted:#484F58;--green:#2EA043;--red:#F85149;--orange:#F0883E;--yellow:#D29922;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;}
+.nav{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(13,17,23,.93);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 48px;z-index:100;}
+.nav-logo{font-family:DM Serif Display,serif;font-size:22px;color:var(--text);letter-spacing:-.5px;}
+.nav-logo span{color:var(--primary);}
+.nav-badge{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--text-secondary);letter-spacing:.3px;}
+main{padding-top:60px;}
+.container{max-width:1100px;margin:0 auto;padding:0 48px;}
+.hero{padding:100px 0 80px;text-align:center;position:relative;}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(27,110,253,.07) 0%,transparent 65%);pointer-events:none;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(27,110,253,.1);border:1px solid rgba(27,110,253,.22);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:700;color:var(--primary-light);letter-spacing:1px;text-transform:uppercase;margin-bottom:28px;}
+.hero h1{font-family:DM Serif Display,serif;font-size:clamp(38px,5.5vw,60px);font-weight:400;line-height:1.12;margin-bottom:20px;letter-spacing:-1.5px;}
+.hero h1 em{font-style:italic;color:var(--primary-light);}
+.hero-sub{font-size:17px;color:var(--text-secondary);max-width:560px;margin:0 auto 48px;line-height:1.7;}
+.stats-row{display:flex;justify-content:center;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden;max-width:640px;margin:0 auto;}
+.stat-item{flex:1;padding:24px 16px;text-align:center;border-right:1px solid var(--border);}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:DM Serif Display,serif;font-size:38px;color:var(--primary-light);line-height:1;margin-bottom:6px;}
+.stat-num.g{color:#4ADE80;}
+.stat-num.o{color:var(--orange);}
+.stat-label{font-size:12px;color:var(--text-secondary);font-weight:500;}
+.hero-demo-cta{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:36px;}
+.hero-demo-btn{display:inline-flex;align-items:center;gap:10px;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;cursor:pointer;transition:background .2s,transform .15s;box-shadow:0 4px 24px rgba(27,110,253,.35);}
+.hero-demo-btn:hover{background:var(--primary-light);transform:translateY(-2px);box-shadow:0 8px 32px rgba(27,110,253,.45);}
+.hero-demo-btn:active{transform:translateY(0);}
+.hero-demo-hint{font-size:12px;color:var(--text-muted);}
+.section{padding:80px 0;border-top:1px solid var(--border);}
+.section-header{margin-bottom:48px;}
+.section-num{font-size:11px;font-weight:700;color:var(--primary);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.section-title{font-family:DM Serif Display,serif;font-size:clamp(26px,3.5vw,38px);font-weight:400;line-height:1.2;letter-spacing:-.5px;margin-bottom:14px;}
+.section-desc{font-size:15px;color:var(--text-secondary);max-width:520px;line-height:1.7;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;transition:border-color .2s,transform .2s;}
+.card:hover{border-color:var(--primary);transform:translateY(-2px);}
+.card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;background:rgba(27,110,253,.1);border:1px solid rgba(27,110,253,.15);color:var(--primary-light);}
+.card-icon.g{background:rgba(46,160,67,.1);border-color:rgba(46,160,67,.15);color:#4ADE80;}
+.card-icon.o{background:rgba(240,136,62,.1);border-color:rgba(240,136,62,.15);color:var(--orange);}
+.card-icon.y{background:rgba(210,153,34,.1);border-color:rgba(210,153,34,.15);color:var(--yellow);}
+.card-icon.r{background:rgba(248,81,73,.1);border-color:rgba(248,81,73,.15);color:var(--red);}
+.card-icon.t{background:rgba(27,193,193,.1);border-color:rgba(27,193,193,.15);color:#1BC1C1;}
+.card-icon.p{background:rgba(188,140,255,.1);border-color:rgba(188,140,255,.15);color:#BC8CFF;}
+.card h3{font-family:DM Serif Display,serif;font-size:18px;font-weight:400;margin-bottom:8px;letter-spacing:-.2px;}
+.card p{font-size:13px;color:var(--text-secondary);line-height:1.6;}
+.card-tag{display:inline-block;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;margin-bottom:12px;letter-spacing:.3px;}
+.t-blue{background:rgba(27,110,253,.12);border:1px solid rgba(27,110,253,.2);color:var(--primary-light);}
+.t-green{background:rgba(46,160,67,.12);border:1px solid rgba(46,160,67,.2);color:#4ADE80;}
+.t-orange{background:rgba(240,136,62,.12);border:1px solid rgba(240,136,62,.2);color:var(--orange);}
+.t-yellow{background:rgba(210,153,34,.12);border:1px solid rgba(210,153,34,.2);color:var(--yellow);}
+.matrix-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--border);}
+.matrix-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:760px;}
+.matrix-table thead th{background:var(--bg-card);padding:14px 20px;text-align:left;font-size:10.5px;font-weight:700;color:var(--text-secondary);letter-spacing:.8px;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+.matrix-table thead th:first-child{border-radius:15px 0 0 0;}
+.matrix-table thead th:last-child{border-radius:0 15px 0 0;}
+.matrix-table tbody tr{border-bottom:1px solid var(--border);}
+.matrix-table tbody tr:last-child{border-bottom:none;}
+.matrix-table tbody tr:hover{background:var(--bg-card-hover);}
+.matrix-table tbody tr.row-none{opacity:.5;}
+.matrix-table tbody td{padding:13px 20px;color:var(--text-secondary);}
+.matrix-table tbody td:first-child{font-weight:600;color:var(--text);white-space:nowrap;}
+.matrix-table tbody td:nth-child(2){white-space:nowrap;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap;}
+.b-yes{background:rgba(46,160,67,.15);color:#4ADE80;}
+.b-no{background:rgba(248,81,73,.12);color:var(--red);}
+.b-basic{background:rgba(210,153,34,.12);color:var(--yellow);}
+.t-BEST{color:#4ADE80;font-weight:700;}
+.t-GOOD{color:var(--primary-light);font-weight:600;}
+.t-FLEX{color:var(--orange);font-weight:600;}
+.t-QUICK{color:var(--yellow);font-weight:600;}
+.s-FULL{color:#4ADE80;font-weight:700;}
+.s-SIM{color:var(--primary-light);font-weight:600;}
+.s-NON{color:var(--text-muted);}
+.s-OPT{color:var(--orange);font-weight:600;}
+/* Overlay + phone frame */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay.open{opacity:1;pointer-events:all;}
+.overlay-inner{display:flex;flex-direction:column;align-items:center;gap:20px;position:relative;}
+.close-btn{position:absolute;top:-52px;right:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);font-size:18px;line-height:1;transition:background .2s,color .2s;}
+.close-btn:hover{background:rgba(255,255,255,.13);color:var(--text);}
+.demo-label{color:var(--text-secondary);font-size:13px;font-weight:500;text-align:center;margin-top:-8px;}
+.phone-frame{width:375px;height:720px;background:#0D1117;border-radius:44px;border:4px solid #2A2A2A;overflow:hidden;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.05);}
+.phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#0D1117;border-radius:0 0 20px 20px;z-index:20;display:flex;align-items:center;justify-content:center;gap:8px;}
+.phone-notch::before{content:'';width:8px;height:8px;background:#1D1D1D;border-radius:50%;}
+.phone-notch::after{content:'';width:50px;height:6px;background:#1D1D1D;border-radius:3px;}
+.phone-screen{width:100%;height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden;padding-top:36px;}
+/* Demo screen components */
+.screen-nav{height:50px;background:var(--bg-card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;}
+.screen-nav-back{width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px;font-size:20px;color:var(--primary);transition:background .15s;flex-shrink:0;line-height:1;}
+.screen-nav-back:hover{background:rgba(27,110,253,.1);}
+.screen-nav-title{font-size:16px;font-weight:600;color:var(--text);flex:1;text-align:center;padding-right:28px;}
+.chat-area{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;}
+.chat-area::-webkit-scrollbar{width:0;}
+.chat-bubble{max-width:78%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.55;word-break:break-word;}
+.chat-bubble.bot{background:var(--bg-card);border:1px solid var(--border);border-radius:4px 16px 16px 16px;align-self:flex-start;color:var(--text);}
+.chat-bubble.user{background:var(--primary);border-radius:16px 4px 16px 16px;align-self:flex-end;color:#fff;}
+.invite-card{margin:12px 16px 16px;background:rgba(27,110,253,.07);border:1px solid rgba(27,110,253,.22);border-radius:16px;padding:16px;}
+.invite-text{font-size:13px;color:var(--text);line-height:1.5;margin-bottom:12px;}
+.invite-actions{display:flex;gap:8px;}
+.invite-btn-skip{flex:1;background:none;border:1px solid var(--border);border-radius:8px;padding:9px;cursor:pointer;color:var(--text-secondary);font-size:12px;font-family:Inter,sans-serif;transition:background .15s;}
+.invite-btn-skip:hover{background:var(--bg-card);}
+.invite-btn-go{flex:2;background:var(--primary);border:none;border-radius:8px;padding:9px;cursor:pointer;color:#fff;font-size:12px;font-weight:600;font-family:Inter,sans-serif;transition:background .2s;}
+.invite-btn-go:hover{background:var(--primary-light);}
+.screen-body{flex:1;overflow-y:auto;padding:20px 16px;}
+.screen-body::-webkit-scrollbar{width:0;}
+.screen-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.screen-sub{font-size:12px;color:var(--text-secondary);margin-bottom:22px;line-height:1.5;}
+.resolve-opt{display:flex;flex-direction:column;gap:10px;}
+.resolve-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--bg);cursor:pointer;text-align:left;width:100%;transition:border-color .2s,background .2s;font-family:Inter,sans-serif;}
+.resolve-btn:hover{border-color:var(--primary);background:rgba(27,110,253,.05);}
+.resolve-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.resolve-label{font-weight:600;color:var(--text);font-size:14px;}
+.resolve-sub{font-size:11px;color:var(--text-secondary);margin-top:2px;}
+.face-row{display:flex;gap:6px;justify-content:center;margin-bottom:4px;}
+.face-col{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.face-btn{background:none;border:2px solid var(--border);border-radius:14px;padding:10px 6px;cursor:pointer;transition:border-color .2s,background .2s;display:flex;align-items:center;justify-content:center;min-width:52px;}
+.face-btn:hover{border-color:var(--primary);background:rgba(27,110,253,.05);}
+.face-btn.selected{border-color:var(--primary);background:rgba(27,110,253,.1);}
+.face-label{font-size:10px;color:var(--text-muted);text-align:center;line-height:1.2;}
+.csat-selected-label{font-size:13px;font-weight:600;color:var(--primary-light);margin:8px 0 20px;min-height:20px;text-align:center;}
+.reason-chips{display:flex;flex-direction:column;gap:8px;}
+.reason-chip{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:13px;color:var(--text-secondary);font-family:Inter,sans-serif;transition:border-color .2s,background .2s;width:100%;text-align:left;}
+.reason-chip:hover{border-color:var(--primary);background:rgba(27,110,253,.04);}
+.reason-chip.selected{border-color:var(--primary);background:rgba(27,110,253,.08);color:var(--text);}
+.reason-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.reason-check svg{opacity:0;transition:opacity .15s;}
+.reason-chip.selected .reason-check{background:var(--primary);border-color:var(--primary);}
+.reason-chip.selected .reason-check svg{opacity:1;}
+.action-btn{width:100%;background:var(--primary);border:none;border-radius:12px;padding:13px;cursor:pointer;color:#fff;font-size:14px;font-weight:600;font-family:Inter,sans-serif;transition:background .2s;margin-top:16px;}
+.action-btn:hover{background:var(--primary-light);}
+.action-btn:disabled{opacity:.35;cursor:not-allowed;}
+.action-btn-sec{width:100%;background:none;border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;color:var(--text-secondary);font-size:13px;font-family:Inter,sans-serif;margin-top:10px;transition:background .15s;}
+.action-btn-sec:hover{background:var(--bg-card);}
+.done-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;}
+.done-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+.done-title{font-family:DM Serif Display,serif;font-size:22px;font-weight:400;color:var(--text);margin-bottom:10px;}
+.done-sub{font-size:13px;color:var(--text-secondary);line-height:1.6;max-width:260px;}
+.transfer-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;}
+.survey-textarea{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:13px;color:var(--text);font-family:Inter,sans-serif;resize:none;outline:none;line-height:1.5;transition:border-color .2s;margin-top:12px;}
+.survey-textarea:focus{border-color:var(--primary);}
+.survey-textarea::placeholder{color:var(--text-muted);}
+/* Path selector */
+.path-select-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:20px 18px;}
+.path-select-intro{text-align:center;margin-bottom:20px;}
+.path-select-intro p{font-size:12px;color:var(--text-secondary);line-height:1.6;}
+.path-card{width:100%;background:var(--bg-card);border:1.5px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;text-align:left;font-family:Inter,sans-serif;transition:border-color .2s,background .2s;margin-bottom:12px;display:block;}
+.path-card:last-child{margin-bottom:0;}
+.path-card:hover{border-color:var(--primary);background:rgba(27,110,253,.04);}
+.path-card.path-b:hover{border-color:#4ADE80;background:rgba(46,160,67,.04);}
+.path-card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.path-card-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.path-card-label{display:flex;flex-direction:column;gap:1px;}
+.path-chip{display:inline-block;font-size:9px;font-weight:700;padding:1px 7px;border-radius:8px;letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px;}
+.chip-a{background:rgba(27,110,253,.12);color:var(--primary-light);}
+.chip-b{background:rgba(46,160,67,.12);color:#4ADE80;}
+.path-card-title{font-size:13px;font-weight:600;color:var(--text);}
+.path-card-desc{font-size:11px;color:var(--text-secondary);line-height:1.55;padding-left:46px;}
+.path-divider{text-align:center;font-size:10px;color:var(--text-muted);font-weight:600;letter-spacing:.5px;margin:4px 0 12px;}
+/* Before/After comparison */
+.ba-row{display:flex;align-items:stretch;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin:32px auto 0;max-width:760px;text-align:left;}
+.ba-panel{flex:1;padding:22px 24px;}
+.ba-panel+.ba-panel{border-left:1px solid var(--border);}
+.ba-arrow-col{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 10px;border-left:1px solid var(--border);border-right:1px solid var(--border);color:var(--text-muted);gap:6px;min-width:44px;}
+.ba-arrow-col span{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);writing-mode:vertical-rl;}
+.ba-panel-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.ba-tag{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;}
+.ba-before{background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.2);color:var(--red);}
+.ba-after{background:rgba(46,160,67,.12);border:1px solid rgba(46,160,67,.2);color:#4ADE80;}
+.ba-panel-title{font-size:13px;font-weight:600;color:var(--text);}
+.ba-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+.ba-item{display:flex;align-items:flex-start;gap:8px;}
+.ba-item-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;background:rgba(248,81,73,.1);color:var(--red);}
+.ba-item-title{font-size:11.5px;font-weight:600;color:var(--text);line-height:1.4;}
+.ba-item-desc{font-size:10.5px;color:var(--text-secondary);line-height:1.4;margin-top:1px;}
+.ba-metric-row{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.ba-metric-num{font-family:DM Serif Display,serif;font-size:20px;line-height:1;}
+.ba-metric-label{font-size:10.5px;color:var(--text-secondary);line-height:1.3;}
+.ba-flow-block{background:rgba(27,110,253,.04);border:1px solid rgba(27,110,253,.12);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+.ba-flow-block:last-of-type{margin-bottom:0;}
+.ba-flow-label{font-size:9.5px;font-weight:700;color:var(--primary-light);letter-spacing:.5px;text-transform:uppercase;margin-bottom:7px;}
+.ba-flow-steps{display:flex;align-items:center;flex-wrap:wrap;gap:4px;}
+.ba-step-chip{background:rgba(27,110,253,.09);border:1px solid rgba(27,110,253,.15);border-radius:5px;padding:2px 7px;font-size:10.5px;font-weight:500;color:var(--text);}
+.ba-step-arrow{color:var(--text-muted);font-size:10px;}
+/* Inline queue chat — all within chat bubble flow */
+.queue-system-msg{align-self:center;display:flex;align-items:center;gap:6px;background:rgba(27,110,253,.07);border:1px solid rgba(27,110,253,.15);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--text-secondary);max-width:90%;}
+.queue-exit-inline{background:none;border:none;font-size:10px;font-weight:600;color:var(--primary-light);cursor:pointer;font-family:Inter,sans-serif;padding:0 0 0 8px;border-left:1px solid var(--border);margin-left:4px;}
+.chat-csat-widget{align-self:flex-start;max-width:86%;background:var(--bg-card);border:1px solid var(--border);border-radius:4px 14px 14px 14px;padding:12px 14px;margin-left:0;}
+.chat-csat-widget .face-row{justify-content:flex-start;gap:6px;}
+.chat-csat-widget .face-btn{min-width:40px;padding:7px 4px;}
+.q-face-label{font-size:11px;color:var(--text-muted);margin-top:7px;transition:color .2s;}
+.chat-factors-widget{align-self:flex-start;max-width:90%;background:var(--bg-card);border:1px solid var(--border);border-radius:4px 14px 14px 14px;padding:12px 14px;margin-left:0;}
+.inline-chips-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.inline-chip{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:4px 10px;font-size:11px;color:var(--text-secondary);font-family:Inter,sans-serif;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:4px;}
+.inline-chip:hover{border-color:var(--primary);color:var(--text);}
+.inline-chip.chip-sel{border-color:var(--primary);background:rgba(27,110,253,.1);color:var(--primary-light);}
+.inline-submit{width:100%;background:var(--primary);border:none;border-radius:8px;padding:9px;font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:Inter,sans-serif;transition:background .2s;}
+.inline-submit:disabled{opacity:.3;cursor:not-allowed;}
+.inline-submit:not(:disabled):hover{background:var(--primary-light);}
+.agent-label{font-size:10px;color:var(--primary-light);display:block;margin-bottom:3px;font-weight:600;letter-spacing:.2px;}
+.session-system-msg{align-self:center;font-size:10.5px;color:var(--text-muted);padding:3px 10px;text-align:center;}
+.session-end-row{align-self:center;padding:12px 0 4px;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">trip<span>.</span>com</div>
+  <div class="nav-badge">IBU CSC UXA | July 2025</div>
+</nav>
+
+<main>
+<div class="container">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Research-based Redesign</div>
+  <h1>AI Chatbot <em>Feedback Mechanism</em> Comparison</h1>
+  <p class="hero-sub">Benchmarking feedback invitation patterns across 11 platforms — OTAs, airlines, hotels, and e-commerce — to uncover best practices for AI feedback collection in travel.</p>
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-num">11</div>
+      <div class="stat-label">Platforms Tested</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num g">8</div>
+      <div class="stat-label">Have AI Feedback</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num o">&lt;1%</div>
+      <div class="stat-label">Trip.com Eval Rate</div>
+    </div>
+  </div>
+  <!-- Before vs After comparison -->
+  <div class="ba-row">
+    <div class="ba-panel">
+      <div class="ba-panel-head">
+        <span class="ba-tag ba-before">Before</span>
+        <span class="ba-panel-title">Trip.com Current Mechanism</span>
+      </div>
+      <ul class="ba-list">
+        <li class="ba-item">
+          <div class="ba-item-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+          <div><div class="ba-item-title">Opt-in evaluate button only</div><div class="ba-item-desc">Hidden icon at chat bottom — users must discover it unprompted; no proactive invitation</div></div>
+        </li>
+        <li class="ba-item">
+          <div class="ba-item-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+          <div><div class="ba-item-title">No invitation script</div><div class="ba-item-desc">Zero proactive prompting — 100% dependent on user initiative to find and tap the button</div></div>
+        </li>
+        <li class="ba-item">
+          <div class="ba-item-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+          <div><div class="ba-item-title">No issue triage or transfer path</div><div class="ba-item-desc">Same dead-end experience for both resolved and unresolved users — no human escalation flow</div></div>
+        </li>
+      </ul>
+      <div class="ba-metric-row">
+        <div class="ba-metric-num" style="color:var(--red)">&lt;1%</div>
+        <div class="ba-metric-label">AI session<br>evaluation rate</div>
+      </div>
+    </div>
+    <div class="ba-arrow-col">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+      <span>Redesign</span>
+    </div>
+    <div class="ba-panel">
+      <div class="ba-panel-head">
+        <span class="ba-tag ba-after">After</span>
+        <span class="ba-panel-title">Dual-Path Optimized Flow</span>
+      </div>
+      <div class="ba-flow-block">
+        <div class="ba-flow-label">AI Chat Ends</div>
+        <div class="ba-flow-steps">
+          <span class="ba-step-chip">Invitation</span><span class="ba-step-arrow">→</span>
+          <span class="ba-step-chip">Issue Check</span><span class="ba-step-arrow">→</span>
+          <span class="ba-step-chip">CSAT</span><span class="ba-step-arrow">→</span>
+          <span class="ba-step-chip">Factors</span><span class="ba-step-arrow">→</span>
+          <span class="ba-step-chip">End</span>
+        </div>
+      </div>
+      <div class="ba-flow-block">
+        <div class="ba-flow-label">Transfer to Human Agent</div>
+        <div class="ba-flow-steps">
+          <span class="ba-step-chip">Queue + CSAT</span><span class="ba-step-arrow">→</span>
+          <span class="ba-step-chip">Factors</span><span class="ba-step-arrow">→</span>
+          <span class="ba-step-chip">Human Session</span><span class="ba-step-arrow">→</span>
+          <span class="ba-step-chip">NPS</span>
+        </div>
+      </div>
+      <div class="ba-metric-row">
+        <div class="ba-metric-num" style="color:#4ADE80">↑</div>
+        <div class="ba-metric-label">Auto-triggered · structured<br>· dual-path</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-demo-cta">
+    <button class="hero-demo-btn" id="demoBtn" onclick="openDemo()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21 5,3"/></svg>
+      Try Optimized Feedback Flow Demo
+    </button>
+    <span class="hero-demo-hint">Interactive prototype · Based on PPT Slide 9 redesign</span>
+  </div>
+</section>
+
+<!-- SECTION 01 -->
+<section class="section" id="s01">
+  <div class="section-header">
+    <div class="section-num">Section 01</div>
+    <h2 class="section-title">Platform Coverage</h2>
+    <p class="section-desc">We tested feedback mechanisms across 11 platforms spanning 4 categories to establish a comprehensive cross-industry benchmark.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+      </div>
+      <span class="card-tag t-blue">OTAs</span>
+      <h3>4 OTA Platforms</h3>
+      <p>Trip.com, Expedia, Agoda, Airbnb — assessed for post-conversation feedback triggers and evaluation entry points. Airbnb has no AI chatbot feedback system.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon g">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      </div>
+      <span class="card-tag t-green">Airlines</span>
+      <h3>5 Airlines</h3>
+      <p>British Airways, Singapore Airlines, Cathay Pacific, United Airlines, Lufthansa — surveyed for AI-specific feedback integration and script quality. Lufthansa has no AI feedback.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon o">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      </div>
+      <span class="card-tag t-orange">Hotel + E-commerce</span>
+      <h3>Hilton + Amazon</h3>
+      <p>Hilton (hotel) and Amazon (e-commerce) — compared feedback timing and completion. Hilton has no AI feedback loop; Amazon offers basic thumbs-only rating inline.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 02 -->
+<section class="section" id="s02">
+  <div class="section-header">
+    <div class="section-num">Section 02</div>
+    <h2 class="section-title">Trigger Timing Analysis</h2>
+    <p class="section-desc">Feedback invitation timing is critical. We categorized trigger strategies into four models based on when and how users are asked for feedback.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon g">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"/></svg>
+      </div>
+      <span class="card-tag t-green">Best Practice</span>
+      <h3>BEST Model</h3>
+      <p>Feedback collected 24–48 h after service completion. Allows reflection while experience is still fresh. Observed in Singapore Airlines — highest quality signal.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+      </div>
+      <span class="card-tag t-blue">Good</span>
+      <h3>GOOD Model</h3>
+      <p>Feedback triggered after key milestones — booking confirmation, check-in, flight change. Contextual touchpoints without survey fatigue. Used by Expedia, Cathay Pacific, United.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon y">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      </div>
+      <span class="card-tag t-yellow">Flexible</span>
+      <h3>FLEX Model</h3>
+      <p>User-initiated feedback available anytime through a persistent entry point. Lower immediate response rate but better for power users. Observed in British Airways.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon o">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/></svg>
+      </div>
+      <span class="card-tag t-orange">Quick</span>
+      <h3>QUICK Model</h3>
+      <p>Feedback requested immediately after AI session ends. High volume but lower quality signals; risk of survey fatigue. Current approach at Trip.com and Agoda.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 03 -->
+<section class="section" id="s03">
+  <div class="section-header">
+    <div class="section-num">Section 03</div>
+    <h2 class="section-title">Feedback Script Quality</h2>
+    <p class="section-desc">The quality of feedback invitation text significantly impacts completion rates. We evaluated scripts across four quality tiers.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon g">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <span class="card-tag t-green">Full Script</span>
+      <h3>Full Natural Language</h3>
+      <p>Contextual, personalized invitation referencing the specific interaction. Creates perceived value. Highest completion rates observed — used by Singapore Airlines.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <span class="card-tag t-blue">Simple</span>
+      <h3>Simplified Prompt</h3>
+      <p>Concise, action-oriented invitation with clear next steps. Good balance of completion rate and user effort. Used by Expedia, Cathay Pacific, United Airlines.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon r">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      </div>
+      <span class="card-tag t-orange">Non-Contextual</span>
+      <h3>Generic / None</h3>
+      <p>No AI-specific feedback or generic corporate phrasing unrelated to the chat session. Low engagement — signals weak investment in the AI improvement loop. Seen in Agoda, Amazon.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon o">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="5" width="22" height="14" rx="7" ry="7"/><circle cx="16" cy="12" r="3"/></svg>
+      </div>
+      <span class="card-tag t-yellow">Optional</span>
+      <h3>Opt-In Model</h3>
+      <p>Feedback available through a persistent button that users must actively seek. Respects autonomy but captures only highly motivated respondents. Current Trip.com approach.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04 -->
+<section class="section" id="s04">
+  <div class="section-header">
+    <div class="section-num">Section 04</div>
+    <h2 class="section-title">Competitor Comparison Matrix</h2>
+    <p class="section-desc">Comprehensive analysis across all 11 platforms, covering AI feedback availability, trigger strategy, and script quality. Platforms without AI feedback are shown for reference.</p>
+  </div>
+  <div class="matrix-wrap">
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Category</th>
+          <th>AI Feedback</th>
+          <th>Trigger Timing</th>
+          <th>Script Quality</th>
+          <th>Coverage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Trip.com ★</td>
+          <td>OTA</td>
+          <td><span class="badge b-yes">Has AI Feedback</span></td>
+          <td><span class="t-QUICK">QUICK</span></td>
+          <td><span class="s-OPT">OPT</span></td>
+          <td>Full</td>
+        </tr>
+        <tr>
+          <td>Expedia</td>
+          <td>OTA</td>
+          <td><span class="badge b-yes">Has AI Feedback</span></td>
+          <td><span class="t-GOOD">GOOD</span></td>
+          <td><span class="s-SIM">SIM</span></td>
+          <td>Full</td>
+        </tr>
+        <tr>
+          <td>Agoda</td>
+          <td>OTA</td>
+          <td><span class="badge b-yes">Has AI Feedback</span></td>
+          <td><span class="t-QUICK">QUICK</span></td>
+          <td><span class="s-NON">NON</span></td>
+          <td>Full</td>
+        </tr>
+        <tr class="row-none">
+          <td>Airbnb</td>
+          <td>OTA</td>
+          <td><span class="badge b-no">No AI Feedback</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>Singapore Airlines</td>
+          <td>Airline</td>
+          <td><span class="badge b-yes">Has AI Feedback</span></td>
+          <td><span class="t-BEST">BEST</span></td>
+          <td><span class="s-FULL">FULL</span></td>
+          <td>Full</td>
+        </tr>
+        <tr>
+          <td>British Airways</td>
+          <td>Airline</td>
+          <td><span class="badge b-yes">Has AI Feedback</span></td>
+          <td><span class="t-FLEX">FLEX</span></td>
+          <td><span class="s-OPT">OPT</span></td>
+          <td>Full</td>
+        </tr>
+        <tr>
+          <td>Cathay Pacific</td>
+          <td>Airline</td>
+          <td><span class="badge b-yes">Has AI Feedback</span></td>
+          <td><span class="t-GOOD">GOOD</span></td>
+          <td><span class="s-SIM">SIM</span></td>
+          <td>Full</td>
+        </tr>
+        <tr>
+          <td>United Airlines</td>
+          <td>Airline</td>
+          <td><span class="badge b-yes">Has AI Feedback</span></td>
+          <td><span class="t-GOOD">GOOD</span></td>
+          <td><span class="s-SIM">SIM</span></td>
+          <td>Full</td>
+        </tr>
+        <tr class="row-none">
+          <td>Lufthansa</td>
+          <td>Airline</td>
+          <td><span class="badge b-no">No AI Feedback</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>Amazon</td>
+          <td>E-commerce</td>
+          <td><span class="badge b-basic">Basic Only</span></td>
+          <td><span class="t-QUICK">QUICK</span></td>
+          <td><span class="s-NON">NON</span></td>
+          <td>Basic</td>
+        </tr>
+        <tr class="row-none">
+          <td>Hilton</td>
+          <td>Hotel</td>
+          <td><span class="badge b-no">No AI Feedback</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>None</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 05 -->
+<section class="section" id="s05">
+  <div class="section-header">
+    <div class="section-num">Section 05</div>
+    <h2 class="section-title">Survey Content and Completion Methods</h2>
+    <p class="section-desc">Two dominant patterns emerged for feedback format and survey delivery among platforms that have implemented AI feedback.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon t">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <span class="card-tag t-blue">Inline Chat</span>
+      <h3>Embedded Feedback</h3>
+      <p>Feedback collected within the chat window via CSAT faces, thumbs, or star ratings. Minimal friction. Best for quick sentiment signals — highest completion rate observed across benchmarked platforms.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon p">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+      </div>
+      <span class="card-tag t-orange">External Survey</span>
+      <h3>Redirect Survey</h3>
+      <p>Users sent to a dedicated survey page (Typeform, Qualtrics). Richer qualitative data but significantly higher drop-off. Recommended only for periodic deep-research studies.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 06 -->
+<section class="section" id="s06">
+  <div class="section-header">
+    <div class="section-num">Section 06</div>
+    <h2 class="section-title">Optimization Recommendations</h2>
+    <p class="section-desc">Three proposed options to improve Trip.com's AI chatbot feedback mechanism, addressing the current &lt;1% evaluation rate.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+      </div>
+      <span class="card-tag t-blue">Option A</span>
+      <h3>Session-End Auto-Trigger</h3>
+      <p>Automatically surface a feedback card at the end of every AI chat session. Simple thumbs-up/down with optional open text. Removes friction of finding the evaluate button; targets higher passive completion.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon o">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"/></svg>
+      </div>
+      <span class="card-tag t-yellow">Option B</span>
+      <h3>Milestone-Based Trigger</h3>
+      <p>Trigger feedback only after high-value interactions — booking confirmation, cancellation, itinerary change. Ensures richer context per feedback point while minimising survey fatigue.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon g">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+      </div>
+      <span class="card-tag t-green">Recommended · Option C</span>
+      <h3>Issue-Aware Feedback Flow</h3>
+      <p>After AI session: invitation script → issue resolution check → CSAT (if resolved) or human transfer offer (if not) → factor selection → thank you. Separates resolved vs. unresolved cases for better signal quality. See interactive demo above.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<!-- DEMO OVERLAY -->
+<div class="overlay" id="demoOverlay">
+  <div class="overlay-inner">
+    <button class="close-btn" id="closeBtn" onclick="closeDemo()">&#x2715;</button>
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" id="phoneScreen"></div>
+    </div>
+    <div class="demo-label">Optimized Feedback Flow · Interactive Demo</div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+const state = { resolved: null, csatScore: null, reasons: [] };
+
+// ── Face SVGs for CSAT ─────────────────────────────────────────────────────
+const FACES = [
+  {
+    color: '#F85149',
+    label: 'Very Low',
+    desc: 'Very Unsatisfied',
+    svg: `<svg width="36" height="36" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="rgba(248,81,73,.12)" stroke="#F85149" stroke-width="1.5"/><path d="M12 14 Q14 12 16 14" stroke="#F85149" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M24 14 Q26 12 28 14" stroke="#F85149" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M13 28 Q20 21 27 28" stroke="#F85149" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`
+  },
+  {
+    color: '#F0883E',
+    label: 'Low',
+    desc: 'Unsatisfied',
+    svg: `<svg width="36" height="36" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="rgba(240,136,62,.12)" stroke="#F0883E" stroke-width="1.5"/><circle cx="14" cy="15" r="2" fill="#F0883E"/><circle cx="26" cy="15" r="2" fill="#F0883E"/><path d="M14 27 Q20 23 26 27" stroke="#F0883E" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`
+  },
+  {
+    color: '#D29922',
+    label: 'Neutral',
+    desc: 'Neutral',
+    svg: `<svg width="36" height="36" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="rgba(210,153,34,.12)" stroke="#D29922" stroke-width="1.5"/><circle cx="14" cy="15" r="2" fill="#D29922"/><circle cx="26" cy="15" r="2" fill="#D29922"/><line x1="13" y1="26" x2="27" y2="26" stroke="#D29922" stroke-width="2.5" stroke-linecap="round"/></svg>`
+  },
+  {
+    color: '#2EA043',
+    label: 'High',
+    desc: 'Satisfied',
+    svg: `<svg width="36" height="36" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="rgba(46,160,67,.12)" stroke="#2EA043" stroke-width="1.5"/><circle cx="14" cy="15" r="2" fill="#2EA043"/><circle cx="26" cy="15" r="2" fill="#2EA043"/><path d="M14 24 Q20 29 26 24" stroke="#2EA043" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`
+  },
+  {
+    color: '#4ADE80',
+    label: 'Very High',
+    desc: 'Very Satisfied',
+    svg: `<svg width="36" height="36" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="rgba(74,222,128,.12)" stroke="#4ADE80" stroke-width="1.5"/><path d="M12 14 Q14 12 16 14" stroke="#4ADE80" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M24 14 Q26 12 28 14" stroke="#4ADE80" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M12 23 Q20 31 28 23" stroke="#4ADE80" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`
+  }
+];
+
+const REASONS = [
+  { id: 'speed',    label: 'Response Speed',      icon: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/></svg>` },
+  { id: 'accuracy', label: 'Answer Accuracy',     icon: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>` },
+  { id: 'clarity',  label: 'Language Clarity',    icon: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>` },
+  { id: 'resolve',  label: 'Problem Resolution',  icon: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>` },
+  { id: 'attitude', label: 'Service Attitude',    icon: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>` },
+];
+
+// ── Screen HTML generators ─────────────────────────────────────────────────
+
+function pathSelectHTML() {
+  return `
+    <div class="screen-nav">
+      <div class="screen-nav-back" onclick="closeDemo()" style="font-size:16px;">&#x2715;</div>
+      <div class="screen-nav-title">Choose a Path</div>
+    </div>
+    <div class="path-select-body">
+      <div class="path-select-intro">
+        <p>Two independent feedback paths.<br>Select one to preview interactively.</p>
+      </div>
+
+      <button class="path-card" onclick="state.reasonTarget='done_thanks'; renderScreen('chat')">
+        <div class="path-card-head">
+          <div class="path-card-icon" style="background:rgba(27,110,253,.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B8AFF" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="path-card-label">
+            <span class="path-chip chip-a">Path A</span>
+            <span class="path-card-title">AI Chat Ends</span>
+          </div>
+        </div>
+        <div class="path-card-desc">Invitation script → Issue check → CSAT rating → Factor selection → Thank you</div>
+      </button>
+
+      <div class="path-divider">— or —</div>
+
+      <button class="path-card path-b" onclick="renderScreen('transfer_chat')">
+        <div class="path-card-head">
+          <div class="path-card-icon" style="background:rgba(46,160,67,.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 9.81a19.79 19.79 0 0 1-3.07-8.68A2 2 0 0 1 2 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L6.09 7.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 14.92z"/></svg>
+          </div>
+          <div class="path-card-label">
+            <span class="path-chip chip-b">Path B</span>
+            <span class="path-card-title">Transfer to Human Agent</span>
+          </div>
+        </div>
+        <div class="path-card-desc">User requests human → Queue wait → <strong style="color:var(--text);">Inline CSAT in chat</strong> → Factor selection → Connected → NPS invitation</div>
+      </button>
+    </div>
+  `;
+}
+
+function transferChatHTML() {
+  return `
+    <div class="screen-nav">
+      <div class="screen-nav-back" onclick="renderScreen('path_select')">&#8249;</div>
+      <div class="screen-nav-title">Trip.com AI Assistant</div>
+    </div>
+    <div class="chat-area">
+      <div class="chat-bubble bot">Hello! I'm your Trip.com AI Assistant. How can I help you today?</div>
+      <div class="chat-bubble user">My refund hasn't arrived after 14 days. I want to speak with a human agent.</div>
+      <div class="chat-bubble bot">I understand — let me check your refund status. I can see the request from 14 days ago is still pending. I'll connect you with a customer service specialist who can resolve this directly.</div>
+      <div class="chat-bubble bot" style="opacity:.65;font-size:12.5px;font-style:italic;">Transferring you to the personal service agent…</div>
+    </div>
+    <div class="invite-card" style="background:rgba(46,160,67,.06);border-color:rgba(46,160,67,.22);">
+      <div class="invite-text" style="color:var(--text);">You're being connected to a human agent. While you wait, we'd love a quick rating on today's AI experience.</div>
+      <div class="invite-actions">
+        <button class="invite-btn-skip" onclick="renderScreen('path_select')">← Back</button>
+        <button class="invite-btn-go" style="background:#2EA043;" onclick="renderScreen('transfer_queue')">Enter Queue →</button>
+      </div>
+    </div>
+  `;
+}
+
+function chatHTML() {
+  return `
+    <div class="screen-nav">
+      <div class="screen-nav-back" onclick="closeDemo()">&#x2715;</div>
+      <div class="screen-nav-title">Trip.com AI Assistant</div>
+    </div>
+    <div class="chat-area">
+      <div class="chat-bubble bot">Hello! I'm your Trip.com AI Assistant. How can I help you today?</div>
+      <div class="chat-bubble user">I need to change my flight to next Friday.</div>
+      <div class="chat-bubble bot">Sure! Let me check available flights for next Friday on the same route…</div>
+      <div class="chat-bubble bot">I found 3 alternative flights. I've updated your booking to the 09:20 flight — you'll receive a confirmation email shortly.</div>
+      <div class="chat-bubble user">Perfect, thank you!</div>
+      <div class="chat-bubble bot">You're welcome! Is there anything else I can help you with?</div>
+      <div class="chat-bubble user">No, that's all.</div>
+    </div>
+    <div class="invite-card">
+      <div class="invite-text">Before you go — would you take a moment to share feedback on this AI session? It only takes 30 seconds.</div>
+      <div class="invite-actions">
+        <button class="invite-btn-skip" onclick="closeDemo()">Skip</button>
+        <button class="invite-btn-go" onclick="renderScreen('resolved')">Rate Experience →</button>
+      </div>
+    </div>
+  `;
+}
+
+function resolvedHTML() {
+  return `
+    <div class="screen-nav">
+      <div class="screen-nav-back" onclick="renderScreen('chat')">&#8249;</div>
+      <div class="screen-nav-title">Feedback</div>
+    </div>
+    <div class="screen-body">
+      <div class="screen-title">Was your issue resolved today?</div>
+      <div class="screen-sub">This helps us route your feedback and improve AI accuracy</div>
+      <div class="resolve-opt">
+        <button class="resolve-btn" onclick="state.resolved='yes'; renderScreen('csat')">
+          <div class="resolve-icon" style="background:rgba(46,160,67,.15)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>
+          <div>
+            <div class="resolve-label">Yes, fully resolved</div>
+            <div class="resolve-sub">My issue was completely handled</div>
+          </div>
+        </button>
+        <button class="resolve-btn" onclick="state.resolved='partial'; renderScreen('csat')">
+          <div class="resolve-icon" style="background:rgba(210,153,34,.15)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D29922" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill="#D29922" stroke="none"/></svg>
+          </div>
+          <div>
+            <div class="resolve-label">Partially resolved</div>
+            <div class="resolve-sub">Some parts were handled, some weren't</div>
+          </div>
+        </button>
+        <button class="resolve-btn" onclick="state.resolved='no'; renderScreen('transfer')">
+          <div class="resolve-icon" style="background:rgba(248,81,73,.12)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F85149" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </div>
+          <div>
+            <div class="resolve-label">No, still unresolved</div>
+            <div class="resolve-sub">My issue was not addressed</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function transferHTML() {
+  return `
+    <div class="screen-nav">
+      <div class="screen-nav-back" onclick="renderScreen('resolved')">&#8249;</div>
+      <div class="screen-nav-title">Support Options</div>
+    </div>
+    <div class="transfer-center">
+      <div style="width:60px;height:60px;background:rgba(240,136,62,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F0883E" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 9.81a19.79 19.79 0 0 1-3.07-8.68A2 2 0 0 1 2 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L6.09 7.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 14.92z"/></svg>
+      </div>
+      <div class="screen-title" style="font-size:17px;">We're sorry to hear that</div>
+      <div class="screen-sub" style="margin-bottom:0;">Would you like to connect with a human agent for further assistance?</div>
+      <button class="action-btn" onclick="renderScreen('transfer_queue')">Connect with Human Agent</button>
+      <button class="action-btn-sec" onclick="renderScreen('done_skip')">No thanks, I'll try later</button>
+    </div>
+  `;
+}
+
+function csatHTML() {
+  const facesHTML = FACES.map((f, i) => `
+    <div class="face-col">
+      <button class="face-btn" id="face${i+1}" onclick="selectFace(${i+1})">${f.svg}</button>
+      <span class="face-label" style="color:${f.color}">${f.label}</span>
+    </div>
+  `).join('');
+
+  return `
+    <div class="screen-nav">
+      <div class="screen-nav-back" onclick="renderScreen('resolved')">&#8249;</div>
+      <div class="screen-nav-title">Rating</div>
+    </div>
+    <div class="screen-body" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:28px;">
+      <div class="screen-title">How satisfied are you with<br>the AI Assistant?</div>
+      <div class="screen-sub">Select the face that best describes your experience</div>
+      <div class="face-row">${facesHTML}</div>
+      <div class="csat-selected-label" id="csatLabel">&nbsp;</div>
+      <button class="action-btn" id="csatNext" disabled onclick="renderScreen('reasons')" style="margin-top:0;">Continue</button>
+    </div>
+  `;
+}
+
+function reasonsHTML() {
+  state.reasons = [];
+  const chipsHTML = REASONS.map(r => `
+    <button class="reason-chip" id="chip_${r.id}" onclick="toggleReason('${r.id}', this)">
+      <div class="reason-check" id="check_${r.id}">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg>
+      </div>
+      <span style="display:flex;align-items:center;gap:6px;">${r.icon} ${r.label}</span>
+    </button>
+  `).join('');
+
+  return `
+    <div class="screen-nav">
+      <div class="screen-nav-back" onclick="renderScreen('csat')">&#8249;</div>
+      <div class="screen-nav-title">Feedback Details</div>
+    </div>
+    <div class="screen-body">
+      <div class="screen-title">What affected your experience?</div>
+      <div class="screen-sub" style="margin-bottom:16px;">Select all that apply</div>
+      <div class="reason-chips">${chipsHTML}</div>
+      <textarea class="survey-textarea" id="commentBox" placeholder="Any additional comments? (optional)" rows="3"></textarea>
+      <button class="action-btn" id="reasonsSubmit" disabled onclick="renderScreen(state.reasonTarget||'done_thanks')">Submit Feedback</button>
+      <button class="action-btn-sec" onclick="renderScreen(state.reasonTarget||'done_thanks')">Skip &amp; Submit</button>
+    </div>
+  `;
+}
+
+function doneHTML(type) {
+  if (type === 'transfer') {
+    return `
+      <div class="screen-nav">
+        <div class="screen-nav-back" style="opacity:0;pointer-events:none;">&#8249;</div>
+        <div class="screen-nav-title">Connecting…</div>
+      </div>
+      <div class="done-center">
+        <div class="done-icon" style="background:rgba(27,110,253,.12);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3B8AFF" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="done-title">Connecting you now</div>
+        <div class="done-sub">A human agent will join the chat shortly. Thank you for your patience.</div>
+        <button class="action-btn" style="margin-top:24px;" onclick="closeDemo()">Done</button>
+      </div>
+    `;
+  }
+  if (type === 'skip') {
+    return `
+      <div class="screen-nav">
+        <div class="screen-nav-back" style="opacity:0;pointer-events:none;">&#8249;</div>
+        <div class="screen-nav-title">Feedback</div>
+      </div>
+      <div class="done-center">
+        <div class="done-icon" style="background:rgba(139,148,158,.1);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8B949E" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+        </div>
+        <div class="done-title">Got it</div>
+        <div class="done-sub">We're sorry we couldn't resolve your issue. Feel free to contact us again anytime.</div>
+        <button class="action-btn" style="margin-top:24px;" onclick="closeDemo()">Close</button>
+      </div>
+    `;
+  }
+  // default: thank you after CSAT + reasons
+  return `
+    <div class="screen-nav">
+      <div class="screen-nav-back" style="opacity:0;pointer-events:none;">&#8249;</div>
+      <div class="screen-nav-title">Thank You!</div>
+    </div>
+    <div class="done-center">
+      <div class="done-icon" style="background:rgba(46,160,67,.12);">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+      </div>
+      <div class="done-title">Thanks for your feedback!</div>
+      <div class="done-sub">Your input directly helps us improve the Trip.com AI Assistant for millions of travellers.</div>
+      <button class="action-btn" style="margin-top:24px;" onclick="closeDemo()">Done</button>
+    </div>
+  `;
+}
+
+// ── Transfer queue: fully inline CSAT + human session in chat flow ────────
+function transferQueueHTML() {
+  const facesHTML = FACES.map((f, i) => `
+    <div class="face-col">
+      <button class="face-btn" id="qface${i+1}" onclick="selectQueueFace(${i+1})">${f.svg}</button>
+      <span class="face-label" style="color:${f.color};font-size:9px;">${f.label}</span>
+    </div>
+  `).join('');
+  return `
+    <div class="screen-nav" style="padding:0 12px;">
+      <div class="screen-nav-back" onclick="renderScreen('transfer_chat')" style="margin-right:4px;">&#8249;</div>
+      <div style="display:flex;flex-direction:column;flex:1;">
+        <span style="font-size:14px;font-weight:600;color:var(--text);">Trip.com Support</span>
+        <span style="font-size:10px;color:#4ADE80;">Transferring…</span>
+      </div>
+    </div>
+    <div class="chat-area" id="queueChat">
+      <div class="chat-bubble bot">Transferring you to the personal service agent…</div>
+      <div class="queue-system-msg">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+        You are currently <strong style="color:var(--text);margin:0 2px;">#1</strong> in the queue
+        <button class="queue-exit-inline" onclick="closeDemo()">Exit</button>
+      </div>
+      <div class="chat-bubble bot">While you wait, please share a quick rating of today's AI session — it only takes a few seconds.</div>
+      <div class="chat-csat-widget" id="qCsatWidget">
+        <div class="face-row" style="justify-content:flex-start;gap:6px;margin-bottom:6px;">${facesHTML}</div>
+        <div class="q-face-label" id="qFaceLabel">Tap a face to rate</div>
+      </div>
+    </div>
+  `;
+}
+
+function selectQueueFace(score) {
+  state.csatScore = score;
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.getElementById('qface' + i);
+    if (btn) btn.classList.toggle('selected', i === score);
+  }
+  const label = document.getElementById('qFaceLabel');
+  if (label) { label.textContent = FACES[score-1].desc; label.style.color = FACES[score-1].color; }
+  // Append factor question after brief delay
+  setTimeout(appendQueueFactors, 300);
+}
+
+function appendQueueFactors() {
+  const chat = document.getElementById('queueChat');
+  if (!chat || document.getElementById('qFactorsWidget')) return;
+  // Bot asks for factors — as a regular chat bubble
+  const botBubble = document.createElement('div');
+  botBubble.className = 'chat-bubble bot';
+  botBubble.textContent = 'What factor most affected your experience?';
+  chat.appendChild(botBubble);
+  // Factor chips — styled as a chat element, not a full-width overlay
+  const widget = document.createElement('div');
+  widget.className = 'chat-factors-widget';
+  widget.id = 'qFactorsWidget';
+  widget.innerHTML = `
+    <div class="inline-chips-row">
+      ${REASONS.map(r => `<button class="inline-chip" onclick="toggleQueueReason('${r.id}',this)">${r.icon}&nbsp;${r.label}</button>`).join('')}
+    </div>
+    <button class="inline-submit" id="qFactorSubmit" onclick="submitQueueFeedback()" disabled>Submit</button>
+  `;
+  chat.appendChild(widget);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function toggleQueueReason(id, btn) {
+  btn.classList.toggle('chip-sel');
+  const idx = state.reasons.indexOf(id);
+  if (idx > -1) state.reasons.splice(idx, 1); else state.reasons.push(id);
+  const s = document.getElementById('qFactorSubmit');
+  if (s) s.disabled = state.reasons.length === 0;
+}
+
+function submitQueueFeedback() {
+  const chat = document.getElementById('queueChat');
+  // Lock the widgets
+  const widget = document.getElementById('qFactorsWidget');
+  if (widget) { widget.querySelectorAll('button').forEach(b => b.disabled = true); widget.style.opacity = '.45'; }
+  const csatWidget = document.getElementById('qCsatWidget');
+  if (csatWidget) { csatWidget.querySelectorAll('button').forEach(b => b.disabled = true); }
+
+  // Bot acknowledgment — still just a chat bubble
+  const thanks = document.createElement('div');
+  thanks.className = 'chat-bubble bot';
+  thanks.textContent = 'Thank you for your feedback! Connecting you to an agent now…';
+  chat.appendChild(thanks);
+
+  // System message: agent joined
+  setTimeout(() => {
+    const sys = document.createElement('div');
+    sys.className = 'session-system-msg';
+    sys.innerHTML = '── <span style="color:#4ADE80;font-weight:600;">Jessica (Human Agent)</span> has joined ──';
+    chat.appendChild(sys);
+    chat.scrollTop = chat.scrollHeight;
+    // Stream human session messages
+    const msgs = [
+      { role:'agent', text:'Hi! I\'m Jessica from Trip.com Customer Service. I can see your refund inquiry — let me pull up your account right away.' },
+      { role:'user',  text:'Thank you! It\'s been 14 days and I still haven\'t received anything.' },
+      { role:'agent', text:'I can see the refund was processed on our end on Day 2, but your bank is showing a hold. I\'ve escalated this with our payments team — funds should clear within 2–3 business days.' },
+      { role:'user',  text:'That\'s a relief, I was getting worried. Thank you!' },
+      { role:'agent', text:'Completely understandable! I\'ve also sent a confirmation to your registered email with a reference number. Is there anything else I can help you with today?' },
+      { role:'user',  text:'No, that\'s everything. You\'ve been very helpful!' },
+      { role:'agent', text:'Glad I could help. Thank you for choosing Trip.com, and have a wonderful day!' },
+    ];
+    msgs.forEach((msg, i) => {
+      setTimeout(() => {
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble ' + (msg.role === 'agent' ? 'bot' : 'user');
+        if (msg.role === 'agent') bubble.innerHTML = `<span class="agent-label">Jessica · Human Agent</span>${msg.text}`;
+        else bubble.textContent = msg.text;
+        chat.appendChild(bubble);
+        // After last message — add end row
+        if (i === msgs.length - 1) {
+          setTimeout(() => {
+            const endRow = document.createElement('div');
+            endRow.className = 'session-end-row';
+            endRow.innerHTML = `<button onclick="closeDemo()" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:8px 20px;font-size:12px;font-weight:600;color:var(--text-secondary);cursor:pointer;font-family:Inter,sans-serif;">Session ended &nbsp;·&nbsp; Close Demo</button>`;
+            chat.appendChild(endRow);
+            chat.scrollTop = chat.scrollHeight;
+          }, 500);
+        }
+        chat.scrollTop = chat.scrollHeight;
+      }, 500 + i * 550);
+    });
+  }, 800);
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function renderScreen(name) {
+  const ps = document.getElementById('phoneScreen');
+  switch (name) {
+    case 'path_select':         ps.innerHTML = pathSelectHTML();          break;
+    case 'chat':                ps.innerHTML = chatHTML();                 break;
+    case 'resolved':            ps.innerHTML = resolvedHTML();             break;
+    case 'transfer':            ps.innerHTML = transferHTML();             break;
+    case 'csat':                ps.innerHTML = csatHTML();                 break;
+    case 'reasons':             ps.innerHTML = reasonsHTML();              break;
+    case 'done_thanks':         ps.innerHTML = doneHTML('thanks');         break;
+    case 'done_skip':           ps.innerHTML = doneHTML('skip');           break;
+    case 'transfer_chat':       ps.innerHTML = transferChatHTML();         break;
+    case 'transfer_queue':      ps.innerHTML = transferQueueHTML();        break;
+    default:                    ps.innerHTML = pathSelectHTML();
+  }
+}
+
+// ── CSAT face selection ───────────────────────────────────────────────────
+function selectFace(score) {
+  state.csatScore = score;
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.getElementById('face' + i);
+    if (btn) btn.classList.toggle('selected', i === score);
+  }
+  const label = document.getElementById('csatLabel');
+  if (label) label.textContent = FACES[score - 1].desc;
+  const next = document.getElementById('csatNext');
+  if (next) next.disabled = false;
+}
+
+// ── Reasons chip toggle ───────────────────────────────────────────────────
+function toggleReason(id, btn) {
+  btn.classList.toggle('selected');
+  const idx = state.reasons.indexOf(id);
+  if (idx > -1) {
+    state.reasons.splice(idx, 1);
+  } else {
+    state.reasons.push(id);
+  }
+  const submit = document.getElementById('reasonsSubmit');
+  if (submit) submit.disabled = state.reasons.length === 0;
+}
+
+// ── Overlay open / close ──────────────────────────────────────────────────
+function openDemo() {
+  state.resolved = null;
+  state.csatScore = null;
+  state.reasons = [];
+  state.reasonTarget = 'done_thanks';
+  document.getElementById('demoOverlay').classList.add('open');
+  renderScreen('path_select');
+}
+
+function closeDemo() {
+  document.getElementById('demoOverlay').classList.remove('open');
+}
+
+// Keyboard close
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDemo(); });
+</script>
+</body>
+</html>
