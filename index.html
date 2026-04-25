@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elena Lu · UX Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset & Base ────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;
+  --surface:#161B22;
+  --surface-hover:#1C2330;
+  --border:rgba(255,255,255,.08);
+  --border-hover:rgba(27,110,253,.35);
+  --accent:#1B6EFD;
+  --accent-dim:rgba(27,110,253,.12);
+  --text:#E6EDF3;
+  --text-muted:rgba(230,237,243,.45);
+  --text-faint:rgba(230,237,243,.28);
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px) 0 0/48px 48px;
+  pointer-events:none;
+  z-index:0;
+}
+.container{
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 40px;
+  position:relative;
+  z-index:1;
+}
+.section-label{
+  display:inline-block;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:var(--text-faint);
+  margin-bottom:16px;
+}
+
+/* ─── Navigation ──────────────────────────────────────────── */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 40px;
+  background:rgba(13,17,23,.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  z-index:100;
+}
+.nav-logo{
+  font-family:var(--serif);
+  font-size:18px;
+  color:var(--text);
+  text-decoration:none;
+}
+.nav-links{
+  display:flex;
+  gap:32px;
+  list-style:none;
+}
+.nav-links a{
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-muted);
+  text-decoration:none;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--text)}
+
+/* ─── Hero ────────────────────────────────────────────────── */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  padding:80px 40px 60px;
+}
+.hero-glow{
+  position:absolute;
+  width:700px;height:700px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(27,110,253,.13) 0%,transparent 70%);
+  top:50%;left:50%;
+  transform:translate(-50%,-55%);
+  pointer-events:none;
+}
+.hero-inner{
+  position:relative;
+  z-index:1;
+  max-width:720px;
+}
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  font-size:12px;
+  font-weight:500;
+  color:var(--accent);
+  background:var(--accent-dim);
+  border:1px solid rgba(27,110,253,.25);
+  border-radius:100px;
+  padding:5px 14px;
+  margin-bottom:28px;
+}
+.hero-badge::before{
+  content:'';
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--accent);
+  animation:pulse 2s ease infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero-name{
+  font-family:var(--serif);
+  font-size:clamp(52px,7vw,88px);
+  line-height:1.08;
+  letter-spacing:-.5px;
+  color:var(--text);
+  margin-bottom:6px;
+}
+.hero-title{
+  font-size:18px;
+  font-weight:400;
+  color:var(--text-muted);
+  margin-bottom:24px;
+  letter-spacing:.2px;
+}
+.hero-title strong{color:var(--text);font-weight:600}
+.hero-desc{
+  font-size:16px;
+  line-height:1.75;
+  color:var(--text-muted);
+  max-width:520px;
+  margin:0 auto 40px;
+}
+.hero-ctas{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.btn-primary{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:var(--accent);
+  color:#fff;
+  font-size:14px;
+  font-weight:600;
+  padding:12px 24px;
+  border-radius:10px;
+  text-decoration:none;
+  transition:background .2s,transform .2s;
+}
+.btn-primary:hover{background:#3080ff;transform:translateY(-1px)}
+.btn-ghost{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:transparent;
+  color:var(--text-muted);
+  font-size:14px;
+  font-weight:500;
+  padding:12px 24px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  text-decoration:none;
+  transition:color .2s,border-color .2s,transform .2s;
+}
+.btn-ghost:hover{color:var(--text);border-color:rgba(255,255,255,.2);transform:translateY(-1px)}
+.hero-scroll-hint{
+  position:absolute;
+  bottom:36px;left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  color:var(--text-faint);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+}
+.scroll-line{
+  width:1px;height:36px;
+  background:linear-gradient(to bottom,var(--accent),transparent);
+  animation:scrollLine 1.8s ease-in-out infinite;
+}
+@keyframes scrollLine{0%{opacity:0;transform:scaleY(0);transform-origin:top}50%{opacity:1}100%{opacity:0;transform:scaleY(1);transform-origin:top}}
+
+/* ─── About ───────────────────────────────────────────────── */
+.about{
+  padding:100px 0;
+  border-top:1px solid var(--border);
+}
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:64px;
+  align-items:start;
+}
+.about-left h2{
+  font-family:var(--serif);
+  font-size:clamp(28px,3vw,40px);
+  line-height:1.25;
+  margin-bottom:20px;
+  color:var(--text);
+}
+.about-left h2 em{
+  font-style:italic;
+  color:var(--accent);
+}
+.about-left p{
+  font-size:15px;
+  color:var(--text-muted);
+  line-height:1.8;
+  margin-bottom:14px;
+}
+.skills-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:24px;
+}
+.skill-tag{
+  font-size:12px;
+  font-weight:500;
+  color:var(--text-muted);
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:4px 10px;
+}
+.skill-tag.skill-design{
+  color:#58A6FF;
+  background:rgba(88,166,255,.08);
+  border-color:rgba(88,166,255,.22);
+}
+.skill-tag.skill-research{
+  color:#3FB950;
+  background:rgba(63,185,80,.08);
+  border-color:rgba(63,185,80,.22);
+}
+.skill-tag.skill-data{
+  color:#A371F7;
+  background:rgba(163,113,247,.08);
+  border-color:rgba(163,113,247,.22);
+}
+.skill-tag.skill-tool{
+  color:#F0883E;
+  background:rgba(240,136,62,.08);
+  border-color:rgba(240,136,62,.22);
+}
+
+/* Trip.com experience card */
+.exp-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+}
+.exp-header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:16px;
+}
+.exp-logo{
+  background:#fff;
+  font-size:13px;
+  font-weight:800;
+  padding:6px 10px;
+  border-radius:8px;
+  letter-spacing:-.3px;
+  flex-shrink:0;
+  white-space:nowrap;
+}
+.exp-logo .trip-t{color:#1B6EFD}
+.exp-logo .trip-dot{color:#FF7D00}
+.exp-logo .trip-com{color:#1B6EFD}
+.exp-role{
+  font-size:15px;
+  font-weight:600;
+  color:var(--text);
+}
+.exp-period{
+  font-size:12px;
+  color:var(--text-faint);
+  margin-top:2px;
+}
+.exp-team{
+  font-size:12px;
+  color:var(--text-muted);
+  margin-bottom:16px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.exp-bullets{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.exp-bullets li{
+  font-size:13.5px;
+  color:var(--text-muted);
+  line-height:1.65;
+  padding-left:16px;
+  position:relative;
+}
+.exp-bullets li::before{
+  content:'';
+  position:absolute;
+  left:0;top:9px;
+  width:4px;height:4px;
+  border-radius:50%;
+  background:var(--accent);
+}
+
+/* ─── More Information (collapsible) ─────────────────────── */
+.more-info{
+  border-top:1px solid var(--border);
+}
+.more-details{
+  padding:0;
+}
+.more-summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  list-style:none;
+  padding:32px 40px;
+  max-width:1080px;
+  margin:0 auto;
+  user-select:none;
+}
+.more-summary::-webkit-details-marker{display:none}
+.more-summary .section-label{margin-bottom:0;cursor:pointer}
+.more-toggle-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  font-weight:500;
+  color:var(--text-faint);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:5px 14px;
+  transition:color .2s,border-color .2s;
+}
+.more-summary:hover .more-toggle-btn{color:var(--text-muted);border-color:rgba(255,255,255,.18)}
+.more-toggle-icon{
+  display:inline-block;
+  transition:transform .3s;
+  font-style:normal;
+}
+.more-details[open] .more-toggle-icon{transform:rotate(180deg)}
+.more-content{
+  padding:0 40px 80px;
+  max-width:1080px;
+  margin:0 auto;
+}
+.more-content-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:48px;
+  padding-top:8px;
+}
+.more-section-title{
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text-faint);
+  margin-bottom:20px;
+}
+.prev-exp-item{
+  border-left:2px solid var(--border);
+  padding-left:16px;
+  margin-bottom:24px;
+}
+.prev-exp-item:last-child{margin-bottom:0}
+.prev-exp-header{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:3px;
+}
+.prev-exp-role{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+}
+.prev-exp-period{
+  font-size:11px;
+  color:var(--text-faint);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.prev-exp-company{
+  font-size:12px;
+  color:var(--text-muted);
+  margin-bottom:6px;
+}
+.prev-exp-desc{
+  font-size:13px;
+  color:var(--text-faint);
+  line-height:1.6;
+}
+.edu-items{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin-bottom:32px;
+}
+.edu-item{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.edu-degree{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+}
+.edu-school{
+  font-size:13px;
+  color:var(--text-muted);
+}
+.edu-period{
+  font-size:11px;
+  color:var(--text-faint);
+}
+.lang-items{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.lang-tag{
+  font-size:12px;
+  font-weight:500;
+  color:var(--text-muted);
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:4px 12px;
+}
+
+/* ─── Work / Projects ─────────────────────────────────────── */
+.work{
+  padding:100px 0;
+  border-top:1px solid var(--border);
+}
+.work-header{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  margin-bottom:48px;
+}
+.work-header h2{
+  font-family:var(--serif);
+  font-size:clamp(28px,3vw,40px);
+  color:var(--text);
+}
+.work-count{
+  font-size:13px;
+  color:var(--text-faint);
+  margin-bottom:4px;
+}
+.projects-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+.project-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:32px;
+  text-decoration:none;
+  color:inherit;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  transition:border-color .25s,background .25s,transform .25s;
+  position:relative;
+  overflow:hidden;
+  grid-column:span 2;
+}
+.project-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:0;
+  transition:opacity .3s;
+}
+.project-card:hover{
+  border-color:var(--border-hover);
+  background:var(--surface-hover);
+  transform:translateY(-3px);
+}
+.project-card:hover::before{opacity:1}
+.project-card:nth-child(5){grid-column:1/3;}
+.card-num{
+  font-size:11px;
+  font-weight:700;
+  color:var(--accent);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:12px;
+  opacity:.7;
+}
+.card-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:20px;
+}
+.card-tag{
+  font-size:11px;
+  font-weight:500;
+  color:var(--text-faint);
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:5px;
+  padding:3px 9px;
+}
+.card-title{
+  font-family:var(--serif);
+  font-size:22px;
+  line-height:1.2;
+  color:var(--text);
+  margin-bottom:10px;
+}
+.card-desc{
+  font-size:14px;
+  line-height:1.7;
+  color:var(--text-muted);
+  margin-bottom:24px;
+  flex:1;
+}
+.card-stats{
+  display:flex;
+  gap:0;
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:24px;
+}
+.card-stat{
+  flex:1;
+  padding:10px 14px;
+  text-align:center;
+  border-right:1px solid var(--border);
+}
+.card-stat:last-child{border-right:none}
+.stat-val{
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+  display:block;
+  margin-bottom:2px;
+}
+.stat-label{
+  font-size:10px;
+  color:var(--text-faint);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+.card-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:13px;
+  font-weight:600;
+  color:var(--accent);
+  text-decoration:none;
+  transition:gap .2s;
+}
+.project-card:hover .card-cta{gap:10px}
+.card-arrow{
+  font-size:16px;
+  line-height:1;
+  transition:transform .2s;
+}
+.project-card:hover .card-arrow{transform:translateX(2px)}
+
+
+/* ─── Footer ──────────────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);
+  padding:48px 40px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:relative;
+  z-index:1;
+}
+.footer-left{
+  font-family:var(--serif);
+  font-size:20px;
+  color:var(--text);
+}
+.footer-right{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+}
+.footer-email{
+  font-size:14px;
+  color:var(--text-muted);
+  text-decoration:none;
+  transition:color .2s;
+}
+.footer-email:hover{color:var(--accent)}
+.footer-copy{
+  font-size:12px;
+  color:var(--text-faint);
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media(max-width:900px){
+  .about-grid{grid-template-columns:1fr;gap:40px}
+  .projects-grid{grid-template-columns:1fr}
+  .project-card{grid-column:span 1!important}
+  .work-header{flex-direction:column;align-items:flex-start;gap:4px}
+  nav{padding:0 20px}
+  .container{padding:0 20px}
+  .more-summary{padding:24px 20px}
+  .more-content{padding:0 20px 60px}
+  .more-content-grid{grid-template-columns:1fr;gap:32px}
+  footer{flex-direction:column;gap:20px;align-items:flex-start;padding:40px 20px}
+  .footer-right{align-items:flex-start}
+}
+@media(max-width:600px){
+  .hero-name{font-size:48px}
+  .projects-grid{gap:14px}
+  .project-card{padding:24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Elena Lu</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="mailto:jingyilu22@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">UX Designer · Trip.com IBU</div>
+    <h1 class="hero-name">Elena Lu</h1>
+    <p class="hero-title"><strong>Product &amp; Interaction Design</strong> · Research-Driven</p>
+    <p class="hero-desc">
+      I turn user behavior data and competitive analysis into clear, intuitive product experiences —
+      from booking flows and AI assistants to feedback systems and fare card redesigns.
+    </p>
+    <div class="hero-ctas">
+      <a href="#work" class="btn-primary">View Case Studies <span>↓</span></a>
+      <a href="mailto:jingyilu22@gmail.com" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-left">
+        <span class="section-label">About</span>
+        <h2>Research-informed design,<br><em>built for real users</em></h2>
+        <p>
+          I'm a UX Designer at Trip.com's International Business Unit, working across the full design process —
+          competitive benchmarking, interaction design, usability testing, and shipping improvements that measurably reduce user friction.
+        </p>
+        <p>
+          My focus is on international travel products: flights, hotels, and AI-powered booking experiences.
+          I care about the moments where users get stuck, and designing past them.
+        </p>
+        <div class="skills-row">
+          <span class="skill-tag skill-design">Interaction Design</span>
+          <span class="skill-tag skill-research">Competitive Research</span>
+          <span class="skill-tag skill-research">Usability Testing</span>
+          <span class="skill-tag skill-design">Flow Design</span>
+          <span class="skill-tag skill-data">Data Analysis</span>
+          <span class="skill-tag skill-tool">Figma</span>
+          <span class="skill-tag skill-design">Prototyping</span>
+        </div>
+      </div>
+      <div class="about-right">
+        <div class="exp-card">
+          <div class="exp-header">
+            <div class="exp-logo">
+              <span class="trip-t">T</span><span class="trip-com">rip</span><span class="trip-dot">.</span><span class="trip-com">com</span>
+            </div>
+            <div class="exp-meta">
+              <div class="exp-role">UX Designer</div>
+              <div class="exp-period">2025 – Present</div>
+            </div>
+          </div>
+          <div class="exp-team">International Business Unit · Customer Service Center</div>
+          <ul class="exp-bullets">
+            <li>Led end-to-end UX design for international flight and hotel booking experiences across multiple markets</li>
+            <li>Conducted competitive benchmarking across major platforms to surface design gaps and prioritize improvements</li>
+            <li>Redesigned high-friction moments including fare card clarity, passenger name entry, and AI chatbot feedback — each grounded in ticket data and user behavioral patterns</li>
+            <li>Collaborated cross-functionally with PM, engineering, and localization teams to ship iterative interaction improvements</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- More Information (collapsible) -->
+<section class="more-info" id="more">
+  <details class="more-details">
+    <summary class="more-summary">
+      <span class="section-label">More Information</span>
+      <span class="more-toggle-btn">
+        <em class="more-toggle-icon">↓</em>
+        Expand
+      </span>
+    </summary>
+    <div class="more-content">
+      <div class="more-content-grid">
+
+        <!-- Left: Previous Experience -->
+        <div>
+          <div class="more-section-title">Previous Experience</div>
+
+          <div class="prev-exp-item">
+            <div class="prev-exp-header">
+              <span class="prev-exp-role">UX Evaluation Engineer</span>
+              <span class="prev-exp-period">Nov 2022 – Oct 2024</span>
+            </div>
+            <div class="prev-exp-company">Huawei Technologies · Shanghai (Secondment)</div>
+            <p class="prev-exp-desc">Specialized in intelligent driving product UX. Developed quantifiable experience metrics systems, conducted NPS and ADAS satisfaction research, and led competitive benchmarking for HMI interaction improvements.</p>
+          </div>
+
+          <div class="prev-exp-item">
+            <div class="prev-exp-header">
+              <span class="prev-exp-role">User Researcher</span>
+              <span class="prev-exp-period">Mar – Sep 2022</span>
+            </div>
+            <div class="prev-exp-company">Shanghai HuiChen Resources Consulting</div>
+            <p class="prev-exp-desc">Automotive industry user research — focus groups, home visits, and in-depth interviews for automotive clients.</p>
+          </div>
+
+          <div class="prev-exp-item">
+            <div class="prev-exp-header">
+              <span class="prev-exp-role">Research Analyst</span>
+              <span class="prev-exp-period">Dec 2020 – Dec 2021</span>
+            </div>
+            <div class="prev-exp-company">Shanghai Technology Exchange</div>
+            <p class="prev-exp-desc">Designed technology transfer frameworks and conducted market research supporting tech commercialization strategy.</p>
+          </div>
+        </div>
+
+        <!-- Right: Education + Languages -->
+        <div>
+          <div class="more-section-title">Education</div>
+          <div class="edu-items">
+            <div class="edu-item">
+              <span class="edu-degree">MA · Sociology</span>
+              <span class="edu-school">University of Chicago</span>
+              <span class="edu-period">2017 – 2018</span>
+            </div>
+            <div class="edu-item">
+              <span class="edu-degree">MA · Liberal Studies</span>
+              <span class="edu-school">Duke University</span>
+              <span class="edu-period">2015 – 2017</span>
+            </div>
+            <div class="edu-item">
+              <span class="edu-degree">BA · Italian &amp; English</span>
+              <span class="edu-school">Nanjing Normal University</span>
+              <span class="edu-period">2010 – 2015</span>
+            </div>
+          </div>
+
+          <div class="more-section-title">Languages</div>
+          <div class="lang-items">
+            <span class="lang-tag">English — Professional</span>
+            <span class="lang-tag">Mandarin — Native</span>
+            <span class="lang-tag">Italian — C1</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- Work -->
+<section class="work" id="work">
+  <div class="container">
+    <div class="work-header">
+      <div>
+        <span class="section-label">Selected Work</span>
+        <h2>5 UX Case Studies</h2>
+      </div>
+      <span class="work-count">Interactive prototypes ↓</span>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- 1. TripGenie AI Planner -->
+      <a class="project-card" href="04_TripGenie_AI_Planner/TripGenie_AI_Redesign_Portfolio.html" target="_blank">
+        <div class="card-num">01</div>
+        <div class="card-tags">
+          <span class="card-tag">Competitor Research</span>
+          <span class="card-tag">AI UX</span>
+          <span class="card-tag">Interaction Design</span>
+        </div>
+        <h3 class="card-title">TripGenie AI Planner<br>Redesign</h3>
+        <p class="card-desc">
+          Benchmarked major AI trip-planning platforms to identify critical UX gaps.
+          Redesigned the planning, hotel selection, and service flows with persona-driven itinerary cards,
+          contextual AI responses, and a connected 3-screen journey.
+        </p>
+        <div class="card-stats">
+          <div class="card-stat">
+            <span class="stat-val">10</span>
+            <span class="stat-label">Platforms Studied</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">5</span>
+            <span class="stat-label">UX Gaps Found</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">3</span>
+            <span class="stat-label">Demo Screens</span>
+          </div>
+        </div>
+        <span class="card-cta">View Case Study <span class="card-arrow">→</span></span>
+      </a>
+
+      <!-- 2. Flight Fare Card -->
+      <a class="project-card" href="06_Flight%20Fare%20Card%20Competitive%20Analysis/Flight_Fare_Card_Redesign_UX_Portfolio.html" target="_blank">
+        <div class="card-num">02</div>
+        <div class="card-tags">
+          <span class="card-tag">Competitor Analysis</span>
+          <span class="card-tag">Visual Design</span>
+          <span class="card-tag">Conversion UX</span>
+        </div>
+        <h3 class="card-title">Flight Fare Card<br>Redesign</h3>
+        <p class="card-desc">
+          With most users abandoning at the fare selection step, this project benchmarked
+          major platforms and explored distinct card layout variants — balancing information
+          density, scannability, and decision clarity.
+        </p>
+        <div class="card-stats">
+          <div class="card-stat">
+            <span class="stat-val">85%+</span>
+            <span class="stat-label">Cart Abandon</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">4</span>
+            <span class="stat-label">Competitors</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">3</span>
+            <span class="stat-label">Variants</span>
+          </div>
+        </div>
+        <span class="card-cta">View Case Study <span class="card-arrow">→</span></span>
+      </a>
+
+      <!-- 3. MY Name Entry -->
+      <a class="project-card" href="05_Malaysia_Flight_Name/MY_Name_Entry_Optimization_UX_Portfolio.html" target="_blank">
+        <div class="card-num">03</div>
+        <div class="card-tags">
+          <span class="card-tag">Data Analysis</span>
+          <span class="card-tag">Form UX</span>
+          <span class="card-tag">Localization</span>
+        </div>
+        <h3 class="card-title">Passenger Name Entry<br>Optimization (MY)</h3>
+        <p class="card-desc">
+          Malaysia ranked among the top markets globally for flight name amendment tickets.
+          Analyzed thousands of support cases to trace the root cause to form design failures,
+          then redesigned the entry flow with real-time validation and localization support.
+        </p>
+        <div class="card-stats">
+          <div class="card-stat">
+            <span class="stat-val">7,079</span>
+            <span class="stat-label">Tickets Analyzed</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">#3</span>
+            <span class="stat-label">Globally (MY)</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">3</span>
+            <span class="stat-label">Demo Screens</span>
+          </div>
+        </div>
+        <span class="card-cta">View Case Study <span class="card-arrow">→</span></span>
+      </a>
+
+      <!-- 4. AI Chatbot Feedback -->
+      <a class="project-card" href="07_AI_Chatbot_Feedback/chatbot-feedback-demo.html" target="_blank">
+        <div class="card-num">04</div>
+        <div class="card-tags">
+          <span class="card-tag">Benchmark Study</span>
+          <span class="card-tag">Feedback UX</span>
+          <span class="card-tag">AI Systems</span>
+        </div>
+        <h3 class="card-title">AI Chatbot Feedback<br>Mechanism Redesign</h3>
+        <p class="card-desc">
+          With fewer than 1% of users leaving AI conversation feedback, the signal pipeline
+          was effectively broken. Benchmarked major platforms and redesigned a dual-path
+          feedback system that surfaces actionable quality signals at scale.
+        </p>
+        <div class="card-stats">
+          <div class="card-stat">
+            <span class="stat-val">11</span>
+            <span class="stat-label">Platforms Studied</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">&lt;1%</span>
+            <span class="stat-label">Eval Rate</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">2-Path</span>
+            <span class="stat-label">Solution</span>
+          </div>
+        </div>
+        <span class="card-cta">View Case Study <span class="card-arrow">→</span></span>
+      </a>
+
+      <!-- 5. HK Concert Ticketing -->
+      <a class="project-card" href="09_HK_Concert_Ticketing/HK_Concert_Ticketing.html" target="_blank">
+        <div class="card-num">05</div>
+        <div class="card-tags">
+          <span class="card-tag">Usability Testing</span>
+          <span class="card-tag">Flow Design</span>
+          <span class="card-tag">Purchase UX</span>
+        </div>
+        <h3 class="card-title">HK Concert Ticketing<br>UX Optimization</h3>
+        <p class="card-desc">
+          Tested major Hong Kong concert ticketing platforms across multiple live events.
+          Identified systemic UX failures — including opaque policies, guest purchase risks,
+          and missing confirmation checkpoints — then redesigned a complete 5-step purchase journey.
+        </p>
+        <div class="card-stats">
+          <div class="card-stat">
+            <span class="stat-val">4</span>
+            <span class="stat-label">Platforms Tested</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">5</span>
+            <span class="stat-label">Core Issues Found</span>
+          </div>
+          <div class="card-stat">
+            <span class="stat-val">5-Step</span>
+            <span class="stat-label">Connected Flow</span>
+          </div>
+        </div>
+        <span class="card-cta">View Case Study <span class="card-arrow">→</span></span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-left">Elena Lu</div>
+  <div class="footer-right">
+    <a href="mailto:jingyilu22@gmail.com" class="footer-email">jingyilu22@gmail.com</a>
+    <span class="footer-copy">UX Designer · Trip.com IBU · 2025</span>
+  </div>
+</footer>
+
+</body>
+</html>
