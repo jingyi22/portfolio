@@ -56,6 +56,11 @@ body{background:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px) 0 0/
 </style>
 </head>
 <body>
+<script>try{localStorage.removeItem('fc-portfolio-screen');}catch(e){}</script>
+<style>#portfolio-back a:hover{color:#E6EDF3!important;border-color:rgba(255,255,255,.22)!important}</style>
+<div id="portfolio-back" style="position:fixed;top:16px;left:16px;z-index:9999">
+  <a href="../portfolio.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(13,17,23,.88);backdrop-filter:blur(12px);color:rgba(230,237,243,.6);font-family:'Inter',system-ui,sans-serif;font-size:12px;font-weight:500;text-decoration:none;padding:7px 13px;border-radius:8px;border:1px solid rgba(255,255,255,.1);transition:color .2s,border-color .2s">← Portfolio</a>
+</div>
 <div id="root"></div>
 <script type="text/babel">
 
@@ -913,154 +918,170 @@ function CoverScreen({onStart,accent}) {
     {stage:'Pre-Booking',issue:'Fee Opacity',detail:'Baggage costs hidden until checkout. $76 card → $101+ true cost — drip pricing destroys first-time trust',hot:true},
     {stage:'Post-Booking',issue:'Fragile State',detail:'Wrong fare class = penalties or no recourse. No free-correction window — users stranded with non-refundable tickets',hot:false},
   ];
-  const card=(children,extra={})=>(
-    <div style={{background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.08)',borderRadius:16,padding:'22px 24px',display:'flex',flexDirection:'column',overflow:'hidden',...extra}}>{children}</div>
+  const sectionLabel = (t) => (
+    <div style={{fontSize:10,fontWeight:700,letterSpacing:2,textTransform:'uppercase',color:'rgba(255,255,255,.28)',marginBottom:20}}>{t}</div>
   );
-  const lbl=t=><div style={{color:'rgba(255,255,255,.3)',fontWeight:700,letterSpacing:1.5,textTransform:'uppercase',marginBottom:22,flexShrink:0,fontSize:14}}>{t}</div>;
 
   return (
-    <div style={{display:'grid',gridTemplateColumns:'340px 1fr 1fr',gridTemplateRows:'1fr 1fr 1fr',gap:12,padding:'28px 32px',height:'100vh',width:'100vw',overflow:'hidden',position:'relative'}}>
-      <div style={{position:'absolute',width:500,height:500,borderRadius:'50%',background:`radial-gradient(circle,${accent}13 0%,transparent 70%)`,top:'45%',left:'32%',transform:'translate(-50%,-50%)',pointerEvents:'none',zIndex:0}}/>
+    <div style={{width:'100vw',height:'100vh',overflowY:'auto',overflowX:'hidden',scrollbarWidth:'none',position:'relative'}}>
 
-      {/* Hero */}
-      <div className="a-fsi" style={{gridRow:'1/-1',gridColumn:'1',display:'flex',flexDirection:'column',justifyContent:'space-between',position:'relative',zIndex:1,animationDelay:'.04s'}}>
-        <div>
-          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:22}}>
-            <div style={{background:'white',borderRadius:7,padding:'4px 10px',fontSize:13,fontWeight:800,color:accent}}>trip.com</div>
-            <div style={{background:'rgba(255,255,255,.06)',border:'1px solid rgba(255,255,255,.1)',borderRadius:20,padding:'3px 10px',fontSize:10,color:'rgba(255,255,255,.45)',fontWeight:500}}>UX Portfolio</div>
+      <div style={{position:'fixed',width:700,height:700,borderRadius:'50%',background:`radial-gradient(circle,${accent}18 0%,transparent 70%)`,top:'10%',left:'50%',transform:'translateX(-50%)',pointerEvents:'none',zIndex:0}}/>
+
+      {/* HERO */}
+      <div className="a-fsi" style={{maxWidth:780,margin:'0 auto',padding:'72px 32px 0',textAlign:'center',position:'relative',zIndex:1}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10,marginBottom:28}}>
+          <div style={{background:'white',borderRadius:7,padding:'5px 12px',fontSize:13,fontWeight:800,color:accent}}>trip.com</div>
+          <div style={{display:'inline-flex',alignItems:'center',background:`${accent}1A`,border:`1px solid ${accent}38`,borderRadius:20,padding:'5px 14px',fontSize:11,fontWeight:700,color:'#7AAFFF',letterSpacing:1,textTransform:'uppercase'}}>
+            Case Study · Global Markets · 2025
           </div>
-          <div style={{fontSize:9,color:'rgba(255,255,255,.28)',fontWeight:700,letterSpacing:2.2,textTransform:'uppercase',marginBottom:11}}>Case Study · Global Markets · 2025</div>
-          <div style={{fontSize:36,fontWeight:800,color:'white',lineHeight:1.13,letterSpacing:-.8,marginBottom:16}}>Flight Fare Card<br/><span style={{color:accent}}>Redesign</span></div>
-          <div style={{color:'rgba(255,255,255,.42)',lineHeight:1.72,fontSize:15}}>First-time users abandon flight booking at 85%+ rates — primarily due to hidden fees, information overload, and a core trust deficit. This project benchmarks 4 competitors, explores 3 design variants, and proposes targeted interventions to transform the fare card into a trust-centric decision tool.</div>
         </div>
-        <div>
-          <div style={{color:'rgba(255,255,255,.28)',fontWeight:700,letterSpacing:1.4,textTransform:'uppercase',marginBottom:10,fontSize:14}}>Research Approach</div>
+        <h1 style={{fontFamily:'"DM Serif Display",Georgia,serif',fontSize:58,fontWeight:400,color:'white',lineHeight:1.08,letterSpacing:'-.5px',marginBottom:22}}>
+          Flight Fare Card<br/>
+          <em style={{color:accent,fontStyle:'italic'}}>Redesign</em>
+        </h1>
+        <p style={{color:'rgba(255,255,255,.48)',fontSize:16,lineHeight:1.75,maxWidth:560,margin:'0 auto 40px'}}>
+          First-time users abandon at 85%+ rates — driven by hidden fees, information overload, and a core trust deficit. This project benchmarks 4 competitors, explores 3 design variants, and proposes targeted interventions.
+        </p>
+        <div style={{display:'flex',background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.08)',borderRadius:16,overflow:'hidden',maxWidth:580,margin:'0 auto 40px'}}>
           {[
-            ['🔬','Behavioral Psychology','Hick\'s Law · Loss Aversion · Decoy Effect · Drip Pricing'],
-            ['🧪','Competitive Benchmarking','Expedia · Google Flights · Skyscanner · Hopper'],
-            ['📊','Internal Analysis','UX audit · 5 staff interviews · WCAG 2.1 compliance'],
-          ].map(([ic,t,s])=>(
-            <div key={t} style={{display:'flex',alignItems:'flex-start',gap:10,padding:'9px 11px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.06)',borderRadius:10,marginBottom:7}}>
-              <span style={{fontSize:13,flexShrink:0,marginTop:1}}>{ic}</span>
-              <div>
-                <div style={{fontSize:12,fontWeight:600,color:'rgba(255,255,255,.75)',marginBottom:1}}>{t}</div>
-                <div style={{fontSize:10,color:'rgba(255,255,255,.32)'}}>{s}</div>
-              </div>
+            {num:'85%+',label:'Cart Abandon Rate',hi:true},
+            {num:'4',label:'Competitors Benchmarked',hi:false},
+            {num:'3',label:'Design Variants Explored',hi:false},
+          ].map((s,i)=>
+            <div key={i} style={{flex:1,padding:'22px 16px',borderRight:i<2?'1px solid rgba(255,255,255,.07)':'none',textAlign:'center'}}>
+              <div style={{fontFamily:'"DM Serif Display",Georgia,serif',fontSize:38,fontWeight:400,color:s.hi?accent:'white',lineHeight:1}}>{s.num}</div>
+              <div style={{fontSize:11,color:'rgba(255,255,255,.32)',marginTop:7,lineHeight:1.4}}>{s.label}</div>
             </div>
-          ))}
+          )}
         </div>
-        <div>
-          <button onClick={onStart} style={{width:'100%',padding:'14px 20px',borderRadius:13,border:'none',background:accent,color:'white',fontSize:14,fontWeight:700,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8,animation:'confirmPulse 2.2s ease-in-out infinite',boxShadow:`0 6px 24px ${accent}44`}}>
-            Experience the Redesign <Ic.Plane s={14} c="white"/>
-          </button>
-          <div style={{textAlign:'center',marginTop:7,fontSize:10,color:'rgba(255,255,255,.2)'}}>5 Screens · 3 Design Variants · iPhone Frame</div>
-        </div>
+        <button onClick={onStart} style={{padding:'15px 36px',borderRadius:14,border:'none',background:accent,color:'white',fontSize:15,fontWeight:700,cursor:'pointer',display:'inline-flex',alignItems:'center',gap:10,animation:'confirmPulse 2.2s ease-in-out infinite',boxShadow:`0 8px 28px ${accent}50`,marginBottom:10}}>
+          Experience the Redesign <span style={{fontSize:17}}>→</span>
+        </button>
+        <div style={{fontSize:11,color:'rgba(255,255,255,.2)',marginBottom:72}}>Interactive Prototype · 5 Screens · 3 Design Variants · iPhone Frame</div>
       </div>
 
-      {/* A: Conversion Barriers */}
-      {card(<>
-        {lbl('Conversion Barriers · Priority Ranking')}
-        <div style={{fontSize:10,color:'rgba(255,255,255,.2)',marginBottom:12}}>Qualitative severity based on competitive audit &amp; user research — not quantitative survey data</div>
-        <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
-          {bars.map((b,i)=>{
-            const tagColor = b.tag==='Critical' ? accent : b.tag==='High' ? `${accent}90` : 'rgba(255,255,255,.3)';
-            return (
-              <div key={i}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:5}}>
-                  <div style={{display:'flex',alignItems:'center',gap:7}}>
-                    <span style={{fontSize:10,fontWeight:800,color:tagColor,minWidth:20}}>{b.rank}</span>
-                    <span style={{color:'rgba(255,255,255,.7)',fontWeight:i<2?600:400,fontSize:15}}>{b.label}</span>
+      {/* BODY */}
+      <div style={{maxWidth:900,margin:'0 auto',padding:'0 32px 80px',position:'relative',zIndex:1}}>
+        <div style={{height:1,background:'rgba(255,255,255,.07)',marginBottom:56}}/>
+
+        <div className="a-fsi" style={{marginBottom:48,animationDelay:'.1s'}}>
+          {sectionLabel('Conversion Barriers — Priority Ranking')}
+          <div style={{background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.07)',borderRadius:16,padding:'24px 28px',display:'flex',flexDirection:'column',gap:16}}>
+            {bars.map((b,i)=>{
+              const tc=b.tag==='Critical'?accent:b.tag==='High'?`${accent}90`:'rgba(255,255,255,.3)';
+              return (
+                <div key={i}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:7}}>
+                    <div style={{display:'flex',alignItems:'center',gap:8}}>
+                      <span style={{fontSize:11,fontWeight:800,color:tc,minWidth:22}}>{b.rank}</span>
+                      <span style={{color:'rgba(255,255,255,.8)',fontWeight:i<2?600:400,fontSize:14}}>{b.label}</span>
+                      {b.note&&<span style={{fontSize:10,color:'rgba(255,255,255,.27)',fontStyle:'italic'}}>— {b.note}</span>}
+                    </div>
+                    <span style={{fontSize:10,fontWeight:700,color:tc,background:`${tc}18`,borderRadius:4,padding:'2px 7px',border:`1px solid ${tc}44`,flexShrink:0}}>{b.tag}</span>
                   </div>
-                  <div style={{display:'flex',alignItems:'center',gap:6}}>
-                    {b.note&&<span style={{fontSize:9,color:'rgba(255,255,255,.27)',fontStyle:'italic'}}>{b.note}</span>}
-                    <span style={{fontSize:9,fontWeight:700,color:tagColor,background:`${tagColor}18`,borderRadius:4,padding:'2px 6px',border:`1px solid ${tagColor}44`}}>{b.tag}</span>
+                  <div style={{height:5,background:'rgba(255,255,255,.07)',borderRadius:3}}>
+                    <div style={{height:'100%',width:`${b.w}%`,borderRadius:3,background:i===0?accent:i===1?`${accent}70`:'rgba(255,255,255,.22)'}}/>
                   </div>
                 </div>
-                <div style={{height:4,background:'rgba(255,255,255,.07)',borderRadius:2}}>
-                  <div style={{height:'100%',width:`${b.w}%`,borderRadius:2,background:i===0?accent:i===1?`${accent}70`:'rgba(255,255,255,.22)'}}/>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="a-fsi" style={{marginBottom:48,animationDelay:'.14s'}}>
+          {sectionLabel('Key Findings — Across the Booking Journey')}
+          <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:10}}>
+            {findings.map((f,i)=>
+              <div key={i} style={{background:'rgba(255,255,255,.03)',border:`1px solid ${f.hot?`${accent}44`:'rgba(255,255,255,.07)'}`,borderTop:`2px solid ${f.hot?accent:'rgba(255,255,255,.10)'}`,borderRadius:14,padding:'16px 14px',display:'flex',flexDirection:'column'}}>
+                <div style={{fontSize:10,fontWeight:700,color:'rgba(255,255,255,.28)',textTransform:'uppercase',letterSpacing:.8,marginBottom:5}}>{f.stage}</div>
+                <div style={{fontFamily:'"DM Serif Display",Georgia,serif',fontSize:17,fontWeight:400,color:f.hot?accent:'rgba(255,255,255,.85)',lineHeight:1.25,marginBottom:8}}>{f.issue}</div>
+                <div style={{fontSize:11.5,color:'rgba(255,255,255,.38)',lineHeight:1.55}}>{f.detail}</div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="a-fsi" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16,animationDelay:'.17s'}}>
+          <div style={{background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.07)',borderRadius:16,padding:'24px 24px'}}>
+            {sectionLabel('Trip.com Feature Gaps vs. Competitors')}
+            <div style={{display:'flex',flexDirection:'column',gap:12}}>
+              {[
+                ['True Cost Baggage Toggle','Expedia & Google Flights — dynamic bag-fee display'],
+                ['Visual Stop Timeline','Google Flights graphical layover representation'],
+                ['Free Cancellation Hero Badge','Skyscanner green pill — most prominent card element'],
+                ['Price Freeze Secondary CTA','Hopper-pioneered — 25%+ conversion lift on return'],
+                ['AI-Driven Sort Personalization','No major OTA has fully shipped this — opportunity'],
+              ].map(([f,n],i)=>
+                <div key={i} style={{display:'flex',alignItems:'flex-start',gap:10}}>
+                  <div style={{width:18,height:18,borderRadius:5,background:'rgba(239,68,68,.1)',border:'1px solid rgba(239,68,68,.25)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1}}>
+                    <span style={{fontSize:9,color:'#EF4444',fontWeight:700}}>✕</span>
+                  </div>
+                  <div>
+                    <div style={{fontSize:12.5,fontWeight:600,color:'rgba(255,255,255,.7)',lineHeight:1.3}}>{f}</div>
+                    <div style={{fontSize:10,color:'rgba(255,255,255,.28)',marginTop:2}}>{n}</div>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </>,{gridRow:'1',gridColumn:'2',zIndex:1,animationDelay:'.08s'})}
-
-      {/* B: Dropout stats */}
-      {card(<>
-        {lbl('First-Time User Dropout Data')}
-        <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
-          {[
-            {pct:'85%+',label:'Cart abandonment rate',sub:'Travel industry benchmark — hidden fees = primary trigger at checkout',c:accent},
-            {pct:'60%+',label:'Traffic is mobile',sub:'Mobile-first design critical — thumb zone, vertical cards, 44px tap targets',c:'#10B981'},
-            {pct:'<1h',label:'Risky layover threshold',sub:'Short connections = top post-booking complaint across platforms tested',c:'#EF4444'},
-            {pct:'$0',label:'Visible baggage cost on card',sub:'Current Trip.com design — baggage fees only revealed at checkout stage',c:'rgba(255,255,255,.45)'},
-          ].map((t,i)=>(
-            <div key={i} style={{display:'flex',gap:10,alignItems:'flex-start',padding:'8px 10px',background:'rgba(255,255,255,.03)',borderRadius:9,borderLeft:`2px solid ${t.c}`}}>
-              <div style={{fontSize:16,fontWeight:800,color:t.c,flexShrink:0,minWidth:54,letterSpacing:-.3}}>{t.pct}</div>
-              <div>
-                <div style={{fontWeight:600,color:'rgba(255,255,255,.72)',marginBottom:2,fontSize:16}}>{t.label}</div>
-                <div style={{fontSize:10,color:'rgba(255,255,255,.3)',lineHeight:1.4}}>{t.sub}</div>
-              </div>
+              )}
             </div>
-          ))}
-        </div>
-      </>,{gridRow:'1',gridColumn:'3',zIndex:1,animationDelay:'.1s'})}
-
-      {/* C: Key findings */}
-      {card(<>
-        {lbl('Key Findings · Across the Booking Journey')}
-        <div style={{flex:1,display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:10}}>
-          {findings.map((f,i)=>(
-            <div key={i} style={{padding:'12px',background:'rgba(255,255,255,.03)',borderRadius:10,borderTop:`1.5px solid ${f.hot?accent:'rgba(255,255,255,.09)'}`,display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
-              <div>
-                <div style={{color:'rgba(255,255,255,.28)',fontWeight:700,textTransform:'uppercase',letterSpacing:.7,marginBottom:6,fontSize:12}}>{f.stage}</div>
-                <div style={{fontWeight:700,color:f.hot?accent:'rgba(255,255,255,.8)',marginBottom:6,lineHeight:1.25,fontSize:22}}>{f.issue}</div>
-              </div>
-              <div style={{color:'rgba(255,255,255,.38)',lineHeight:1.45,fontSize:13}}>{f.detail}</div>
+          </div>
+          <div style={{background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.07)',borderRadius:16,padding:'24px 24px'}}>
+            {sectionLabel('First-Time User Dropout Data')}
+            <div style={{display:'flex',flexDirection:'column',gap:12}}>
+              {[
+                {pct:'85%+',label:'Cart abandonment rate',sub:'Hidden fees = primary trigger at checkout',c:accent},
+                {pct:'60%+',label:'Traffic is mobile',sub:'Mobile-first — thumb zone, vertical cards, 44px tap targets',c:'#10B981'},
+                {pct:'<1h',label:'Risky layover threshold',sub:'Short connections = top post-booking complaint',c:'#EF4444'},
+                {pct:'$0',label:'Visible baggage cost on card',sub:'Current Trip.com design — fees only revealed at checkout',c:'rgba(255,255,255,.45)'},
+              ].map((t,i)=>(
+                <div key={i} style={{display:'flex',gap:10,alignItems:'flex-start',padding:'8px 10px',background:'rgba(255,255,255,.03)',borderRadius:9,borderLeft:`2px solid ${t.c}`}}>
+                  <div style={{fontSize:15,fontWeight:800,color:t.c,flexShrink:0,minWidth:50}}>{t.pct}</div>
+                  <div>
+                    <div style={{fontWeight:600,color:'rgba(255,255,255,.72)',marginBottom:2,fontSize:13}}>{t.label}</div>
+                    <div style={{fontSize:10,color:'rgba(255,255,255,.3)',lineHeight:1.4}}>{t.sub}</div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </>,{gridRow:'2',gridColumn:'2/-1',zIndex:1,animationDelay:'.12s'})}
 
-      {/* D: Research coverage */}
-      {card(<>
-        {lbl('Research Coverage')}
-        <div style={{flex:1,display:'grid',gridTemplateColumns:'1fr 1fr',gridTemplateRows:'1fr 1fr 1fr',gap:8}}>
-          {[['4','Competitors benchmarked'],['10+','UX patterns analyzed'],['85%+','Industry abandon rate'],['5','Staff interviews'],['WCAG','2.1 compliance check'],['3','Design variants explored']].map(([v,l])=>(
-            <div key={l} style={{padding:'10px 12px',background:'rgba(255,255,255,.04)',borderRadius:10,display:'flex',flexDirection:'column',justifyContent:'center'}}>
-              <div style={{fontSize:20,fontWeight:800,color:'white',letterSpacing:-.3,lineHeight:1}}>{v}</div>
-              <div style={{color:'rgba(255,255,255,.32)',marginTop:3,lineHeight:1.3,fontSize:14}}>{l}</div>
+        <div className="a-fsi" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,animationDelay:'.2s'}}>
+          <div style={{background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.07)',borderRadius:16,padding:'24px 24px'}}>
+            {sectionLabel('Research Coverage')}
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:10}}>
+              {[['4','Competitors'],['3','Design Variants'],['85%+','Abandon Rate'],['5','Staff Interviews'],['WCAG','2.1 Check'],['10+','UX Patterns']].map(([v,l])=>
+                <div key={l} style={{padding:'12px',background:'rgba(255,255,255,.04)',borderRadius:10,textAlign:'center'}}>
+                  <div style={{fontFamily:'"DM Serif Display",Georgia,serif',fontSize:22,fontWeight:400,color:'white',lineHeight:1}}>{v}</div>
+                  <div style={{fontSize:10,color:'rgba(255,255,255,.3)',marginTop:5}}>{l}</div>
+                </div>
+              )}
             </div>
-          ))}
+          </div>
+          <div style={{background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.07)',borderRadius:16,padding:'24px 24px'}}>
+            {sectionLabel('Research Approach')}
+            <div style={{display:'flex',flexDirection:'column',gap:10}}>
+              {[
+                ['🔬','Behavioral Psychology',"Hick's Law · Loss Aversion · Decoy Effect · Drip Pricing"],
+                ['🧪','Competitive Benchmarking','Expedia · Google Flights · Skyscanner · Hopper'],
+                ['📊','Internal Analysis','UX audit · 5 staff interviews · WCAG 2.1 compliance'],
+              ].map(([ic,t,s])=>
+                <div key={t} style={{display:'flex',alignItems:'flex-start',gap:12,padding:'14px 16px',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.06)',borderRadius:12}}>
+                  <span style={{fontSize:18,flexShrink:0}}>{ic}</span>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:600,color:'rgba(255,255,255,.8)',marginBottom:4}}>{t}</div>
+                    <div style={{fontSize:11,color:'rgba(255,255,255,.32)',lineHeight:1.5}}>{s}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </>,{gridRow:'3',gridColumn:'2',zIndex:1,animationDelay:'.14s'})}
 
-      {/* E: Feature gaps */}
-      {card(<>
-        <div style={{color:'rgba(255,255,255,.3)',fontWeight:700,letterSpacing:1.5,textTransform:'uppercase',marginBottom:10,flexShrink:0,fontSize:13}}>Trip.com Feature Gaps vs. Competitors</div>
-        <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
-          {[
-            ['True Cost Baggage Toggle','Expedia & Google Flights — dynamic bag-fee display'],
-            ['Visual Stop Timeline','Google Flights graphical layover representation'],
-            ['Free Cancellation Hero Badge','Skyscanner green pill — most prominent card element'],
-            ['Price Freeze Secondary CTA','Hopper-pioneered — 25%+ conversion lift on return'],
-            ['AI-Driven Sort Personalization','No major OTA has fully shipped this — opportunity'],
-          ].map(([f,n],i)=>(
-            <div key={i} style={{display:'flex',alignItems:'flex-start',gap:7,padding:'4px 0',borderBottom:i<4?'1px solid rgba(255,255,255,.05)':'none'}}>
-              <div style={{width:14,height:14,borderRadius:3,background:'rgba(239,68,68,.1)',border:'1px solid rgba(239,68,68,.22)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:2}}>
-                <Ic.X s={7} c="#EF4444"/>
-              </div>
-              <div>
-                <div style={{fontWeight:600,color:'rgba(255,255,255,.65)',lineHeight:1.3,fontSize:13}}>{f}</div>
-                <div style={{fontSize:9,color:'rgba(255,255,255,.28)',marginTop:1,lineHeight:1.3}}>{n}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </>,{gridRow:'3',gridColumn:'3',zIndex:1,animationDelay:'.16s',padding:'14px 16px'})}
+      </div>
     </div>
   );
 }
+
 
 // ─── PhoneFrame ───────────────────────────────────────────────────────────────
 function PhoneFrame({children,scale}) {

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MY Name Entry Optimization · UX Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <template id="__bundler_thumbnail" data-bg-color="#0C0D12">
   <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
     <rect width="1200" height="800" fill="#0C0D12"/>
@@ -55,6 +55,11 @@ body{background:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px) 0 0/
 </style>
 </head>
 <body>
+<script>try{localStorage.removeItem('my-portfolio-screen');}catch(e){}</script>
+<style>#portfolio-back a:hover{color:#E6EDF3!important;border-color:rgba(255,255,255,.22)!important}</style>
+<div id="portfolio-back" style="position:fixed;top:16px;left:16px;z-index:9999">
+  <a href="../portfolio.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(13,17,23,.88);backdrop-filter:blur(12px);color:rgba(230,237,243,.6);font-family:'Inter',system-ui,sans-serif;font-size:12px;font-weight:500;text-decoration:none;padding:7px 13px;border-radius:8px;border:1px solid rgba(255,255,255,.1);transition:color .2s,border-color .2s">← Portfolio</a>
+</div>
 <div id="root"></div>
 <script type="text/babel">
 
@@ -109,154 +114,196 @@ function CoverScreen({ onStart, accent }) {
   { label: 'Others', pct: 8.2, note: '' }];
 
   const findings = [
-  { stage: 'Pre-booking', issue: 'Knowledge Gap', detail: 'No localized name guide or ethnic-specific FAQ to prepare users', hot: false },
-  { stage: 'Name Entry', issue: 'Terminology Confusion', detail: '"First/Last Name" doesn\'t map to Malaysian naming — causes 19.13% reversal errors', hot: true },
-  { stage: 'Pre-payment', issue: 'Weak Verification', detail: 'Popup lacks boarding denial risk warning — users skip without cross-checking', hot: true },
-  { stage: 'Post-order', issue: 'Buried Information', detail: 'Name details lost in confirmation emails; free-correction window missed by most users', hot: false },
-  { stage: 'Check-in', issue: 'Emergency Issues', detail: '~0.1% same-day cases face potential denied boarding with no emergency handling protocol', hot: false }];
+  { stage: 'Pre-booking', icon: '📚', issue: 'Knowledge Gap', detail: 'No localized name guide or ethnic-specific FAQ to prepare users', hot: false },
+  { stage: 'Name Entry', icon: '⌨️', issue: 'Terminology Confusion', detail: '"First/Last Name" doesn\'t map to Malaysian naming — causes 19.13% reversal errors', hot: true },
+  { stage: 'Pre-payment', icon: '⚠️', issue: 'Weak Verification', detail: 'Popup lacks boarding denial risk warning — users skip without cross-checking', hot: true },
+  { stage: 'Post-order', icon: '📧', issue: 'Buried Information', detail: 'Name details lost in confirmation emails; free-correction window missed by most users', hot: false },
+  { stage: 'Check-in', icon: '🚨', issue: 'Emergency Issues', detail: '~0.1% same-day cases face potential denied boarding with no emergency handling protocol', hot: false }];
 
-  const card = (children, extraStyle = {}) =>
-  <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 16, padding: '18px 20px', display: 'flex', flexDirection: 'column', overflow: 'hidden', ...extraStyle }}>
-      {children}
-    </div>;
-
-  const lbl = (t) => <div style={{ color: 'rgba(255,255,255,.3)', fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14, flexShrink: 0, fontSize: "14px" }}>{t}</div>;
+  const sectionLabel = (t) => (
+    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(255,255,255,.28)', marginBottom: 20 }}>{t}</div>
+  );
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr 1fr', gridTemplateRows: '1fr 1fr 1fr', gap: 12, padding: '28px 32px', height: '100vh', width: '100vw', overflow: 'hidden', position: 'relative' }}>
-      {/* glow */}
-      <div style={{ position: 'absolute', width: 500, height: 500, borderRadius: '50%', background: `radial-gradient(circle,${accent}13 0%,transparent 70%)`, top: '45%', left: '32%', transform: 'translate(-50%,-50%)', pointerEvents: 'none', zIndex: 0 }} />
+    <div style={{ width: '100vw', height: '100vh', overflowY: 'auto', overflowX: 'hidden', scrollbarWidth: 'none', position: 'relative' }}>
 
-      {/* ── Hero: spans all 3 rows, col 1 ── */}
-      <div className="a-fsi" style={{ gridRow: '1 / -1', gridColumn: '1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', zIndex: 1, animationDelay: '.04s' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 22 }}>
-            <div style={{ background: 'white', borderRadius: 7, padding: '4px 10px', fontSize: 13, fontWeight: 800, color: accent }}>trip.com</div>
-            <div style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.1)', borderRadius: 20, padding: '3px 10px', fontSize: 10, color: 'rgba(255,255,255,.45)', fontWeight: 500 }}>UX Portfolio</div>
+      {/* ── ambient glow ── */}
+      <div style={{ position: 'fixed', width: 700, height: 700, borderRadius: '50%', background: `radial-gradient(circle,${accent}18 0%,transparent 70%)`, top: '10%', left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none', zIndex: 0 }} />
+
+      {/* ══════════════════ HERO ══════════════════ */}
+      <div className="a-fsi" style={{ maxWidth: 780, margin: '0 auto', padding: '72px 32px 0', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+
+        {/* badges row */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 28 }}>
+          <div style={{ background: 'white', borderRadius: 7, padding: '5px 12px', fontSize: 13, fontWeight: 800, color: accent }}>trip.com</div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', background: `rgba(27,110,253,.10)`, border: `1px solid rgba(27,110,253,.22)`, borderRadius: 20, padding: '5px 14px', fontSize: 11, fontWeight: 700, color: '#7AAFFF', letterSpacing: 1, textTransform: 'uppercase' }}>
+            Case Study · Malaysia Market · 2025
           </div>
-          <div style={{ fontSize: 9, color: 'rgba(255,255,255,.28)', fontWeight: 700, letterSpacing: 2.2, textTransform: 'uppercase', marginBottom: 11 }}>Case Study · Malaysia Market · 2025</div>
-          <div style={{ fontSize: 36, fontWeight: 800, color: 'white', lineHeight: 1.13, letterSpacing: -.8, marginBottom: 16 }}>Passenger<br />Name Entry<br /><span style={{ color: accent }}>Optimization</span></div>
-          <div style={{ color: 'rgba(255,255,255,.42)', lineHeight: 1.72, fontSize: "15px", height: "128.984px" }}>Malaysia faces a top-3 global flight name-change rate, generating ~1,200 monthly amendment tickets. This project identifies root causes and proposes targeted UX interventions across the full booking journey.</div>
         </div>
-        <div>
-          <div style={{ color: 'rgba(255,255,255,.28)', fontWeight: 700, letterSpacing: 1.4, textTransform: 'uppercase', marginBottom: 10, fontSize: "14px" }}>Research Approach</div>
+
+        {/* title */}
+        <h1 style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 58, fontWeight: 400, color: 'white', lineHeight: 1.08, letterSpacing: -.5, marginBottom: 22 }}>
+          Passenger Name Entry<br />
+          <em style={{ color: accent, fontStyle: 'italic' }}>Optimization</em>
+        </h1>
+
+        {/* subtitle */}
+        <p style={{ color: 'rgba(255,255,255,.48)', fontSize: 16, lineHeight: 1.75, maxWidth: 560, margin: '0 auto 40px' }}>
+          Malaysia ranks top-3 globally for flight name-change rate, generating ~1,200 monthly amendment tickets. Root cause analysis and targeted UX interventions across the full booking journey.
+        </p>
+
+        {/* stats row */}
+        <div style={{ display: 'flex', background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 16, overflow: 'hidden', maxWidth: 580, margin: '0 auto 40px' }}>
           {[
-          ['🔬', 'Desktop Research', 'Naming conventions, airline rules, gov. docs'],
-          ['🧪', 'Competitive Testing', '10 platforms — 4 int\'l OTAs, 2 regional, 4 airlines'],
-          ['📊', 'Internal Analysis', '7,079 tickets · CPO data · 5 staff interviews']].
-          map(([ic, t, s]) =>
-          <div key={t} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '9px 11px', background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.06)', borderRadius: 10, marginBottom: 7 }}>
-              <span style={{ fontSize: 13, flexShrink: 0, marginTop: 1 }}>{ic}</span>
-              <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,.75)', marginBottom: 1 }}>{t}</div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,.32)' }}>{s}</div>
-              </div>
+          { num: '7,079', label: 'Amendment Tickets', hi: false },
+          { num: '#3', label: 'Global Name-Change Rate', hi: true },
+          { num: '5', label: 'Staff Interviews', hi: false }].map((s, i) =>
+          <div key={i} style={{ flex: 1, padding: '22px 16px', borderRight: i < 2 ? '1px solid rgba(255,255,255,.07)' : 'none', textAlign: 'center' }}>
+              <div style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 38, fontWeight: 400, color: s.hi ? accent : 'white', lineHeight: 1 }}>{s.num}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.32)', marginTop: 7, lineHeight: 1.4 }}>{s.label}</div>
             </div>
           )}
         </div>
-        <div>
-          <button onClick={onStart} style={{ width: '100%', padding: '14px 20px', borderRadius: 13, border: 'none', background: accent, color: 'white', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, animation: 'confirmPulse 2.2s ease-in-out infinite', boxShadow: `0 6px 24px ${accent}44` }}>
-            Experience the Redesign <span style={{ fontSize: 15 }}>→</span>
-          </button>
-          <div style={{ textAlign: 'center', marginTop: 7, fontSize: 10, color: 'rgba(255,255,255,.2)' }}>Interactive Prototype · 3 Screens · iPhone Frame</div>
-        </div>
+
+        {/* CTA */}
+        <button onClick={onStart} style={{ padding: '15px 36px', borderRadius: 14, border: 'none', background: accent, color: 'white', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10, animation: 'confirmPulse 2.2s ease-in-out infinite', boxShadow: `0 8px 28px ${accent}50`, marginBottom: 10 }}>
+          Experience the Redesign <span style={{ fontSize: 17 }}>→</span>
+        </button>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,.2)', marginBottom: 72 }}>Interactive Prototype · 3 Screens · iPhone Frame</div>
       </div>
 
-      {/* ── A: Amendment breakdown — row 1, col 2 ── */}
-      {card(<>
-        {lbl('Amendment Type Distribution · 7,079 tickets')}
-        <div style={{ fontSize: 10, color: 'rgba(255,255,255,.2)', marginBottom: 12 }}>Percentages sum to &gt;100% — multiple types per ticket possible</div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          {bars.map((b, i) =>
-          <div key={i}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 5 }}>
-                <span style={{ color: 'rgba(255,255,255,.7)', fontWeight: i < 2 ? 600 : 400, fontSize: "16px" }}>{b.label}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                  {b.note && <span style={{ fontSize: 9, color: 'rgba(255,255,255,.27)', fontStyle: 'italic' }}>{b.note}</span>}
-                  <span style={{ fontSize: 12, fontWeight: 700, color: i < 2 ? 'white' : 'rgba(255,255,255,.5)' }}>{b.pct}%</span>
+      {/* ══════════════════ BODY CONTENT ══════════════════ */}
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 32px 80px', position: 'relative', zIndex: 1 }}>
+
+        {/* divider */}
+        <div style={{ height: 1, background: 'rgba(255,255,255,.07)', marginBottom: 56 }} />
+
+        {/* ── Amendment Type Distribution ── */}
+        <div className="a-fsi" style={{ marginBottom: 48, animationDelay: '.1s' }}>
+          {sectionLabel('Amendment Type Distribution · 7,079 tickets')}
+          <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, padding: '24px 28px' }}>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,.22)', marginBottom: 20 }}>Percentages sum to &gt;100% — multiple types per ticket possible</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {bars.map((b, i) =>
+              <div key={i}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ color: i < 2 ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.55)', fontWeight: i < 2 ? 600 : 400, fontSize: 14 }}>{b.label}</span>
+                      {b.note && <span style={{ fontSize: 10, color: 'rgba(255,255,255,.25)', fontStyle: 'italic' }}>{b.note}</span>}
+                    </div>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: i < 2 ? 'white' : 'rgba(255,255,255,.45)', letterSpacing: -.3 }}>{b.pct}%</span>
+                  </div>
+                  <div style={{ height: 5, background: 'rgba(255,255,255,.06)', borderRadius: 3 }}>
+                    <div style={{ height: '100%', width: `${b.pct}%`, borderRadius: 3, background: i === 0 ? accent : i === 1 ? `${accent}70` : 'rgba(255,255,255,.2)', transition: 'width .6s ease' }} />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Key Findings ── */}
+        <div className="a-fsi" style={{ marginBottom: 48, animationDelay: '.14s' }}>
+          {sectionLabel('Key Findings · Across the Booking Journey')}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10 }}>
+            {findings.map((f, i) =>
+            <div key={i} style={{ background: 'rgba(255,255,255,.03)', border: `1px solid ${f.hot ? `${accent}44` : 'rgba(255,255,255,.07)'}`, borderTop: `2px solid ${f.hot ? accent : 'rgba(255,255,255,.10)'}`, borderRadius: 14, padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div style={{ fontSize: 20 }}>{f.icon}</div>
+                <div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,.28)', textTransform: 'uppercase', letterSpacing: .8, marginBottom: 5 }}>{f.stage}</div>
+                  <div style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 17, fontWeight: 400, color: f.hot ? accent : 'rgba(255,255,255,.85)', lineHeight: 1.25, marginBottom: 8 }}>{f.issue}</div>
+                  <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,.38)', lineHeight: 1.55 }}>{f.detail}</div>
                 </div>
               </div>
-              <div style={{ height: 4, background: 'rgba(255,255,255,.07)', borderRadius: 2 }}>
-                <div style={{ height: '100%', width: `${b.pct}%`, borderRadius: 2, background: i === 0 ? accent : i === 1 ? `${accent}70` : 'rgba(255,255,255,.22)' }} />
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </>, { gridRow: '1', gridColumn: '2', zIndex: 1, animationDelay: '.08s' })}
 
-      {/* ── B: Error timing — row 1, col 3 ── */}
-      {card(<>
-        {lbl('Error Discovery Timing')}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          {[
-          { pct: '44.39%', label: 'Same-day amendments', sub: 'Errors realized right after booking — point-of-entry interface failure', c: accent, big: true },
-          { pct: '67.06%', label: 'Within first week', sub: 'Fast discovery across first-time and repeat customers', c: 'rgba(255,255,255,.55)', big: false },
-          { pct: '10.43%', label: 'Urgent — <3 days to flight', sub: 'Risk of denied boarding · emergency handling protocol needed', c: '#EF4444', big: false },
-          { pct: '70.80%', label: '1+ month before departure', sub: 'Most users can act if proactively notified — ideal intervention window', c: '#10B981', big: false }].
-          map((t, i) =>
-          <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '8px 10px', background: 'rgba(255,255,255,.03)', borderRadius: 9, borderLeft: `2px solid ${t.c}` }}>
-              <div style={{ fontSize: t.big ? 18 : 14, fontWeight: 800, color: t.c, flexShrink: 0, minWidth: 54, letterSpacing: -.3 }}>{t.pct}</div>
-              <div>
-                <div style={{ fontWeight: 600, color: 'rgba(255,255,255,.72)', marginBottom: 2, fontSize: "16px" }}>{t.label}</div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', lineHeight: 1.4 }}>{t.sub}</div>
+        {/* ── Error Discovery Timing ── */}
+        <div className="a-fsi" style={{ marginBottom: 48, animationDelay: '.17s' }}>
+          {sectionLabel('Error Discovery Timing')}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            {[
+            { pct: '44.39%', label: 'Same-day amendments', sub: 'Errors realized right after booking — point-of-entry interface failure', c: accent },
+            { pct: '67.06%', label: 'Within first week', sub: 'Fast discovery across first-time and repeat customers', c: 'rgba(255,255,255,.5)' },
+            { pct: '10.43%', label: 'Urgent — <3 days to flight', sub: 'Risk of denied boarding · emergency handling needed', c: '#EF4444' },
+            { pct: '70.80%', label: '1+ month before departure', sub: 'Most users can act if proactively notified — ideal intervention window', c: '#10B981' }].
+            map((t, i) =>
+            <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', padding: '16px 18px', background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 14, borderLeft: `3px solid ${t.c}` }}>
+                <div style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 26, fontWeight: 400, color: t.c, flexShrink: 0, lineHeight: 1 }}>{t.pct}</div>
+                <div>
+                  <div style={{ fontWeight: 600, color: 'rgba(255,255,255,.75)', marginBottom: 4, fontSize: 13 }}>{t.label}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,.32)', lineHeight: 1.5 }}>{t.sub}</div>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </>, { gridRow: '1', gridColumn: '3', zIndex: 1, animationDelay: '.1s' })}
 
-      {/* ── C: Key findings — row 2, cols 2–3 ── */}
-      {card(<>
-        {lbl('Key Findings · Across the Booking Journey')}
-        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 10 }}>
-          {findings.map((f, i) =>
-          <div key={i} style={{ padding: '12px', background: 'rgba(255,255,255,.03)', borderRadius: 10, borderTop: `1.5px solid ${f.hot ? accent : 'rgba(255,255,255,.09)'}`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ color: 'rgba(255,255,255,.28)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: .7, marginBottom: 6, fontSize: "12px" }}>{f.stage}</div>
-                <div style={{ fontWeight: 700, color: f.hot ? accent : 'rgba(255,255,255,.8)', marginBottom: 6, lineHeight: 1.25, height: "30px", fontSize: "24px" }}>{f.issue}</div>
-              </div>
-              <div style={{ color: 'rgba(255,255,255,.38)', lineHeight: 1.45, height: "120px", fontSize: "14px" }}>{f.detail}</div>
-            </div>
-          )}
-        </div>
-      </>, { gridRow: '2', gridColumn: '2 / -1', zIndex: 1, animationDelay: '.12s' })}
+        {/* ── Research Coverage + Feature Gaps ── */}
+        <div className="a-fsi" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, animationDelay: '.2s' }}>
 
-      {/* ── D: Research coverage — row 3, col 2 ── */}
-      {card(<>
-        {lbl('Research Coverage')}
-        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr 1fr', gap: 8 }}>
-          {[['7,079', 'Amendment tickets'], ['6 mo', 'Jan–Jun 2025'], ['10', 'Platforms tested'], ['5', 'Staff interviews'], ['5', 'Airlines benchmarked'], ['4', 'Gov. docs reviewed']].map(([v, l]) =>
-          <div key={l} style={{ padding: '10px 12px', background: 'rgba(255,255,255,.04)', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ fontSize: 20, fontWeight: 800, color: 'white', letterSpacing: -.3, lineHeight: 1 }}>{v}</div>
-              <div style={{ color: 'rgba(255,255,255,.32)', marginTop: 3, lineHeight: 1.3, fontSize: "14px" }}>{l}</div>
+          {/* Research Coverage */}
+          <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, padding: '24px 24px' }}>
+            {sectionLabel('Research Coverage')}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+              {[['7,079', 'Tickets'], ['6 mo', 'Jan–Jun 2025'], ['10', 'Platforms'], ['5', 'Interviews'], ['5', 'Airlines'], ['4', 'Gov. docs']].map(([v, l]) =>
+              <div key={l} style={{ padding: '12px', background: 'rgba(255,255,255,.04)', borderRadius: 10, textAlign: 'center' }}>
+                  <div style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 24, fontWeight: 400, color: 'white', lineHeight: 1 }}>{v}</div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', marginTop: 5 }}>{l}</div>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </>, { gridRow: '3', gridColumn: '2', zIndex: 1, animationDelay: '.14s' })}
+          </div>
 
-      {/* ── E: Feature gaps — row 3, col 3 ── */}
-      {card(<>
-        {lbl('Trip.com Feature Gaps vs. Competitors')}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          {[
-          ['MRZ Passport Guidance', 'MH & Traveloka already offer this'],
-          ['Local Honorifics (Dato, Datuk)', 'Malaysia Airlines supports these'],
-          ['Multi-ethnic Name Examples', 'AirAsia covers Malay/Chinese/Indian'],
-          ['Smart Prefix Validation', 'AirAsia detects bin/binti issues'],
-          ['Boarding Denial Warning', 'Traveloka popup has this; Trip.com does not']].
-          map(([f, n], i) =>
-          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '8px 0', borderBottom: i < 4 ? '1px solid rgba(255,255,255,.05)' : 'none' }}>
-              <div style={{ width: 16, height: 16, borderRadius: 4, background: 'rgba(239,68,68,.1)', border: '1px solid rgba(239,68,68,.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                <span style={{ fontSize: 8, color: '#EF4444', fontWeight: 700 }}>✕</span>
-              </div>
-              <div>
-                <div style={{ fontWeight: 600, color: 'rgba(255,255,255,.65)', lineHeight: 1.3, fontSize: "18px" }}>{f}</div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,.28)', marginTop: 1 }}>{n}</div>
-              </div>
+          {/* Feature Gaps */}
+          <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, padding: '24px 24px' }}>
+            {sectionLabel('Trip.com Feature Gaps vs. Competitors')}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {[
+              ['MRZ Passport Guidance', 'MH & Traveloka already offer this'],
+              ['Local Honorifics (Dato, Datuk)', 'Malaysia Airlines supports these'],
+              ['Multi-ethnic Name Examples', 'AirAsia covers Malay/Chinese/Indian'],
+              ['Smart Prefix Validation', 'AirAsia detects bin/binti issues'],
+              ['Boarding Denial Warning', 'Traveloka popup has this; Trip.com does not']].
+              map(([f, n], i) =>
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                  <div style={{ width: 18, height: 18, borderRadius: 5, background: 'rgba(239,68,68,.1)', border: '1px solid rgba(239,68,68,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                    <span style={{ fontSize: 9, color: '#EF4444', fontWeight: 700 }}>✕</span>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,.7)', lineHeight: 1.3 }}>{f}</div>
+                    <div style={{ fontSize: 10, color: 'rgba(255,255,255,.28)', marginTop: 2 }}>{n}</div>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
-      </>, { gridRow: '3', gridColumn: '3', zIndex: 1, animationDelay: '.16s' })}
+
+        {/* ── Research Approach ── */}
+        <div className="a-fsi" style={{ marginTop: 16, animationDelay: '.23s' }}>
+          <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, padding: '24px 28px' }}>
+            {sectionLabel('Research Approach')}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+              {[
+              ['🔬', 'Desktop Research', 'Naming conventions, airline rules, government documentation'],
+              ['🧪', 'Competitive Testing', '10 platforms — 4 int\'l OTAs, 2 regional, 4 airlines'],
+              ['📊', 'Internal Analysis', '7,079 tickets · CPO data · 5 staff interviews']].
+              map(([ic, t, s]) =>
+              <div key={t} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 16px', background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.06)', borderRadius: 12 }}>
+                  <span style={{ fontSize: 18, flexShrink: 0 }}>{ic}</span>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,.8)', marginBottom: 4 }}>{t}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,.32)', lineHeight: 1.5 }}>{s}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>);
 
 }

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Hong Kong Concert Ticketing UX Optimization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#1B6EFD;--primary-light:#3B8AFF;--bg:#0D1117;--bg-card:#161B22;--bg-card-hover:#1C2128;--border:#30363D;--text:#E6EDF3;--text-secondary:#8B949E;--text-muted:#484F58;--green:#2EA043;--red:#F85149;--orange:#F0883E;--yellow:#D29922;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;}
+.nav{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(13,17,23,.93);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 48px;z-index:100;}
+.nav-logo{font-family:DM Serif Display,serif;font-size:22px;color:var(--text);letter-spacing:-.5px;}
+.nav-logo span{color:var(--primary);}
+.nav-badge{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--text-secondary);letter-spacing:.3px;}
+main{padding-top:60px;}
+.container{max-width:1100px;margin:0 auto;padding:0 48px;}
+.hero{padding:100px 0 80px;text-align:center;position:relative;}
+.hero::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(27,110,253,.07) 0%,transparent 65%);pointer-events:none;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(27,110,253,.1);border:1px solid rgba(27,110,253,.22);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:700;color:var(--primary-light);letter-spacing:1px;text-transform:uppercase;margin-bottom:28px;}
+.hero h1{font-family:DM Serif Display,serif;font-size:clamp(36px,5vw,56px);font-weight:400;line-height:1.12;margin-bottom:20px;letter-spacing:-1.5px;}
+.hero h1 em{font-style:italic;color:var(--primary-light);}
+.hero-sub{font-size:16px;color:var(--text-secondary);max-width:600px;margin:0 auto 48px;line-height:1.7;}
+.stats-row{display:flex;justify-content:center;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden;max-width:560px;margin:0 auto;}
+.stat-item{flex:1;padding:22px 16px;text-align:center;border-right:1px solid var(--border);}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:DM Serif Display,serif;font-size:36px;color:var(--primary-light);line-height:1;margin-bottom:6px;}
+.stat-num.g{color:#4ADE80;}
+.stat-num.o{color:var(--orange);}
+.stat-num.r{color:var(--red);}
+.stat-label{font-size:12px;color:var(--text-secondary);font-weight:500;}
+.section{padding:80px 0;border-top:1px solid var(--border);}
+.section-header{margin-bottom:48px;}
+.section-num{font-size:11px;font-weight:700;color:var(--primary);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.section-title{font-family:DM Serif Display,serif;font-size:clamp(26px,3.5vw,38px);font-weight:400;line-height:1.2;letter-spacing:-.5px;margin-bottom:14px;}
+.section-desc{font-size:15px;color:var(--text-secondary);max-width:560px;line-height:1.7;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+.cards-grid-5{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;}
+.cards-grid-5 .card:nth-child(-n+3){grid-column:span 2;}
+.cards-grid-5 .card:nth-child(n+4){grid-column:span 3;}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;transition:border-color .2s,transform .2s;}
+.card:hover{border-color:var(--primary);transform:translateY(-2px);}
+.card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;background:rgba(27,110,253,.1);border:1px solid rgba(27,110,253,.15);color:var(--primary-light);}
+.card-icon.r{background:rgba(248,81,73,.1);border-color:rgba(248,81,73,.15);color:var(--red);}
+.card-icon.o{background:rgba(240,136,62,.1);border-color:rgba(240,136,62,.15);color:var(--orange);}
+.card-icon.y{background:rgba(210,153,34,.1);border-color:rgba(210,153,34,.15);color:var(--yellow);}
+.card-icon.g{background:rgba(46,160,67,.1);border-color:rgba(46,160,67,.15);color:#4ADE80;}
+.card h3{font-family:DM Serif Display,serif;font-size:17px;font-weight:400;margin-bottom:8px;letter-spacing:-.2px;}
+.card p{font-size:13px;color:var(--text-secondary);line-height:1.6;}
+.matrix-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--border);}
+.matrix-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:680px;}
+.matrix-table thead th{background:var(--bg-card);padding:14px 20px;text-align:left;font-size:10.5px;font-weight:700;color:var(--text-secondary);letter-spacing:.8px;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+.matrix-table thead th:first-child{border-radius:15px 0 0 0;}
+.matrix-table thead th:last-child{border-radius:0 15px 0 0;}
+.matrix-table tbody tr{border-bottom:1px solid var(--border);}
+.matrix-table tbody tr:last-child{border-bottom:none;}
+.matrix-table tbody tr:hover{background:var(--bg-card-hover);}
+.matrix-table tbody td{padding:13px 20px;color:var(--text-secondary);}
+.matrix-table tbody td:first-child{font-weight:600;color:var(--text);white-space:nowrap;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap;}
+.b-yes{background:rgba(46,160,67,.15);color:#4ADE80;}
+.b-ok{background:rgba(27,110,253,.12);color:var(--primary-light);}
+.b-mid{background:rgba(210,153,34,.12);color:var(--yellow);}
+.b-no{background:rgba(248,81,73,.12);color:var(--red);}
+.b-warn{background:rgba(240,136,62,.12);color:var(--orange);}
+.t-IMP{color:#4ADE80;font-weight:700;}
+.t-PART{color:var(--primary-light);font-weight:600;}
+.t-MID{color:var(--yellow);font-weight:600;}
+.t-WEAK{color:var(--red);font-weight:600;}
+.t-BAD{color:var(--text-muted);}
+.demo-section{padding:80px 0;border-top:1px solid var(--border);}
+.demo-phone-wrap{display:flex;justify-content:center;align-items:flex-start;gap:48px;flex-wrap:wrap;}
+.phone-frame{width:375px;height:720px;background:#0D1117;border-radius:44px;border:4px solid #2A2A2A;overflow:hidden;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.05);flex-shrink:0;}
+.phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#0D1117;border-radius:0 0 20px 20px;z-index:20;display:flex;align-items:center;justify-content:center;gap:8px;}
+.phone-notch::before{content:"";width:8px;height:8px;background:#1D1D1D;border-radius:50%;}
+.phone-notch::after{content:"";width:50px;height:6px;background:#1D1D1D;border-radius:3px;}
+.phone-screen{width:100%;height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden;padding-top:36px;}
+.screen-nav{height:50px;background:var(--bg-card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;}
+.screen-nav-back{width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px;font-size:20px;color:var(--primary);transition:background .15s;flex-shrink:0;line-height:1;}
+.screen-nav-back:hover{background:rgba(27,110,253,.1);}
+.screen-nav-title{font-size:16px;font-weight:600;color:var(--text);flex:1;text-align:center;padding-right:28px;}
+.screen-body{flex:1;overflow-y:auto;padding:20px 16px;}
+.screen-body::-webkit-scrollbar{width:0;}
+.red-alert-banner{background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.35);border-radius:12px;padding:12px 14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;}
+.red-alert-icon{flex-shrink:0;width:20px;height:20px;background:rgba(248,81,73,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.red-alert-text{font-size:12.5px;color:var(--red);font-weight:600;line-height:1.5;}
+.policy-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px;}
+.policy-header{background:var(--red);padding:10px 16px;display:flex;align-items:center;gap:8px;}
+.policy-header-text{font-size:13px;font-weight:700;color:#fff;}
+.policy-body{padding:14px 16px;background:var(--bg-card);display:flex;flex-direction:column;gap:10px;}
+.policy-item{display:flex;align-items:flex-start;gap:8px;}
+.policy-dot{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:7px;}
+.policy-text{font-size:12.5px;color:var(--text-secondary);line-height:1.5;}
+.orange-box{background:rgba(240,136,62,.1);border:1px solid rgba(240,136,62,.25);border-radius:10px;padding:10px 14px;}
+.orange-box-text{font-size:12px;color:var(--orange);font-weight:500;line-height:1.5;}
+.attendee-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.attendee-row{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;}
+.attendee-icon{width:34px;height:34px;border-radius:50%;background:rgba(27,110,253,.12);border:1px solid rgba(27,110,253,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.attendee-info{flex:1;}
+.attendee-label{font-size:10px;color:var(--text-muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;}
+.attendee-value{font-size:13.5px;color:var(--text);font-weight:500;}
+.attendee-check{width:20px;height:20px;border-radius:50%;background:rgba(46,160,67,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.checkbox-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.checkbox-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--bg-card);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .15s,background .15s;}
+.checkbox-item:hover{border-color:var(--primary);background:rgba(27,110,253,.04);}
+.checkbox-item.checked{border-color:var(--primary);background:rgba(27,110,253,.07);}
+.checkbox-box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s;}
+.checkbox-item.checked .checkbox-box{background:var(--primary);border-color:var(--primary);}
+.checkbox-text{font-size:12.5px;color:var(--text-secondary);line-height:1.5;}
+.checkbox-item.checked .checkbox-text{color:var(--text);}
+.submit-btn{width:100%;background:var(--primary);border:none;border-radius:12px;padding:13px;cursor:pointer;color:#fff;font-size:14px;font-weight:600;font-family:Inter,sans-serif;transition:background .2s;}
+.submit-btn:hover{background:var(--primary-light);}
+.submit-btn:disabled{opacity:.35;cursor:not-allowed;}
+.disclaimer{font-size:10.5px;color:var(--text-muted);line-height:1.5;margin-top:12px;text-align:center;}
+.ticket-card{border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:16px;}
+.ticket-header{padding:14px 16px;background:var(--bg-card);border-bottom:1px solid var(--border);}
+.ticket-event{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.ticket-date{font-size:12px;color:var(--text-secondary);}
+.ticket-body{padding:16px;background:var(--bg-card);}
+.ticket-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+.ticket-row:last-child{border-bottom:none;}
+.ticket-row-label{font-size:11.5px;color:var(--text-muted);}
+.ticket-row-value{font-size:12.5px;color:var(--text);font-weight:500;}
+.ticket-code-row{padding:12px 0;display:flex;align-items:center;justify-content:space-between;}
+.ticket-code-label{font-size:11.5px;color:var(--text-muted);}
+.ticket-code-value{font-family:monospace;font-size:15px;color:var(--text);font-weight:600;letter-spacing:2px;}
+.ticket-code-toggle{background:none;border:1px solid var(--border);border-radius:8px;padding:4px 12px;font-size:11px;color:var(--text-secondary);cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;}
+.ticket-code-toggle:hover{border-color:var(--primary);color:var(--primary-light);}
+.ticket-warning{background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.22);border-radius:10px;padding:10px 14px;margin-top:14px;display:flex;align-items:center;gap:8px;}
+.ticket-warning-text{font-size:11.5px;color:var(--red);font-weight:500;line-height:1.4;}
+.ticket-secure{background:rgba(46,160,67,.08);border:1px solid rgba(46,160,67,.2);border-radius:10px;padding:10px 14px;margin-top:12px;display:flex;align-items:center;gap:8px;}
+.ticket-secure-text{font-size:11.5px;color:#4ADE80;font-weight:500;line-height:1.4;}
+.order-list{display:flex;flex-direction:column;gap:12px;}
+.order-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-card);padding:14px 16px;}
+.order-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.order-event{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.order-date{font-size:11px;color:var(--text-muted);}
+.order-status{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;}
+.status-valid{background:rgba(46,160,67,.12);color:#4ADE80;}
+.status-used{background:rgba(139,148,158,.12);color:var(--text-muted);}
+.order-code-row{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border);}
+.order-code-label{font-size:11px;color:var(--text-muted);}
+.order-code-value{font-family:monospace;font-size:13px;color:var(--text);font-weight:600;letter-spacing:1.5px;}
+.order-no-screenshot{font-size:10px;color:var(--text-muted);display:flex;align-items:center;gap:4px;}
+.order-footer-note{font-size:10.5px;color:var(--text-muted);margin-top:10px;text-align:center;}
+.done-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;}
+.done-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+.done-title{font-family:DM Serif Display,serif;font-size:22px;font-weight:400;color:var(--text);margin-bottom:10px;}
+.done-sub{font-size:13px;color:var(--text-secondary);line-height:1.6;max-width:260px;}
+/* ── Step progress ── */
+.step-progress{display:flex;align-items:center;justify-content:center;max-width:680px;margin:0 auto 40px;}
+.step-node{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;min-width:80px;}
+.step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .2s;border:2px solid transparent;}
+.step-dot.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.step-dot.done{background:transparent;color:#4ADE80;border-color:#4ADE80;}
+.step-dot.idle{background:var(--bg-card);color:var(--text-muted);border-color:var(--border);}
+.step-lbl{font-size:10px;color:var(--text-muted);font-weight:500;text-align:center;line-height:1.3;}
+.step-lbl.active{color:var(--primary-light);}
+.step-lbl.done{color:#4ADE80;}
+.step-line{flex:1;height:2px;background:var(--border);margin-bottom:26px;transition:background .3s;}
+.step-line.done{background:#4ADE80;}
+/* ── Blue nudge ── */
+.blue-nudge{background:rgba(27,110,253,.08);border:1px solid rgba(27,110,253,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;}
+.blue-nudge-text{font-size:12px;color:var(--primary-light);line-height:1.5;}
+/* ── Event card ── */
+.event-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px;background:var(--bg-card);}
+.event-card-banner{height:88px;background:linear-gradient(135deg,#0f0a2a 0%,#1a0f5c 45%,#0d3080 100%);display:flex;align-items:flex-end;padding:12px 14px;}
+.event-card-title{font-size:14px;font-weight:700;color:#fff;line-height:1.35;}
+.event-card-meta{padding:10px 14px;display:flex;flex-direction:column;gap:5px;border-bottom:1px solid var(--border);}
+.event-meta-row{font-size:12px;color:var(--text-secondary);}
+.event-price-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;}
+.event-price{font-size:17px;font-weight:700;color:var(--text);}
+.event-tier{font-size:10.5px;color:var(--text-muted);}
+/* ── Primary button ── */
+.btn-primary{width:100%;background:var(--primary);border:none;border-radius:12px;padding:13px;cursor:pointer;color:#fff;font-size:14px;font-weight:600;font-family:Inter,sans-serif;transition:background .2s;}
+.btn-primary:hover{background:var(--primary-light);}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed;}
+/* ── Annotation panel ── */
+.demo-annotation{width:244px;flex-shrink:0;display:flex;flex-direction:column;gap:12px;padding-top:52px;}
+.ann-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+.ann-eyebrow{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.ann-eyebrow.new{color:#4ADE80;}
+.ann-eyebrow.opt{color:var(--primary-light);}
+.ann-title{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:5px;letter-spacing:-.2px;}
+.ann-desc{font-size:12px;color:var(--text-secondary);line-height:1.6;}
+</style>
+</head>
+<body>
+<style>#portfolio-back a:hover{color:#E6EDF3!important;border-color:rgba(255,255,255,.22)!important}</style>
+<div id="portfolio-back" style="position:fixed;top:16px;left:16px;z-index:9999">
+  <a href="../portfolio.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(13,17,23,.88);backdrop-filter:blur(12px);color:rgba(230,237,243,.6);font-family:'Inter',system-ui,sans-serif;font-size:12px;font-weight:500;text-decoration:none;padding:7px 13px;border-radius:8px;border:1px solid rgba(255,255,255,.1);transition:color .2s,border-color .2s">← Portfolio</a>
+</div>
+<nav class="nav">
+<div></div>
+<div class="nav-badge">trip<span>.</span>com · IBU CSC UXA | Apr 2025</div>
+</nav>
+<main>
+<div class="container">
+<section class="hero">
+  <div class="hero-eyebrow">UX Research + Redesign</div>
+  <h1>HK Concert Ticketing Platform <em>UX Optimization Solution</em></h1>
+  <p class="hero-sub">Competitor analysis of Cityline, URBTIX, Klook, and HK Ticketing — identifying UX and security gaps in Trip.com's concert ticketing flow</p>
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Platforms Tested</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num g">8</div>
+      <div class="stat-label">Concerts Benchmarked</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num r">5</div>
+      <div class="stat-label">Core Issues Found</div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">Competitor Research</div>
+    <h2 class="section-title">5 Core UX Issues</h2>
+    <p class="section-desc">Across 4 platforms and 8 concerts, we identified 5 UX and security gaps in Trip.com's current concert ticketing experience.</p>
+  </div>
+  <div class="cards-grid-5">
+    <div class="card">
+      <div class="card-icon r">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h3>Policy Notices Hard to Find</h3>
+      <p>Ticket rules hidden in popups; "cannot modify after order" notice not prominent enough, Users miss critical info at key moments. </p>
+    </div>
+    <div class="card">
+      <div class="card-icon o">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+      </div>
+      <h3>Weak Info Confirmation</h3>
+      <p>Lacks dedicated confirmation page with no secondary review mechanism. Errors cannot be detected before submission, leading to entry rejection complaints.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon y">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Incomplete Disclaimer</h3>
+      <p>Missing clear disclaimers on user error and ticket transfer risks, Users unclear about their responsibilities, Frequent disputes. </p>
+    </div>
+    <div class="card">
+      <div class="card-icon g">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h3>Weak Order Management</h3>
+      <p>Ticket codes fully exposed with no screenshot protection — ticket fraud risk is high with no accountability.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <h3>Guest Purchase Risk</h3>
+      <p>Trip.com is the only platform allowing guest checkout — no account binding means no purchase history, harder identity verification, and higher fraud exposure.</p>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">Competitor Comparison</div>
+    <h2 class="section-title">Platform Rating Matrix</h2>
+    <p class="section-desc">From Policy Clarity, Info Confirmation, Disclaimer, and My Tickets — rating 4 major platforms across 4 dimensions. </p>
+  </div>
+  <div class="matrix-wrap">
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Policy Clarity</th>
+          <th>Info Confirmation</th>
+          <th>Disclaimer</th>
+          <th>My Tickets</th>
+          <th>Overall</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Trip.com</td>
+          <td><span class="badge b-warn">Partial</span></td>
+          <td><span class="badge b-no">Weak</span></td>
+          <td><span class="badge b-no">Simple</span></td>
+          <td><span class="badge b-no">Basic</span></td>
+          <td><span class="t-WEAK">Needs Improvement</span></td>
+        </tr>
+        <tr>
+          <td>Cityline</td>
+          <td><span class="badge b-yes">Complete</span></td>
+          <td><span class="badge b-warn">Medium</span></td>
+          <td><span class="badge b-yes">Complete</span></td>
+          <td><span class="badge b-yes">Good</span></td>
+          <td><span class="t-IMP">Excellent</span></td>
+        </tr>
+        <tr>
+          <td>URBTIX</td>
+          <td><span class="badge b-yes">Clear</span></td>
+          <td><span class="badge b-no">Weak</span></td>
+          <td><span class="badge b-warn">Medium</span></td>
+          <td><span class="badge b-yes">Good</span></td>
+          <td><span class="t-MID">Medium</span></td>
+        </tr>
+        <tr>
+          <td>Klook</td>
+          <td><span class="badge b-yes">Complete</span></td>
+          <td><span class="badge b-yes">Complete</span></td>
+          <td><span class="badge b-warn">Medium</span></td>
+          <td><span class="badge b-yes">Good</span></td>
+          <td><span class="t-IMP">Excellent</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+</div>
+</main>
+<!-- DEMO SECTION -->
+<section class="demo-section">
+  <div class="container">
+    <div class="section-header" style="text-align:center;">
+      <div class="section-num">Interactive Prototype</div>
+      <h2 class="section-title">Optimized Ticketing Flow</h2>
+      <p class="section-desc" style="margin-left:auto;margin-right:auto;">Walk through the complete purchase journey — each step demonstrates a key UX optimization from the research</p>
+    </div>
+    <div class="step-progress" id="stepProgress"></div>
+    <div class="demo-phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" id="phoneScreen"></div>
+      </div>
+      <div class="demo-annotation" id="demoAnnotation"></div>
+    </div>
+  </div>
+</section>
+<script>
+var currentStep = 0;
+var codeShown = false;
+var confirmChecked = {1:false,2:false,3:false,4:false};
+
+var STEPS = ['Event Details','Fill Info','Confirm Info','Your Ticket','My Tickets'];
+
+var ANNOTATIONS = [
+  [
+    {type:'opt',title:'Policy Fixed Inline',desc:'Purchase rules now appear as a permanent card — not buried behind a small-text popup. Users cannot miss critical info before booking.'},
+    {type:'opt',title:'Disclaimer Enhanced',desc:'Explicit statement added: Trip.com is not liable for entry issues caused by incorrect buyer info. Directly addresses the incomplete disclaimer gap.'}
+  ],
+  [
+    {type:'opt',title:'Guest Login Nudge',desc:'Soft prompt encourages sign-in to pre-fill info and build a purchase record — reducing guest checkout security risks (Issue #5 from research).'},
+    {type:'opt',title:'Repeated Reminder',desc:'Orange warning restates that fields cannot be changed after submission — a second touchpoint before the user commits to continuing.'}
+  ],
+  [
+    {type:'new',title:'Dedicated Confirmation Page',desc:'A brand-new step missing from Trip.com\'s current flow. Users review all entered info and must tick 4 acknowledgements before payment is enabled.'},
+    {type:'new',title:'Active Consent Required',desc:'Submit button stays disabled until all 4 boxes are checked — preventing accidental submission with unverified details (Klook best practice).'}
+  ],
+  [
+    {type:'opt',title:'Masked Ticket Code',desc:'Code is hidden by default (****5678) with a tap-to-reveal toggle — minimising fraud from accidental screenshots or shoulder surfing.'},
+    {type:'opt',title:'Anti-Fraud Notice',desc:'"Do not screenshot or share" warning is prominent and explicit. Directly addresses the order management security gap identified in the audit.'}
+  ],
+  [
+    {type:'opt',title:'Codes Masked in List',desc:'All ticket codes in order history are permanently masked. Users must tap to reveal in context — reducing bulk screenshot fraud risk.'},
+    {type:'opt',title:'Persistent Notice',desc:'"Do not screenshot" reminder appears on every valid order card, reinforcing safe behaviour across the full order management view.'}
+  ]
+];
+
+function renderSteps() {
+  var html = '';
+  for (var i = 0; i < STEPS.length; i++) {
+    var done = i < currentStep, active = i === currentStep;
+    var dc = done ? 'done' : active ? 'active' : 'idle';
+    var lc = done ? 'done' : active ? 'active' : '';
+    html += '<div class="step-node" onclick="navigate(' + i + ')">' +
+      '<div class="step-dot ' + dc + '">' + (done ? '&#10003;' : (i+1)) + '</div>' +
+      '<div class="step-lbl ' + lc + '">' + STEPS[i] + '</div></div>';
+    if (i < STEPS.length - 1) html += '<div class="step-line' + (done ? ' done' : '') + '"></div>';
+  }
+  document.getElementById('stepProgress').innerHTML = html;
+}
+
+function renderAnnotation() {
+  var cards = ANNOTATIONS[currentStep] || [];
+  var html = '';
+  cards.forEach(function(c) {
+    html += '<div class="ann-card"><div class="ann-eyebrow ' + c.type + '">' +
+      (c.type === 'new' ? '&#10022; New Screen' : '&#8593; Optimized') +
+      '</div><div class="ann-title">' + c.title + '</div><div class="ann-desc">' + c.desc + '</div></div>';
+  });
+  var ann = document.getElementById('demoAnnotation');
+  if (ann) ann.innerHTML = html;
+}
+
+function navigate(step) {
+  currentStep = step;
+  renderSteps();
+  renderAnnotation();
+  var fns = [s0_EventDetails, s1_AttendeeInfo, s2_ConfirmInfo, s3_Ticket, s4_MyTickets];
+  var ps = document.getElementById('phoneScreen');
+  if (ps && fns[step]) {
+    ps.innerHTML = fns[step]();
+    codeShown = false;
+    if (step === 2) { confirmChecked = {1:false,2:false,3:false,4:false}; updateConfirmBtn(); }
+    if (step === 3) updateCodeToggle();
+  }
+}
+
+/* ─── Screen 0: Event Details ─── */
+function s0_EventDetails() {
+  return '<div class="screen-nav"><div class="screen-nav-back" style="opacity:0;pointer-events:none;">&#8249;</div><div class="screen-nav-title">Event Details</div></div>' +
+  '<div class="screen-body">' +
+  '<div class="event-card">' +
+    '<div class="event-card-banner"><div class="event-card-title">Jay Chou 2025<br>Hong Kong Concert &#127908;</div></div>' +
+    '<div class="event-card-meta">' +
+      '<div class="event-meta-row">&#128197;&nbsp; Aug 15, 2025 &middot; 20:00</div>' +
+      '<div class="event-meta-row">&#128205;&nbsp; Hong Kong Coliseum</div>' +
+    '</div>' +
+    '<div class="event-price-row">' +
+      '<div><div class="event-price">HK$1,280</div><div class="event-tier">VIP A Section &middot; Row 3</div></div>' +
+      '<button class="btn-primary" style="width:auto;padding:10px 20px;font-size:13px;" onclick="navigate(1)">Book Tickets &rarr;</button>' +
+    '</div>' +
+  '</div>' +
+  '<div class="red-alert-banner"><div class="red-alert-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F85149" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>' +
+  '<div class="red-alert-text">Important: Ticket holder info <strong>cannot be modified</strong> after submission. Please verify all fields carefully.</div></div>' +
+  '<div class="policy-card"><div class="policy-header"><div class="policy-header-text">&#9888; Purchase Policy</div></div><div class="policy-body">' +
+  '<div class="policy-item"><div class="policy-dot"></div><div class="policy-text"><strong>Name:</strong> Cannot be changed after submission &mdash; must match your ID exactly</div></div>' +
+  '<div class="policy-item"><div class="policy-dot"></div><div class="policy-text"><strong>Phone &amp; Email:</strong> Must be able to receive ticket notifications</div></div>' +
+  '<div class="policy-item"><div class="policy-dot"></div><div class="policy-text">Tickets are <strong>non-transferable</strong> &mdash; name-linked, no resale or transfer permitted</div></div>' +
+  '<div class="policy-item"><div class="policy-dot"></div><div class="policy-text">Trip.com is <strong>not liable</strong> for entry issues caused by incorrect information provided by the buyer</div></div>' +
+  '</div></div>' +
+  '</div>';
+}
+
+/* ─── Screen 1: Attendee Info Entry ─── */
+function s1_AttendeeInfo() {
+  return '<div class="screen-nav"><div class="screen-nav-back" onclick="navigate(0)">&#8249;</div><div class="screen-nav-title">Attendee Info</div></div>' +
+  '<div class="screen-body">' +
+  '<div class="blue-nudge">' +
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B8AFF" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+    '<div class="blue-nudge-text">Sign in to auto-fill your info and keep a full purchase record &mdash; or continue as guest.</div>' +
+  '</div>' +
+  '<div class="attendee-list">' +
+    '<div class="attendee-row"><div class="attendee-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B8AFF" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="attendee-info"><div class="attendee-label">Full Name (as on ID)</div><div class="attendee-value">Alex Chen</div></div><div class="attendee-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2EA043" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg></div></div>' +
+    '<div class="attendee-row"><div class="attendee-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B8AFF" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 9.81a19.79 19.79 0 0 1-3.07-8.68A2 2 0 0 1 2 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L6.09 7.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 14.92z"/></svg></div><div class="attendee-info"><div class="attendee-label">Phone Number</div><div class="attendee-value">+852 6*** ***9</div></div><div class="attendee-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2EA043" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg></div></div>' +
+    '<div class="attendee-row"><div class="attendee-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B8AFF" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="attendee-info"><div class="attendee-label">Email Address</div><div class="attendee-value">alex.chen@gmail.com</div></div><div class="attendee-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2EA043" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg></div></div>' +
+  '</div>' +
+  '<div class="orange-box"><div class="orange-box-text">&#9888; These fields <strong>cannot be modified</strong> after submission. Please double-check before continuing.</div></div>' +
+  '<button class="btn-primary" style="margin-top:14px" onclick="navigate(2)">Continue to Confirm &rarr;</button>' +
+  '</div>';
+}
+
+/* ─── Screen 2: Info Confirmation (NEW STEP) ─── */
+function s2_ConfirmInfo() {
+  return '<div class="screen-nav"><div class="screen-nav-back" onclick="navigate(1)">&#8249;</div><div class="screen-nav-title">Confirm Your Info</div></div>' +
+  '<div class="screen-body">' +
+  '<div style="font-size:11.5px;color:var(--text-muted);line-height:1.55;margin-bottom:12px;">Review carefully &mdash; info <strong style="color:var(--red)">cannot be changed</strong> after submission.</div>' +
+  '<div class="ticket-card" style="margin-bottom:14px;"><div class="ticket-header"><div class="ticket-event">Order Summary</div><div class="ticket-date">Jay Chou 2025 &middot; Aug 15 &middot; HK Coliseum &middot; VIP A &middot; HK$1,280</div></div><div class="ticket-body">' +
+  '<div class="ticket-row"><div class="ticket-row-label">Attendee Name</div><div class="ticket-row-value" style="color:var(--text)">Alex Chen</div></div>' +
+  '<div class="ticket-row"><div class="ticket-row-label">Phone</div><div class="ticket-row-value">+852 6*** ***9</div></div>' +
+  '<div class="ticket-row" style="border-bottom:none"><div class="ticket-row-label">Email</div><div class="ticket-row-value">alex.chen@gmail.com</div></div>' +
+  '</div></div>' +
+  '<div class="checkbox-list" id="confirmBoxes">' +
+  '<div class="checkbox-item" id="cc1" onclick="toggleConfirm(1)"><div class="checkbox-box" id="cc1box"></div><div class="checkbox-text">My full name matches my ID exactly</div></div>' +
+  '<div class="checkbox-item" id="cc2" onclick="toggleConfirm(2)"><div class="checkbox-box" id="cc2box"></div><div class="checkbox-text">My phone and email can receive ticket notifications</div></div>' +
+  '<div class="checkbox-item" id="cc3" onclick="toggleConfirm(3)"><div class="checkbox-box" id="cc3box"></div><div class="checkbox-text">I understand info cannot be modified after submission</div></div>' +
+  '<div class="checkbox-item" id="cc4" onclick="toggleConfirm(4)"><div class="checkbox-box" id="cc4box"></div><div class="checkbox-text">I have read and agree to the ticket purchase terms</div></div>' +
+  '</div>' +
+  '<div class="disclaimer" style="margin-bottom:10px;">Trip.com is not liable for any loss caused by incorrect buyer information, including inability to enter the event.</div>' +
+  '<button class="btn-primary" id="confirmBtn" disabled onclick="navigate(3)">Confirm &amp; Pay &rarr;</button>' +
+  '</div>';
+}
+
+function toggleConfirm(num) {
+  var el = document.getElementById('cc' + num);
+  if (!el) return;
+  el.classList.toggle('checked');
+  confirmChecked[num] = el.classList.contains('checked');
+  updateConfirmBtn();
+}
+
+function updateConfirmBtn() {
+  var all = confirmChecked[1] && confirmChecked[2] && confirmChecked[3] && confirmChecked[4];
+  var btn = document.getElementById('confirmBtn');
+  if (btn) btn.disabled = !all;
+}
+
+/* ─── Screen 3: Ticket / Order Confirmed ─── */
+function s3_Ticket() {
+  return '<div class="screen-nav"><div class="screen-nav-back" style="opacity:0;pointer-events:none;">&#8249;</div><div class="screen-nav-title">Order Confirmed</div></div>' +
+  '<div class="screen-body">' +
+  '<div style="text-align:center;padding:14px 0 18px;">' +
+    '<div style="width:52px;height:52px;border-radius:50%;background:rgba(46,160,67,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">' +
+      '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>' +
+    '</div>' +
+    '<div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;">Order Confirmed!</div>' +
+    '<div style="font-size:11.5px;color:var(--text-muted);">E-ticket sent to alex.chen@gmail.com</div>' +
+  '</div>' +
+  '<div class="ticket-card"><div class="ticket-header"><div class="ticket-event">Jay Chou 2025 Hong Kong Concert</div><div class="ticket-date">Aug 15, 2025 &middot; 20:00 &middot; Hong Kong Coliseum</div></div><div class="ticket-body">' +
+  '<div class="ticket-row"><div class="ticket-row-label">Ticket tier</div><div class="ticket-row-value">VIP A Section</div></div>' +
+  '<div class="ticket-row"><div class="ticket-row-label">Seat</div><div class="ticket-row-value">Row 3 &middot; Seat 12</div></div>' +
+  '<div class="ticket-row"><div class="ticket-row-label">Ticket Holder</div><div class="ticket-row-value">Alex Chen</div></div>' +
+  '<div class="ticket-code-row"><div class="ticket-code-label">Ticket Code</div><div class="ticket-code-value" id="codeValue">****5678</div><button class="ticket-code-toggle" id="codeToggle" onclick="toggleCode()">Show</button></div>' +
+  '</div></div>' +
+  '<div class="ticket-warning"><div style="flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F85149" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="ticket-warning-text">Do not screenshot or share your ticket code with anyone &mdash; risk of fraud</div></div>' +
+  '<div class="ticket-secure"><div style="flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EA043" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="ticket-secure-text">Only reveal your code at the venue entrance when requested</div></div>' +
+  '<button class="btn-primary" style="margin-top:14px" onclick="navigate(4)">View My Tickets &rarr;</button>' +
+  '</div>';
+}
+
+function toggleCode() {
+  codeShown = !codeShown;
+  updateCodeToggle();
+}
+
+function updateCodeToggle() {
+  var val = document.getElementById('codeValue');
+  var btn = document.getElementById('codeToggle');
+  if (val && btn) {
+    val.textContent = codeShown ? 'TP56781234' : '****5678';
+    btn.textContent = codeShown ? 'Hide' : 'Show';
+  }
+}
+
+/* ─── Screen 4: My Tickets ─── */
+function s4_MyTickets() {
+  return '<div class="screen-nav"><div class="screen-nav-back" style="opacity:0;pointer-events:none;">&#8249;</div><div class="screen-nav-title">My Tickets</div></div>' +
+  '<div class="screen-body">' +
+  '<div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;">My Orders (2)</div>' +
+  '<div class="order-list">' +
+  '<div class="order-card"><div class="order-card-top"><div><div class="order-event">Jay Chou 2025 HK Concert</div><div class="order-date">Aug 15, 2025 &middot; 20:00 &middot; VIP A</div></div><span class="order-status status-valid">Valid</span></div>' +
+  '<div class="order-code-row"><div class="order-code-label">Ticket Code</div><div class="order-code-value">****5678</div></div>' +
+  '<div class="order-no-screenshot" style="margin-top:8px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>&nbsp;Do not screenshot or share ticket code</div></div>' +
+  '<div class="order-card"><div class="order-card-top"><div><div class="order-event">Coldplay World Tour HK</div><div class="order-date">Sept 20, 2025 &middot; 19:30</div></div><span class="order-status status-used">Used</span></div>' +
+  '<div class="order-code-row"><div class="order-code-label">Ticket Code</div><div class="order-code-value">****9012</div></div></div>' +
+  '</div>' +
+  '<div class="order-footer-note" style="margin-top:14px;">Questions? <span style="color:var(--primary-light);cursor:pointer">Contact Trip.com Support</span></div>' +
+  '</div>';
+}
+
+// Init
+navigate(0);
+</script>
+</body>
+</html>

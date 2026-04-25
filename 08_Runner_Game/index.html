@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Neon Runner</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #0a0a1a;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+let W, H;
+let GROUND_Y, PLAYER_X;
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  GROUND_Y = H - 60;
+  PLAYER_X = 80;
+}
+
+window.addEventListener('resize', resize);
+resize();
+
+const PLAYER_SIZE = 40;
+const GRAVITY = 0.8;
+const JUMP_VEL = -15;
+const BASE_OBSTACLE_SPEED = 6;
+const BASE_COIN_SPEED = 6;
+const SPEED_INCREASE_INTERVAL = 10000;
+const SPEED_INCREASE_FACTOR = 1.1;
+
+let player, obstacles, coins, particles;
+let score, highScore, gameOver, started;
+let gameTime, lastSpeedIncrease;
+let speedMultiplier;
+let groundOffset = 0;
+let obstacleTimer, coinTimer;
+let stars = [];
+
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 80; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * (GROUND_Y - 100),
+      r: Math.random() * 1.5 + 0.5,
+      alpha: Math.random() * 0.5 + 0.2,
+      twinkle: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function init() {
+  highScore = parseInt(localStorage.getItem('runnerHighScore')) || 0;
+  resetGame();
+}
+
+function resetGame() {
+  player = {
+    x: PLAYER_X,
+    y: GROUND_Y - PLAYER_SIZE,
+    w: PLAYER_SIZE,
+    h: PLAYER_SIZE,
+    vy: 0,
+    onGround: true
+  };
+  obstacles = [];
+  coins = [];
+  particles = [];
+  score = 0;
+  gameOver = false;
+  started = false;
+  gameTime = 0;
+  lastSpeedIncrease = 0;
+  speedMultiplier = 1;
+  obstacleTimer = randomRange(1500, 3000);
+  coinTimer = randomRange(2000, 4000);
+  groundOffset = 0;
+  initStars();
+}
+
+function randomRange(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function rectsOverlap(a, b) {
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+function handleJump() {
+  if (gameOver) {
+    resetGame();
+    return;
+  }
+  if (!started) started = true;
+  if (player.onGround) {
+    player.vy = JUMP_VEL;
+    player.onGround = false;
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' || e.code === 'ArrowUp') {
+    e.preventDefault();
+    handleJump();
+  }
+});
+
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  handleJump();
+}, { passive: false });
+
+canvas.addEventListener('mousedown', () => handleJump());
+
+function update(dt) {
+  if (!started || gameOver) return;
+
+  gameTime += dt;
+  groundOffset = (groundOffset + BASE_OBSTACLE_SPEED * speedMultiplier * (dt / 16.67)) % 40;
+
+  if (gameTime - lastSpeedIncrease >= SPEED_INCREASE_INTERVAL) {
+    speedMultiplier *= SPEED_INCREASE_FACTOR;
+    lastSpeedIncrease = gameTime;
+    for (let i = 0; i < 12; i++) {
+      particles.push({
+        x: player.x + player.w / 2,
+        y: player.y + player.h / 2,
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8,
+        life: 1,
+        color: '#0ff',
+        size: 3
+      });
+    }
+  }
+
+  player.vy += GRAVITY;
+  player.y += player.vy * (dt / 16.67);
+  if (player.y >= GROUND_Y - PLAYER_SIZE) {
+    player.y = GROUND_Y - PLAYER_SIZE;
+    player.vy = 0;
+    player.onGround = true;
+  }
+
+  obstacleTimer -= dt;
+  if (obstacleTimer <= 0) {
+    const h = randomRange(40, 100);
+    obstacles.push({
+      x: W + 20,
+      y: GROUND_Y - h,
+      w: randomRange(20, 40),
+      h: h,
+      speed: BASE_OBSTACLE_SPEED * speedMultiplier
+    });
+    obstacleTimer = randomRange(1500 / speedMultiplier, 3000 / speedMultiplier);
+  }
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    obstacles[i].x -= obstacles[i].speed * (dt / 16.67);
+    if (obstacles[i].x + obstacles[i].w < 0) obstacles.splice(i, 1);
+  }
+
+  coinTimer -= dt;
+  if (coinTimer <= 0) {
+    const cy = GROUND_Y - randomRange(80, 220);
+    coins.push({
+      x: W + 20,
+      y: cy,
+      size: 24,
+      rotation: 0,
+      speed: BASE_COIN_SPEED * speedMultiplier,
+      collected: false
+    });
+    coinTimer = randomRange(2000 / speedMultiplier, 4000 / speedMultiplier);
+  }
+  for (let i = coins.length - 1; i >= 0; i--) {
+    coins[i].x -= coins[i].speed * (dt / 16.67);
+    coins[i].rotation += 0.05 * (dt / 16.67);
+    if (coins[i].x + coins[i].size < 0) coins.splice(i, 1);
+  }
+
+  const pBox = { x: player.x + 4, y: player.y + 4, w: player.w - 8, h: player.h - 8 };
+  for (const obs of obstacles) {
+    if (rectsOverlap(pBox, obs)) {
+      triggerGameOver();
+      return;
+    }
+  }
+
+  for (const coin of coins) {
+    if (!coin.collected) {
+      const cx = coin.x + coin.size / 2;
+      const cy = coin.y + coin.size / 2;
+      const px = player.x + player.w / 2;
+      const py = player.y + player.h / 2;
+      const dist = Math.hypot(cx - px, cy - py);
+      if (dist < coin.size / 2 + player.w / 2 - 4) {
+        coin.collected = true;
+        score += 10;
+        for (let i = 0; i < 8; i++) {
+          const angle = (i / 8) * Math.PI * 2;
+          particles.push({
+            x: cx, y: cy,
+            vx: Math.cos(angle) * 4,
+            vy: Math.sin(angle) * 4,
+            life: 1,
+            color: '#ffd700',
+            size: 3
+          });
+        }
+      }
+    }
+  }
+
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx * (dt / 16.67);
+    p.y += p.vy * (dt / 16.67);
+    p.life -= 0.03 * (dt / 16.67);
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  for (const s of stars) {
+    s.twinkle += 0.02 * (dt / 16.67);
+  }
+}
+
+function triggerGameOver() {
+  gameOver = true;
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem('runnerHighScore', highScore);
+  }
+}
+
+function glow(color, blur) {
+  ctx.shadowColor = color;
+  ctx.shadowBlur = blur;
+}
+function noGlow() {
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+}
+
+function draw() {
+  ctx.fillStyle = '#0a0a1a';
+  ctx.fillRect(0, 0, W, H);
+
+  for (const s of stars) {
+    const a = s.alpha * (0.5 + 0.5 * Math.sin(s.twinkle));
+    ctx.fillStyle = 'rgba(255,255,255,' + a + ')';
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.fillStyle = '#12122a';
+  for (let i = 0; i < W + 80; i += 60) {
+    const bx = ((i - groundOffset * 0.3) % (W + 80) + W + 80) % (W + 80) - 40;
+    const bh = 40 + Math.sin(i * 0.07) * 30 + Math.cos(i * 0.13) * 20;
+    ctx.fillRect(bx, GROUND_Y - bh, 40, bh);
+    if (Math.sin(i * 0.5) > 0.3) {
+      ctx.fillStyle = 'rgba(0,255,255,0.15)';
+      ctx.fillRect(bx + 8, GROUND_Y - bh + 10, 6, 6);
+      ctx.fillRect(bx + 22, GROUND_Y - bh + 22, 6, 6);
+      ctx.fillStyle = '#12122a';
+    }
+  }
+
+  glow('#0ff', 12);
+  ctx.strokeStyle = '#0ff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, GROUND_Y);
+  ctx.lineTo(W, GROUND_Y);
+  ctx.stroke();
+  noGlow();
+
+  ctx.strokeStyle = 'rgba(0,255,255,0.3)';
+  ctx.lineWidth = 1;
+  for (let x = -groundOffset; x < W + 40; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, GROUND_Y);
+    ctx.lineTo(x, GROUND_Y + 8);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = 'rgba(0,255,255,0.03)';
+  ctx.fillRect(0, GROUND_Y, W, H - GROUND_Y);
+
+  glow('#0ff', 20);
+  ctx.fillStyle = '#0ff';
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillRect(player.x + 8, player.y + 8, player.w - 16, player.h - 16);
+  noGlow();
+
+  for (const obs of obstacles) {
+    glow('#ff2255', 15);
+    ctx.fillStyle = '#ff2255';
+    ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+    ctx.fillStyle = 'rgba(255,100,150,0.5)';
+    ctx.fillRect(obs.x + 4, obs.y + 4, obs.w - 8, 4);
+    noGlow();
+  }
+
+  for (const coin of coins) {
+    if (coin.collected) continue;
+    const cx = coin.x + coin.size / 2;
+    const cy = coin.y + coin.size / 2;
+    const r = coin.size / 2;
+    const spikes = 5;
+    const innerR = r * 0.4;
+
+    glow('#ffd700', 18);
+    ctx.fillStyle = '#ffd700';
+    ctx.beginPath();
+    for (let i = 0; i < spikes * 2; i++) {
+      const angle = (i / (spikes * 2)) * Math.PI * 2 + coin.rotation - Math.PI / 2;
+      const radius = i % 2 === 0 ? r : innerR;
+      const sx = cx + Math.cos(angle) * radius;
+      const sy = cy + Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(sx, sy);
+      else ctx.lineTo(sx, sy);
+    }
+    ctx.closePath();
+    ctx.fill();
+    noGlow();
+  }
+
+  for (const p of particles) {
+    ctx.globalAlpha = Math.max(0, p.life);
+    glow(p.color, 8);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+    noGlow();
+  }
+  ctx.globalAlpha = 1;
+
+  ctx.font = 'bold 20px monospace';
+  ctx.textBaseline = 'top';
+
+  ctx.textAlign = 'left';
+  glow('#0ff', 10);
+  ctx.fillStyle = '#0ff';
+  ctx.fillText('SCORE: ' + score, 20, 20);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#ffd700';
+  glow('#ffd700', 10);
+  ctx.fillText('BEST: ' + highScore, W - 20, 20);
+  noGlow();
+
+  if (speedMultiplier > 1) {
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 14px monospace';
+    const r = Math.max(0, 200 - Math.floor((speedMultiplier - 1) * 10) * 15);
+    ctx.fillStyle = 'rgba(255,' + r + ',0,0.9)';
+    ctx.fillText('SPEED x' + speedMultiplier.toFixed(1), W / 2, 20);
+  }
+
+  if (!started && !gameOver) {
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 28px monospace';
+    glow('#0ff', 20);
+    ctx.fillStyle = '#0ff';
+    ctx.fillText('NEON RUNNER', W / 2, H / 2 - 60);
+    ctx.font = '16px monospace';
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    noGlow();
+    ctx.fillText('TAP or SPACE to jump', W / 2, H / 2 - 20);
+  }
+
+  if (gameOver) {
+    ctx.fillStyle = 'rgba(5,5,20,0.75)';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 52px monospace';
+    glow('#ff2255', 30);
+    ctx.fillStyle = '#ff2255';
+    ctx.fillText('GAME OVER', W / 2, H / 2 - 80);
+    noGlow();
+
+    ctx.font = 'bold 24px monospace';
+    glow('#0ff', 10);
+    ctx.fillStyle = '#0ff';
+    ctx.fillText('SCORE: ' + score, W / 2, H / 2 - 10);
+
+    ctx.fillStyle = '#ffd700';
+    glow('#ffd700', 10);
+    ctx.fillText('BEST: ' + highScore, W / 2, H / 2 + 30);
+    noGlow();
+
+    if (score > 0 && score >= highScore) {
+      ctx.font = 'bold 18px monospace';
+      ctx.fillStyle = '#ffd700';
+      ctx.fillText('NEW HIGH SCORE!', W / 2, H / 2 + 65);
+    }
+
+    ctx.font = '16px monospace';
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    var isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    ctx.fillText(isMobile ? 'TAP to Restart' : 'Press SPACE to Restart', W / 2, H / 2 + 100);
+  }
+}
+
+var lastTime = 0;
+
+function loop(timestamp) {
+  var dt = lastTime ? Math.min(timestamp - lastTime, 50) : 16.67;
+  lastTime = timestamp;
+  update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+init();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

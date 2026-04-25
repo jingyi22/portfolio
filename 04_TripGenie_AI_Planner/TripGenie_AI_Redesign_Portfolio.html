@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TripGenie AI Planner · Redesign · UX Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
@@ -23,10 +23,15 @@ body{background:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px) 0 0/
 @keyframes bounceIn{0%{transform:scale(.2);opacity:0}55%{transform:scale(1.1)}75%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
 @keyframes floatIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.a-fsi{animation:fadeSlideIn .45s ease-out both}.a-shake{animation:shake .5s ease-in-out}.a-pop{animation:popIn .6s cubic-bezier(.175,.885,.32,1.275) both}.a-slide-up{animation:slideUp .35s cubic-bezier(.4,0,.2,1) both}.a-fade{animation:fadeIn .3s ease both}.a-bounce{animation:bounceIn .65s cubic-bezier(.175,.885,.32,1.275) both}.a-spin{animation:spin .8s linear infinite}.a-blink{animation:blink 1.5s ease-in-out infinite}.scroll{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}.ann{background:rgba(27,110,253,.07);border:1px solid rgba(27,110,253,.18);border-radius:12px;padding:12px 14px;max-width:200px;animation:floatIn .5s ease both}
+.a-fsi{animation:fadeSlideIn .45s ease-out both}.a-shake{animation:shake .5s ease-in-out}.a-pop{animation:popIn .6s cubic-bezier(.175,.885,.32,1.275) both}.a-slide-up{animation:slideUp .35s cubic-bezier(.4,0,.2,1) both}.a-fade{animation:fadeIn .3s ease both}.a-bounce{animation:bounceIn .65s cubic-bezier(.175,.885,.32,1.275) both}.a-spin{animation:spin .8s linear infinite}.a-blink{animation:blink 1.5s ease-in-out infinite}.scroll{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}.ann{background:rgba(27,110,253,.07);border:1px solid rgba(27,110,253,.18);border-radius:12px;padding:12px 14px;max-width:232px;animation:floatIn .5s ease both}
 </style>
 </head>
 <body>
+<script>try{localStorage.removeItem('tripgenie-portfolio-screen-v2');}catch(e){}</script>
+<style>#portfolio-back a:hover{color:#E6EDF3!important;border-color:rgba(255,255,255,.22)!important}</style>
+<div id="portfolio-back" style="position:fixed;top:16px;left:16px;z-index:9999">
+  <a href="../portfolio.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(13,17,23,.88);backdrop-filter:blur(12px);color:rgba(230,237,243,.6);font-family:'Inter',system-ui,sans-serif;font-size:12px;font-weight:500;text-decoration:none;padding:7px 13px;border-radius:8px;border:1px solid rgba(255,255,255,.1);transition:color .2s,border-color .2s">← Portfolio</a>
+</div>
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect, useCallback } = React;
@@ -59,61 +64,207 @@ function StatusBar({ dark }) {
 function CoverScreen({ onStart, accent }) {
   const weaknesses = [
     { label: 'Generic Suggestions', severity: 'Critical', note: 'No cultural context — treats all users identically regardless of dietary, religious, or family needs', icon: '🎯' },
-    { label: 'Voice = STT Only', severity: 'Major', note: 'Voice input only transcribes speech — no real dialogue, follow-up, or clarification capability', icon: '🎙️' },
+    { label: 'Attraction-Only Itinerary', severity: 'Major', note: 'Plans list sightseeing only — no hotel, dining, or transport recommendations, unlike Booking.com AI', icon: '🗺️' },
     { label: 'No Language Auto-reply', severity: 'Major', note: 'Detects user language but always responds in default Chinese — Expedia Romie adapts automatically', icon: '🌐' },
     { label: 'Weak Condition Capture', severity: 'Moderate', note: 'Budget, group size, and special requirements often missed during AI query parsing', icon: '📋' },
     { label: 'No Proactive Escalation', severity: 'Moderate', note: 'Sensitive scenarios (medical travel, religious groups, large parties) receive no human handoff', icon: '🚨' }
   ];
   const findings = [
-    { stage: 'Query Input', issue: 'Generic UI', detail: 'No condition tags or identity recognition — user types freeform with zero guidance', hot: true },
-    { stage: 'AI Response', issue: 'Text Wall', detail: 'Long paragraphs, zero visual hierarchy — users cannot scan key information', hot: true },
-    { stage: 'Hotel Filters', issue: 'Dropdown Only', detail: 'No visual chips, no halal/vegetarian/cultural filters — Priceline Penny wins here', hot: true },
-    { stage: 'Multi-lang', issue: 'Detection Only', detail: 'Can detect language but responds in default Chinese — Expedia Romie does it correctly', hot: true },
-    { stage: 'Edge Cases', issue: 'No Escalation', detail: 'Budget weddings, religious groups, medical travel — zero proactive human handoff', hot: false }
+    { stage: 'Query Input', icon: '⌨️', issue: 'Generic UI', detail: 'No condition tags or identity recognition — user types freeform with zero guidance', hot: true },
+    { stage: 'AI Response', icon: '🗺️', issue: 'Attraction-Only Plans', detail: 'Itinerary lists sightseeing only — no hotel, dining, or transport — Booking.com AI includes all three', hot: true },
+    { stage: 'Hotel Filters', icon: '🏨', issue: 'Dropdown Only', detail: 'No visual chips, no halal/vegetarian/cultural filters — Priceline Penny wins here', hot: true },
+    { stage: 'Multi-lang', icon: '🌐', issue: 'Detection Only', detail: 'Can detect language but responds in default Chinese — Expedia Romie does it correctly', hot: true },
+    { stage: 'Edge Cases', icon: '🚨', issue: 'No Escalation', detail: 'Budget weddings, religious groups, medical travel — zero proactive human handoff', hot: false }
   ];
   const competitors = [
-    { name: 'Expedia Romie', rank: '#1', strength: 'Answer quality — Language auto-adapt', gap: 'TripGenie: generic suggestions, no context awareness' },
-    { name: 'Priceline Penny', rank: '#2', strength: 'Filter UX — Visual chip filters', gap: 'TripGenie: dropdown-only, no cultural filters' },
-    { name: 'Booking AI', rank: '#3', strength: 'Itinerary day-card visualization', gap: 'TripGenie: text-only response, no day cards' }
+    { name: 'Expedia Romie', rank: '#1', rankColor: accent, strength: 'Answer quality — Language auto-adapt', gap: 'TripGenie: generic suggestions, no context awareness' },
+    { name: 'Priceline Penny', rank: '#2', rankColor: '#7C3AED', strength: 'Filter UX — Visual chip filters', gap: 'TripGenie: dropdown-only, no cultural filters' },
+    { name: 'Booking AI', rank: '#3', rankColor: 'rgba(255,255,255,.35)', strength: 'Itinerary day-card visualization', gap: 'TripGenie: text-only response, no day cards' }
   ];
-  const card = (children, extraStyle) =>
-    <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 16, padding: '18px 20px', display: 'flex', flexDirection: 'column', overflow: 'hidden', ...extraStyle }}>{children}</div>;
-  const lbl = (t) => <div style={{ color: 'rgba(255,255,255,.3)', fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14, flexShrink: 0, fontSize: "13px" }}>{t}</div>;
+
+  const sectionLabel = (t) => (
+    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(255,255,255,.28)', marginBottom: 20 }}>{t}</div>
+  );
+
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr 1fr', gridTemplateRows: '1fr 1fr 1fr', gap: 12, padding: '28px 32px', height: '100vh', width: '100vw', overflow: 'hidden', position: 'relative' }}>
-      <div style={{ position: 'absolute', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle,' + accent + '13 0%,transparent 70%)', top: '45%', left: '32%', transform: 'translate(-50%,-50%)', pointerEvents: 'none', zIndex: 0 }} />
-      <div className="a-fsi" style={{ gridRow: '1 / -1', gridColumn: '1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', zIndex: 1, animationDelay: '.04s' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 22 }}>
-            <div style={{ background: 'white', borderRadius: 7, padding: '4px 10px', fontSize: 13, fontWeight: 800, color: accent }}>trip.com</div>
-            <div style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.1)', borderRadius: 20, padding: '3px 10px', fontSize: 10, color: 'rgba(255,255,255,.45)', fontWeight: 500 }}>UX Portfolio</div>
+    <div style={{ width: '100vw', height: '100vh', overflowY: 'auto', overflowX: 'hidden', scrollbarWidth: 'none', position: 'relative' }}>
+
+      {/* ambient glow */}
+      <div style={{ position: 'fixed', width: 700, height: 700, borderRadius: '50%', background: `radial-gradient(circle,${accent}18 0%,transparent 70%)`, top: '10%', left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none', zIndex: 0 }} />
+
+      {/* ══════════════════ HERO ══════════════════ */}
+      <div className="a-fsi" style={{ maxWidth: 780, margin: '0 auto', padding: '72px 32px 0', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+
+        {/* badges */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 28 }}>
+          <div style={{ background: 'white', borderRadius: 7, padding: '5px 12px', fontSize: 13, fontWeight: 800, color: accent }}>trip.com</div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', background: 'rgba(27,110,253,.10)', border: '1px solid rgba(27,110,253,.22)', borderRadius: 20, padding: '5px 14px', fontSize: 11, fontWeight: 700, color: '#7AAFFF', letterSpacing: 1, textTransform: 'uppercase' }}>
+            Case Study · IBU CSC UXA · 2025
           </div>
-          <div style={{ fontSize: 9, color: 'rgba(255,255,255,.28)', fontWeight: 700, letterSpacing: 2.2, textTransform: 'uppercase', marginBottom: 11 }}>Case Study — IBU CSC UXA — 2025</div>
-          <div style={{ fontSize: 34, fontWeight: 800, color: 'white', lineHeight: 1.13, letterSpacing: -.8, marginBottom: 16 }}>TripGenie<br />AI Planner<br /><span style={{ color: accent }}>Redesign</span></div>
-          <div style={{ color: 'rgba(255,255,255,.42)', lineHeight: 1.72, fontSize: "15px" }}>TripGenie underperforms vs Expedia Romie and Priceline Penny. This project identifies 5 core UX gaps and proposes targeted redesign interventions.</div>
         </div>
-        <div>
-          <div style={{ color: 'rgba(255,255,255,.28)', fontWeight: 700, letterSpacing: 1.4, textTransform: 'uppercase', marginBottom: 10, fontSize: "14px" }}>Research Approach</div>
-          {[['🔬', 'Desktop Research', '10 platforms — 4 intl OTAs, 2 regional, 4 airlines'],['🎯', 'Competitive Teardown', 'Expedia Romie, Priceline Penny, Booking AI, Kayak'],['👥', 'Internal Analysis', 'TripGenie logs — User feedback — CS escalations']].map(([ic, t, s]) =>
-            <div key={t} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '9px 11px', background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.06)', borderRadius: 10, marginBottom: 7 }}>
-              <span style={{ fontSize: 13, flexShrink: 0, marginTop: 1 }}>{ic}</span>
-              <div><div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,.75)', marginBottom: 1 }}>{t}</div><div style={{ fontSize: 10, color: 'rgba(255,255,255,.32)' }}>{s}</div></div>
+
+        {/* title */}
+        <h1 style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 58, fontWeight: 400, color: 'white', lineHeight: 1.08, letterSpacing: -.5, marginBottom: 22 }}>
+          TripGenie AI Planner<br />
+          <em style={{ color: accent, fontStyle: 'italic' }}>Redesign</em>
+        </h1>
+
+        {/* subtitle */}
+        <p style={{ color: 'rgba(255,255,255,.48)', fontSize: 16, lineHeight: 1.75, maxWidth: 560, margin: '0 auto 40px' }}>
+          TripGenie underperforms vs Expedia Romie and Priceline Penny. This project identifies 5 core UX gaps and proposes targeted redesign interventions across the full trip-planning flow.
+        </p>
+
+        {/* stats row */}
+        <div style={{ display: 'flex', background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 16, overflow: 'hidden', maxWidth: 580, margin: '0 auto 40px' }}>
+          {[
+            { num: '10', label: 'Platforms Benchmarked', hi: false },
+            { num: '5', label: 'Core UX Gaps Found', hi: true },
+            { num: '3', label: 'Top Competitors Studied', hi: false }
+          ].map((s, i) =>
+            <div key={i} style={{ flex: 1, padding: '22px 16px', borderRight: i < 2 ? '1px solid rgba(255,255,255,.07)' : 'none', textAlign: 'center' }}>
+              <div style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 38, fontWeight: 400, color: s.hi ? accent : 'white', lineHeight: 1 }}>{s.num}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.32)', marginTop: 7, lineHeight: 1.4 }}>{s.label}</div>
             </div>
           )}
         </div>
-        <div>
-          <button onClick={onStart} style={{ width: '100%', padding: '14px 20px', borderRadius: 13, border: 'none', background: accent, color: 'white', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, animation: 'confirmPulse 2.2s ease-in-out infinite', boxShadow: '0 6px 24px ' + accent + '44' }}>
-            Experience the Redesign <span style={{ fontSize: 15 }}>→</span>
-          </button>
-          <div style={{ textAlign: 'center', marginTop: 7, fontSize: 10, color: 'rgba(255,255,255,.2)' }}>Interactive Prototype — 4 Screens — iPhone Frame</div>
-        </div>
+
+        {/* CTA */}
+        <button onClick={onStart} style={{ padding: '15px 36px', borderRadius: 14, border: 'none', background: accent, color: 'white', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10, animation: 'confirmPulse 2.2s ease-in-out infinite', boxShadow: `0 8px 28px ${accent}50`, marginBottom: 10 }}>
+          Experience the Redesign <span style={{ fontSize: 17 }}>→</span>
+        </button>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,.2)', marginBottom: 72 }}>Interactive Prototype · 4 Screens · iPhone Frame</div>
       </div>
-      {card(<>{lbl('Competitive Teardown — 5 Core Weaknesses')}<div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7 }}>{weaknesses.map((w, i) => { const sc = w.severity === 'Critical' ? '#EF4444' : w.severity === 'Major' ? accent : 'rgba(255,255,255,.4)'; const sb = w.severity === 'Critical' ? 'rgba(239,68,68,.1)' : w.severity === 'Major' ? accent + '18' : 'rgba(255,255,255,.06)'; return (<div key={i} style={{ display: 'flex', gap: 10, padding: '9px 10px', background: 'rgba(255,255,255,.03)', borderRadius: 9, borderLeft: '2px solid ' + sc }}><span style={{ fontSize: 15, flexShrink: 0, marginTop: 1 }}>{w.icon}</span><div style={{ flex: 1, minWidth: 0 }}><div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}><span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,.82)' }}>{w.label}</span><span style={{ fontSize: 9, fontWeight: 700, color: sc, background: sb, borderRadius: 4, padding: '1px 5px', flexShrink: 0 }}>{w.severity}</span></div><div style={{ fontSize: 10, color: 'rgba(255,255,255,.35)', lineHeight: 1.4 }}>{w.note}</div></div></div>);})}</div></>, { gridRow: '1', gridColumn: '2', zIndex: 1, animationDelay: '.08s' })}
-      {card(<>{lbl('Competitive Ranking — Top 3')}<div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{competitors.map((c, i) =><div key={i} style={{ padding: '10px 12px', background: 'rgba(255,255,255,.03)', borderRadius: 10, borderLeft: '2px solid ' + (i === 0 ? accent : i === 1 ? '#7C3AED' : 'rgba(255,255,255,.3)'), marginBottom: 8 }}><div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}><span style={{ fontSize: 14, fontWeight: 700, color: 'white' }}>{c.name}</span><span style={{ fontSize: 10, color: accent, fontWeight: 600 }}>{c.rank}</span></div><div style={{ fontSize: 10, color: accent + 'CC', marginBottom: 2 }}>{c.strength}</div><div style={{ fontSize: 9, color: 'rgba(255,255,255,.32)' }}>{c.gap}</div></div>)}</div></>, { gridRow: '1', gridColumn: '3', zIndex: 1, animationDelay: '.1s' })}
-      {card(<>{lbl('Key Findings — 5 UX Gaps Identified')}<div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 10 }}>{findings.map((f, i) =><div key={i} style={{ padding: '12px', background: 'rgba(255,255,255,.03)', borderRadius: 10, borderTop: '1.5px solid ' + (f.hot ? accent : 'rgba(255,255,255,.09)'), display: 'flex', flexDirection: 'column', gap: 8 }}><div style={{ color: 'rgba(255,255,255,.28)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: .7, fontSize: "11px" }}>{f.stage}</div><div style={{ fontWeight: 700, color: f.hot ? accent : 'rgba(255,255,255,.8)', lineHeight: 1.25, fontSize: "18px", marginBottom: 6 }}>{f.issue}</div><div style={{ color: 'rgba(255,255,255,.38)', lineHeight: 1.5, fontSize: "12px" }}>{f.detail}</div></div>)}</div></>, { gridRow: '2', gridColumn: '2 / -1', zIndex: 1, animationDelay: '.12s' })}
-      {card(<>{lbl('Research Coverage')}<div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr 1fr', gap: 8 }}>{[['10', 'Platforms tested'],['5', 'UX dimensions'],['3', 'Top competitors'],['100+', 'User feedback logs'],['7', 'CS escalation cases'],['75MB', 'Competitor PPTX']].map(([v, l]) =><div key={l} style={{ padding: '10px 12px', background: 'rgba(255,255,255,.04)', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><div style={{ fontSize: 20, fontWeight: 800, color: 'white', letterSpacing: -.3, lineHeight: 1 }}>{v}</div><div style={{ color: 'rgba(255,255,255,.32)', marginTop: 3, lineHeight: 1.3, fontSize: "12px" }}>{l}</div></div>)}</div></>, { gridRow: '3', gridColumn: '2', zIndex: 1, animationDelay: '.14s' })}
-      {card(<>{lbl('TripGenie Feature Gaps vs Competitors')}<div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{[['Contextual Intelligence', 'Expedia Romie detects Muslim family, dietary needs'],['Language Auto-reply', 'Expedia Romie responds in user language'],['Visual Filter Chips', 'Priceline Penny has halal/vegetarian filters'],['Itinerary Day Cards', 'Booking AI shows visual day-by-day cards'],['Proactive Escalation', 'Sensitive cases route to human agent']].map(([f, n], i) =><div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '8px 0', borderBottom: i < 4 ? '1px solid rgba(255,255,255,.05)' : 'none' }}><div style={{ width: 16, height: 16, borderRadius: 4, background: 'rgba(239,68,68,.1)', border: '1px solid rgba(239,68,68,.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}><span style={{ fontSize: 8, color: '#EF4444', fontWeight: 700 }}>✕</span></div><div><div style={{ fontWeight: 600, color: 'rgba(255,255,255,.65)', lineHeight: 1.3, fontSize: "15px" }}>{f}</div><div style={{ fontSize: 10, color: 'rgba(255,255,255,.28)', marginTop: 1 }}>{n}</div></div></div>)}</div></>, { gridRow: '3', gridColumn: '3', zIndex: 1, animationDelay: '.16s' })}
-    </div>);
+
+      {/* ══════════════════ BODY CONTENT ══════════════════ */}
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 32px 80px', position: 'relative', zIndex: 1 }}>
+
+        <div style={{ height: 1, background: 'rgba(255,255,255,.07)', marginBottom: 56 }} />
+
+        {/* ── Competitive Teardown — 5 Core Weaknesses ── */}
+        <div className="a-fsi" style={{ marginBottom: 48, animationDelay: '.1s' }}>
+          {sectionLabel('Competitive Teardown — 5 Core Weaknesses')}
+          <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {weaknesses.map((w, i) => {
+              const sc = w.severity === 'Critical' ? '#EF4444' : w.severity === 'Major' ? accent : 'rgba(255,255,255,.4)';
+              const sb = w.severity === 'Critical' ? 'rgba(239,68,68,.1)' : w.severity === 'Major' ? `${accent}18` : 'rgba(255,255,255,.06)';
+              return (
+                <div key={i} style={{ display: 'flex', gap: 12, padding: '12px 14px', background: 'rgba(255,255,255,.03)', borderRadius: 10, borderLeft: `3px solid ${sc}` }}>
+                  <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{w.icon}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,.85)' }}>{w.label}</span>
+                      <span style={{ fontSize: 9, fontWeight: 700, color: sc, background: sb, borderRadius: 4, padding: '2px 6px', flexShrink: 0 }}>{w.severity}</span>
+                    </div>
+                    <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,.38)', lineHeight: 1.5 }}>{w.note}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Key Findings — 5 UX Gaps ── */}
+        <div className="a-fsi" style={{ marginBottom: 48, animationDelay: '.14s' }}>
+          {sectionLabel('Key Findings — 5 UX Gaps Identified')}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10 }}>
+            {findings.map((f, i) =>
+              <div key={i} style={{ background: 'rgba(255,255,255,.03)', border: `1px solid ${f.hot ? `${accent}44` : 'rgba(255,255,255,.07)'}`, borderTop: `2px solid ${f.hot ? accent : 'rgba(255,255,255,.10)'}`, borderRadius: 14, padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div style={{ fontSize: 20 }}>{f.icon}</div>
+                <div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,.28)', textTransform: 'uppercase', letterSpacing: .8, marginBottom: 5 }}>{f.stage}</div>
+                  <div style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 17, fontWeight: 400, color: f.hot ? accent : 'rgba(255,255,255,.85)', lineHeight: 1.25, marginBottom: 8 }}>{f.issue}</div>
+                  <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,.38)', lineHeight: 1.55 }}>{f.detail}</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── Competitor Ranking + Feature Gaps ── */}
+        <div className="a-fsi" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16, animationDelay: '.17s' }}>
+
+          {/* Competitor Ranking */}
+          <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, padding: '24px 24px' }}>
+            {sectionLabel('Competitive Ranking — Top 3')}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {competitors.map((c, i) =>
+                <div key={i} style={{ padding: '14px 16px', background: 'rgba(255,255,255,.03)', borderRadius: 12, borderLeft: `3px solid ${c.rankColor}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+                    <span style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 17, fontWeight: 400, color: 'white' }}>{c.name}</span>
+                    <span style={{ fontSize: 12, color: c.rankColor, fontWeight: 700 }}>{c.rank}</span>
+                  </div>
+                  <div style={{ fontSize: 11, color: `${accent}CC`, marginBottom: 3 }}>{c.strength}</div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)' }}>{c.gap}</div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Feature Gaps */}
+          <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, padding: '24px 24px' }}>
+            {sectionLabel('TripGenie Feature Gaps vs Competitors')}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {[
+                ['Contextual Intelligence', 'Expedia Romie detects Muslim family, dietary needs'],
+                ['Language Auto-reply', 'Expedia Romie responds in user language'],
+                ['Visual Filter Chips', 'Priceline Penny has halal/vegetarian filters'],
+                ['Itinerary Day Cards', 'Booking AI shows visual day-by-day cards'],
+                ['Proactive Escalation', 'Sensitive cases route to human agent']
+              ].map(([f, n], i) =>
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                  <div style={{ width: 18, height: 18, borderRadius: 5, background: 'rgba(239,68,68,.1)', border: '1px solid rgba(239,68,68,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                    <span style={{ fontSize: 9, color: '#EF4444', fontWeight: 700 }}>✕</span>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,.7)', lineHeight: 1.3 }}>{f}</div>
+                    <div style={{ fontSize: 10, color: 'rgba(255,255,255,.28)', marginTop: 2 }}>{n}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Research Coverage + Approach ── */}
+        <div className="a-fsi" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, animationDelay: '.2s' }}>
+
+          {/* Research Coverage */}
+          <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, padding: '24px 24px' }}>
+            {sectionLabel('Research Coverage')}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+              {[['10', 'Platforms'], ['5', 'UX Dimensions'], ['3', 'Competitors'], ['100+', 'Feedback logs'], ['7', 'CS Cases'], ['75MB', 'Competitor PPTX']].map(([v, l]) =>
+                <div key={l} style={{ padding: '12px', background: 'rgba(255,255,255,.04)', borderRadius: 10, textAlign: 'center' }}>
+                  <div style={{ fontFamily: '"DM Serif Display", Georgia, serif', fontSize: 22, fontWeight: 400, color: 'white', lineHeight: 1 }}>{v}</div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,.3)', marginTop: 5 }}>{l}</div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Research Approach */}
+          <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, padding: '24px 24px' }}>
+            {sectionLabel('Research Approach')}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {[
+                ['🔬', 'Desktop Research', '10 platforms — 4 intl OTAs, 2 regional, 4 airlines'],
+                ['🎯', 'Competitive Teardown', 'Expedia Romie, Priceline Penny, Booking AI, Kayak'],
+                ['👥', 'Internal Analysis', 'TripGenie logs — User feedback — CS escalations']
+              ].map(([ic, t, s]) =>
+                <div key={t} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 16px', background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.06)', borderRadius: 12 }}>
+                  <span style={{ fontSize: 18, flexShrink: 0 }}>{ic}</span>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,.8)', marginBottom: 4 }}>{t}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,.32)', lineHeight: 1.5 }}>{s}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
 }
 
 
@@ -133,10 +284,11 @@ function PlanningScreen({ onContinue, accent }) {
         { icon: '📍', label: 'Kyoto — June' },
         { icon: '💰', label: 'Moderate budget' }
       ],
+      greeting: "Salaam! What a wonderful family trip 🌸 I've put together a halal-friendly Kyoto itinerary with prayer-time spacing, kid-safe activities, and certified halal dining every day — enjoy every moment together!",
       itinerary: [
-        { day: 'Day 1', title: 'Fushimi Inari & Gion', tags: ['🕌 Halal nearby', '🍽️ Muslim-friendly restaurant', '👨‍👩‍👧‍👦 Family scenic walk'], color: '#10B981', time: 'Full day' },
-        { day: 'Day 2', title: 'Arashiyama Bamboo & River', tags: ['🌸 Scenic family spot', '🍵 Vegetarian café', '⛩️ Cultural experience'], color: '#3B82F6', time: 'Full day' },
-        { day: 'Day 3', title: 'Kinkaku-ji & Shopping', tags: ['🛍️ Kid-friendly shopping', '🍜 Muslim-friendly area', '📸 Photo spots'], color: '#8B5CF6', time: 'Morning + afternoon' }
+        { day: 'Day 1', title: 'Fushimi Inari & Gion', tags: ['🕌 Halal nearby', '🍽️ Muslim-friendly restaurant', '👨‍👩‍👧‍👦 Family scenic walk'], color: '#10B981', time: 'Full day', stay: 'Kyoto Granbell Hotel · ¥1,280/night', dining: 'Halal Ramen Miyako · 5 min walk' },
+        { day: 'Day 2', title: 'Arashiyama Bamboo & River', tags: ['🌸 Scenic family spot', '🍵 Vegetarian café', '⛩️ Cultural experience'], color: '#3B82F6', time: 'Full day', stay: 'Kyoto Granbell Hotel · ¥1,280/night', dining: 'Musafir Islamic Kitchen · 8 min walk' },
+        { day: 'Day 3', title: 'Kinkaku-ji & Shopping', tags: ['🛍️ Kid-friendly shopping', '🍜 Muslim-friendly area', '📸 Photo spots'], color: '#8B5CF6', time: 'Morning + afternoon', stay: 'Check-out after breakfast', dining: 'Honolu Café Halal Lunch · near station' }
       ]
     },
     business: {
@@ -146,9 +298,10 @@ function PlanningScreen({ onContinue, accent }) {
         { icon: '⏱️', label: 'Tight schedule' },
         { icon: '🏨', label: 'Central hotel preferred' }
       ],
+      greeting: "Tight schedule, got it ⚡ I've kept your itinerary lean — central locations, short transfers, and quick-service dining options so you can maximize productive time in Shanghai.",
       itinerary: [
-        { day: 'Day 1', title: 'The Bund & Lujiazui', tags: ['🏛️ Financial district', '☕ Business café', '📶 High-speed WiFi'], color: '#1B6EFD', time: 'Morning + afternoon' },
-        { day: 'Day 2', title: 'Nanjing Road & Yu Gardens', tags: ['🛍️ Quick shopping', '🍜 Efficient dining', '🚇 Metro accessible'], color: '#7C3AED', time: 'Morning only' }
+        { day: 'Day 1', title: 'The Bund & Lujiazui', tags: ['🏛️ Financial district', '☕ Business café', '📶 High-speed WiFi'], color: '#1B6EFD', time: 'Morning + afternoon', stay: 'Waldorf Astoria Shanghai · ¥2,100/night', dining: 'M on the Bund · business lunch 45 min' },
+        { day: 'Day 2', title: 'Nanjing Road & Yu Gardens', tags: ['🛍️ Quick shopping', '🍜 Efficient dining', '🚇 Metro accessible'], color: '#7C3AED', time: 'Morning only', stay: 'Check-out 11:00 · airport transfer 13:00', dining: 'Din Tai Fung · 30 min · near hotel' }
       ]
     },
     honeymoon: {
@@ -158,12 +311,13 @@ function PlanningScreen({ onContinue, accent }) {
         { icon: '🌹', label: 'Romantic vibes' },
         { icon: '🍷', label: 'Fine dining' }
       ],
+      greeting: "How romantic! 🌹 I've designed a dreamy Paris experience for two — private sunset moments, Michelin-starred dining, and the city's most intimate spots, sequenced perfectly for your honeymoon.",
       itinerary: [
-        { day: 'Day 1', title: 'Eiffel Tower & Champ de Mars', tags: ['🌅 Sunset view', '🍷 Champagne bar', '📸 Romantic photos'], color: '#EC4899', time: 'Evening' },
-        { day: 'Day 2', title: 'Montmartre & Sacré-Cœur', tags: ['🎨 Artist quarter', '☕ Le Consulat café', '🌹 Romantic stroll'], color: '#F59E0B', time: 'Full day' },
-        { day: 'Day 3', title: 'Seine River Cruise', tags: ['🚢 Boat ride', '🌃 Night view', '🍽️ Dinner cruise'], color: '#8B5CF6', time: 'Evening' },
-        { day: 'Day 4', title: 'Louvre & Tuileries Garden', tags: ['🏛️ Art & culture', '🌿 Garden walk', '📸 Iconic landmarks'], color: '#3B82F6', time: 'Full day' },
-        { day: 'Day 5', title: 'Le Marais & Shopping', tags: ['🛍️ Boutique shopping', '🍰 Ladurée macarons', '🎁 Souvenirs'], color: '#10B981', time: 'Morning + afternoon' }
+        { day: 'Day 1', title: 'Eiffel Tower & Champ de Mars', tags: ['🌅 Sunset view', '🍷 Champagne bar', '📸 Romantic photos'], color: '#EC4899', time: 'Evening', stay: 'Hôtel Plaza Athénée · ¥4,200/night', dining: 'Le Jules Verne · Michelin ★★' },
+        { day: 'Day 2', title: 'Montmartre & Sacré-Cœur', tags: ['🎨 Artist quarter', '☕ Le Consulat café', '🌹 Romantic stroll'], color: '#F59E0B', time: 'Full day', stay: 'Hôtel Plaza Athénée · ¥4,200/night', dining: 'Le Consulat Bistro · candlelit dinner' },
+        { day: 'Day 3', title: 'Seine River Cruise', tags: ['🚢 Boat ride', '🌃 Night view', '🍽️ Dinner cruise'], color: '#8B5CF6', time: 'Evening', stay: 'Hôtel Plaza Athénée · ¥4,200/night', dining: 'Bateaux Parisiens dinner cruise · included' },
+        { day: 'Day 4', title: 'Louvre & Tuileries Garden', tags: ['🏛️ Art & culture', '🌿 Garden walk', '📸 Iconic landmarks'], color: '#3B82F6', time: 'Full day', stay: 'Hôtel Plaza Athénée · ¥4,200/night', dining: 'Café de Flore · classic Parisian brunch' },
+        { day: 'Day 5', title: 'Le Marais & Shopping', tags: ['🛍️ Boutique shopping', '🍰 Ladurée macarons', '🎁 Souvenirs'], color: '#10B981', time: 'Morning + afternoon', stay: 'Check-out · airport transfer 15:00', dining: 'Ladurée Salon de Thé · farewell macarons' }
       ]
     }
   };
@@ -187,6 +341,19 @@ function PlanningScreen({ onContinue, accent }) {
   const currentTemplate = TEMPLATES[activeTemplate];
   const visibleItinerary = detected && stage === 'response' ? currentTemplate.itinerary : [];
 
+  // Chip removal → itinerary adapts
+  const removedLabels = detected ? detected.filter(d => d.removed).map(d => d.label) : [];
+  const muslimRemoved = removedLabels.some(l => l.includes('Muslim') || l.includes('muslim'));
+  const familyRemoved = removedLabels.some(l => l.includes('adults') || l.includes('children'));
+  const filteredItinerary = visibleItinerary.map(day => ({
+    ...day,
+    tags: day.tags.filter(tag => {
+      if (muslimRemoved && (tag.includes('🕌') || tag.includes('Halal') || tag.includes('halal') || tag.includes('Muslim') || tag.includes('muslim'))) return false;
+      if (familyRemoved && (tag.includes('👨‍👩‍👧‍👦') || tag.includes('Family') || tag.includes('family') || tag.includes('Kid'))) return false;
+      return true;
+    })
+  }));
+
   const handleAskAI = () => {
     if (!query.trim()) return;
     setStage('thinking');
@@ -205,7 +372,7 @@ function PlanningScreen({ onContinue, accent }) {
         <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center' }}>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 5L7.5 10L12.5 15" stroke="#111827" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
-        <div style={{ flex: 1 }}><div style={{ fontSize: 15, fontWeight: 700, color: '#111827', letterSpacing: -.3 }}>TripGenie AI</div><div style={{ fontSize: 10, color: '#9CA3AF', marginTop: 1 }}>Step 1 of 2 — Trip Planning</div></div>
+        <div style={{ flex: 1 }}><div style={{ fontSize: 15, fontWeight: 700, color: '#111827', letterSpacing: -.3 }}>TripGenie AI</div><div style={{ fontSize: 10, color: '#9CA3AF', marginTop: 1 }}>Step 1 of 3 — Trip Planning</div></div>
         <div style={{ background: '#EEF3FF', borderRadius: 8, padding: '3px 8px', fontSize: 10, color: accent, fontWeight: 700 }}>✦ Redesigned</div>
       </div>
       <div style={{ background: '#E5E7EB', height: 3, flexShrink: 0 }}><div style={{ background: accent, height: '100%', width: stage === 'response' ? '100%' : '50%', borderRadius: '0 2px 2px 0', transition: 'width .5s ease' }} /></div>
@@ -289,19 +456,43 @@ function PlanningScreen({ onContinue, accent }) {
               </div>
             )}
 
+            {/* AI greeting — conversational personality (PPT Slide 17) */}
+            {detected && stage === 'response' && (
+              <div className="a-fsi" style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 8 }}>
+                <div style={{ width: 26, height: 26, borderRadius: '50%', background: `${accent}18`, border: `1.5px solid ${accent}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: accent, flexShrink: 0 }}>✦</div>
+                <div style={{ background: 'white', borderRadius: '2px 14px 14px 14px', padding: '11px 13px', boxShadow: '0 1px 4px rgba(0,0,0,.06)', fontSize: 12.5, color: '#374151', lineHeight: 1.65, maxWidth: '90%' }}>
+                  {currentTemplate.greeting}
+                </div>
+              </div>
+            )}
+
+            {/* AI adjusted notice */}
+            {stage === 'response' && removedLabels.length > 0 && (
+              <div className="a-fsi" style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 10, padding: '8px 13px', marginBottom: 8, display: 'flex', gap: 7, alignItems: 'center' }}>
+                <span style={{ fontSize: 13, color: '#10B981' }}>✦</span>
+                <span style={{ fontSize: 11, color: '#065F46', fontWeight: 500 }}>Plan updated based on your context changes</span>
+              </div>
+            )}
+
             {/* Itinerary cards */}
             {stage === 'response' && (
               <div className="a-fsi">
-                {visibleItinerary.map((day, i) => (
+                {filteredItinerary.map((day, i) => (
                   <div key={i} style={{ background: 'white', borderRadius: 14, padding: 14, boxShadow: '0 1px 4px rgba(0,0,0,.06)', marginBottom: i < 2 ? 8 : 10, borderLeft: '3px solid ' + day.color }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                       <span style={{ fontSize: 11, fontWeight: 700, color: day.color }}>{day.day}</span>
                       <span style={{ fontSize: 10, color: '#9CA3AF' }}>{day.time}</span>
                     </div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#111827', marginBottom: 8 }}>{day.title}</div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: (day.stay || day.dining) ? 8 : 0 }}>
                       {day.tags.map((tag, j) => <span key={j} style={{ fontSize: 10, background: '#F3F4F6', color: '#374151', padding: '3px 8px', borderRadius: 6, fontWeight: 500 }}>{tag}</span>)}
                     </div>
+                    {(day.stay || day.dining) && (
+                      <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        {day.stay && <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 11 }}>🏨</span><span style={{ fontSize: 11, color: '#4B5563', fontWeight: 500 }}>{day.stay}</span></div>}
+                        {day.dining && <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 11 }}>🍽️</span><span style={{ fontSize: 11, color: '#4B5563', fontWeight: 500 }}>{day.dining}</span></div>}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -311,9 +502,15 @@ function PlanningScreen({ onContinue, accent }) {
       </div>
 
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent,white 28%)', padding: '20px 14px 18px', flexShrink: 0 }}>
-        <button onClick={onContinue} style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: accent, color: 'white', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 20px ' + accent + '55', animation: 'confirmPulse 2.5s ease-in-out infinite' }}>
-          Continue to Hotels →
-        </button>
+        {view === 'before' ? (
+          <button disabled style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: '#E5E7EB', color: '#9CA3AF', fontSize: 14, fontWeight: 700, cursor: 'not-allowed' }}>
+            Switch to ✦ After to continue
+          </button>
+        ) : (
+          <button onClick={onContinue} disabled={stage !== 'response'} style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: stage === 'response' ? accent : '#C7D9FF', color: 'white', fontSize: 14, fontWeight: 700, cursor: stage === 'response' ? 'pointer' : 'default', boxShadow: stage === 'response' ? '0 4px 20px ' + accent + '55' : 'none', animation: stage === 'response' ? 'confirmPulse 2.5s ease-in-out infinite' : 'none', transition: 'all .3s' }}>
+            Continue to Hotels →
+          </button>
+        )}
       </div>
     </div>);
 }
@@ -329,15 +526,15 @@ function HotelScreen({ onBack, onContinue, accent }) {
     { id: 'halal', label: '🕌 Halal', color: '#10B981' },
     { id: 'family', label: '👨‍👩‍👧‍👦 Family', color: '#3B82F6' },
     { id: 'muslimFriendly', label: '🍽️ Muslim-friendly', color: '#10B981' },
-    { id: 'prayerRoom', label: '⛿ Prayer room', color: '#8B5CF6' },
+    { id: 'prayerRoom', label: '🙏 Prayer room', color: '#8B5CF6' },
     { id: 'nearStation', label: '🚉 Near station', color: '#6B7280' },
     { id: 'budget', label: '💰 ¥500-1500', color: '#F59E0B' }
   ];
 
   const hotels = [
-    { id: 0, name: 'Kyoto Granbell Hotel', price: '¥1,280', rating: 4.6, tags: ['🕌 Halal', '🍽️ Muslim-friendly', '📍 3min to station'], img: '🏨', halalScore: 98, distance: '0.3km' },
-    { id: 1, name: 'Machiya Residence Kyoto', price: '¥980', rating: 4.4, tags: ['👨‍👩‍👧‍👦 Family rooms', '🛏️ Large beds', '📍 Gion district'], img: '🏯', halalScore: 65, distance: '1.2km' },
-    { id: 2, name: 'Hotel Nikko Princess Kyoto', price: '¥1,450', rating: 4.7, tags: ['🕌 Prayer room', '🍽️ Halal breakfast', '♿ Accessible'], img: '⛩️', halalScore: 95, distance: '0.5km' }
+    { id: 0, name: 'Kyoto Granbell Hotel', price: '¥1,280', rating: 4.6, tags: ['🕌 Halal certified', '🍽️ Muslim-friendly dining', '🚉 3 min to station'], img: '🏨', distance: '0.3km', filterKeys: ['halal', 'muslimFriendly', 'nearStation'] },
+    { id: 1, name: 'Machiya Residence Kyoto', price: '¥980', rating: 4.4, tags: ['👨‍👩‍👧‍👦 Family rooms', '🛏️ Large beds', '💰 Best value'], img: '🏯', distance: '1.2km', filterKeys: ['family', 'budget'] },
+    { id: 2, name: 'Hotel Nikko Princess Kyoto', price: '¥1,450', rating: 4.7, tags: ['🙏 Prayer room', '🍽️ Halal breakfast', '🕌 Halal certified'], img: '⛩️', distance: '0.5km', filterKeys: ['halal', 'muslimFriendly', 'prayerRoom'] }
   ];
 
   const toggleFilter = (id) => {
@@ -345,10 +542,7 @@ function HotelScreen({ onBack, onContinue, accent }) {
     setSelectedHotel(null);
   };
 
-  const getHotelScore = (hotel) => {
-    const matches = activeFilters.filter(f => hotel.tags.some(t => t.includes(f.replace(/([A-Z])/g, ' $1').toLowerCase()) || (f === 'halal' && t.includes('Halal')) || (f === 'muslimFriendly' && t.includes('Muslim')) || (f === 'family' && t.includes('Family'))));
-    return matches.length;
-  };
+  const getHotelScore = (hotel) => activeFilters.filter(f => hotel.filterKeys.includes(f)).length;
 
   const sortedHotels = [...hotels].sort((a, b) => getHotelScore(b) - getHotelScore(a));
 
@@ -359,7 +553,7 @@ function HotelScreen({ onBack, onContinue, accent }) {
         <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center' }}>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 5L7.5 10L12.5 15" stroke="#111827" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
-        <div style={{ flex: 1 }}><div style={{ fontSize: 15, fontWeight: 700, color: '#111827', letterSpacing: -.3 }}>Hotel Selection</div><div style={{ fontSize: 10, color: '#9CA3AF', marginTop: 1 }}>Step 2 of 2 — Smart Filters</div></div>
+        <div style={{ flex: 1 }}><div style={{ fontSize: 15, fontWeight: 700, color: '#111827', letterSpacing: -.3 }}>Hotel Selection</div><div style={{ fontSize: 10, color: '#9CA3AF', marginTop: 1 }}>Step 2 of 3 — Smart Filters</div></div>
         <div style={{ background: '#EEF3FF', borderRadius: 8, padding: '3px 8px', fontSize: 10, color: accent, fontWeight: 700 }}>✦ Redesigned</div>
       </div>
       <div style={{ background: '#E5E7EB', height: 3, flexShrink: 0 }}><div style={{ background: accent, height: '100%', width: '100%', borderRadius: '0 2px 2px 0' }} /></div>
@@ -428,19 +622,24 @@ function HotelScreen({ onBack, onContinue, accent }) {
               </div>
             ))}
 
-            {selectedHotel !== null && (
-              <button onClick={onContinue} className="a-pop" style={{ width: '100%', padding: '14px', borderRadius: 12, border: 'none', background: accent, color: 'white', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 20px ' + accent + '55', animation: 'confirmPulse 2s ease-in-out infinite', marginTop: 4 }}>
-                Book {hotels[selectedHotel].name} — {hotels[selectedHotel].price}/night →
-              </button>
-            )}
           </div>
         )}
       </div>
 
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent,white 28%)', padding: '20px 14px 18px', flexShrink: 0 }}>
-        <button onClick={onContinue} style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: '#6B7280', color: 'white', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
-          ← Back to Planning
-        </button>
+        {view === 'before' ? (
+          <button disabled style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: '#E5E7EB', color: '#9CA3AF', fontSize: 14, fontWeight: 700, cursor: 'not-allowed' }}>
+            Switch to ✦ After to continue
+          </button>
+        ) : selectedHotel !== null ? (
+          <button onClick={onContinue} style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: accent, color: 'white', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 20px ' + accent + '55', animation: 'confirmPulse 2s ease-in-out infinite' }}>
+            Book {hotels[selectedHotel].name} — {hotels[selectedHotel].price}/night →
+          </button>
+        ) : (
+          <button disabled style={{ width: '100%', padding: '15px', borderRadius: 14, border: 'none', background: '#C7D9FF', color: 'white', fontSize: 14, fontWeight: 700, cursor: 'default' }}>
+            Select a hotel above to continue
+          </button>
+        )}
       </div>
     </div>);
 }
@@ -471,7 +670,7 @@ function ServiceScreen({ onBack, onRestart, accent }) {
         <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center' }}>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 5L7.5 10L12.5 15" stroke="#111827" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
-        <div style={{ flex: 1 }}><div style={{ fontSize: 15, fontWeight: 700, color: '#111827', letterSpacing: -.3 }}>Customer Service</div><div style={{ fontSize: 10, color: '#9CA3AF', marginTop: 1 }}>TripGenie AI — Sensitive Scenarios</div></div>
+        <div style={{ flex: 1 }}><div style={{ fontSize: 15, fontWeight: 700, color: '#111827', letterSpacing: -.3 }}>Customer Service</div><div style={{ fontSize: 10, color: '#9CA3AF', marginTop: 1 }}>Step 3 of 3 — Proactive Service</div></div>
         <div style={{ background: '#EEF3FF', borderRadius: 8, padding: '3px 8px', fontSize: 10, color: accent, fontWeight: 700 }}>✦ Redesigned</div>
       </div>
       <div style={{ background: '#E5E7EB', height: 3, flexShrink: 0 }}><div style={{ background: accent, height: '100%', width: '100%', borderRadius: '0 2px 2px 0' }} /></div>
@@ -485,25 +684,28 @@ function ServiceScreen({ onBack, onRestart, accent }) {
         </div>
 
         {view === 'before' ? (
-          /* BEFORE: Passive notification only */
+          /* BEFORE: CS redirect — based on PPT Slide 21 exact finding */
           <div className="a-fsi">
-            <div style={{ background: 'white', borderRadius: 14, padding: 16, boxShadow: '0 1px 4px rgba(0,0,0,.06)', marginBottom: 10 }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: '#111827', marginBottom: 12 }}>Flight Delay Notification</div>
-              <div style={{ background: '#F5F7FA', borderRadius: 10, padding: '11px 13px', marginBottom: 14 }}>
-                <div style={{ fontSize: 11, color: '#6B7280', marginBottom: 4 }}>Flight</div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>AK 721 — Kuala Lumpur → Singapore</div>
-                <div style={{ fontSize: 12, color: '#DC2626', marginTop: 4 }}>⚠️ Delayed by 3 hours</div>
+            {/* User urgent message */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
+              <div style={{ background: '#EEF3FF', borderRadius: '14px 14px 2px 14px', padding: '10px 13px', maxWidth: '82%', fontSize: 12.5, color: '#1E3A5F', lineHeight: 1.55 }}>
+                I'm at the airport — airline staff can't find my booking. My flight is JL 709 in 2 hours, what do I do?!
               </div>
-              <div style={{ fontSize: 12, color: '#6B7280', textAlign: 'center', lineHeight: 1.5 }}>
-                Your flight has been delayed. We apologize for the inconvenience. Please check the app for more information.
-              </div>
-              <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-                <button style={{ flex: 1, padding: '10px', borderRadius: 10, border: '1.5px solid #E5E7EB', background: 'white', color: '#374151', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>View Details</button>
-                <button style={{ flex: 1, padding: '10px', borderRadius: 10, border: 'none', background: '#6B7280', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>OK</button>
+            </div>
+            {/* TripGenie robotic CS redirect */}
+            <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 10 }}>
+              <div style={{ width: 26, height: 26, borderRadius: '50%', background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#6B7280', flexShrink: 0 }}>TG</div>
+              <div style={{ background: 'white', borderRadius: '2px 14px 14px 14px', padding: '12px 13px', boxShadow: '0 1px 4px rgba(0,0,0,.06)', maxWidth: '85%' }}>
+                <div style={{ fontSize: 12.5, color: '#374151', lineHeight: 1.65, marginBottom: 10 }}>
+                  I understand you are experiencing an issue with your booking. For assistance with urgent matters, please visit our Customer Service Center where our support team will be happy to help you.
+                </div>
+                <button style={{ width: '100%', padding: '9px 14px', borderRadius: 9, border: '1.5px solid #E5E7EB', background: '#F9FAFB', color: '#374151', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  Go to Customer Service Center →
+                </button>
               </div>
             </div>
             <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: 12, padding: '10px 13px', fontSize: 11, color: '#92400E', lineHeight: 1.5 }}>
-              <strong>Issues:</strong> Passive notification only — zero proactive solutions — no rebooking path — no refund option — no clear action — user must navigate alone
+              <strong>Issues:</strong> Redirects urgent cases to a static CS page — no direct live agent — no policy lookup — no self-service resolution — no empathy for time-critical scenarios
             </div>
           </div>
         ) : (
@@ -513,8 +715,8 @@ function ServiceScreen({ onBack, onRestart, accent }) {
             <div style={{ background: 'linear-gradient(135deg,#FEE2E2,#FEF3C7)', borderRadius: 14, padding: '12px 13px', marginBottom: 10, border: '1px solid #FDE68A', display: 'flex', gap: 9, alignItems: 'flex-start' }}>
               <span style={{ fontSize: 22, flexShrink: 0 }}>⚠️</span>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#92400E', marginBottom: 2 }}>Flight Delayed by 3 Hours</div>
-                <div style={{ fontSize: 11, color: '#78350F', lineHeight: 1.45 }}>High-impact change detected. Choose an action below — we will handle the rest.</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#92400E', marginBottom: 2 }}>Return Flight Delayed by 3 Hours</div>
+                <div style={{ fontSize: 11, color: '#78350F', lineHeight: 1.45 }}>JL 709 · Osaka → Kuala Lumpur. High-impact change detected — choose an action and we'll handle the rest.</div>
               </div>
             </div>
 
@@ -528,10 +730,14 @@ function ServiceScreen({ onBack, onRestart, accent }) {
                   </div>
                 ) : actionStage === 'done' && selectedAction === i ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontSize: 22 }}>✅</span>
+                    <span style={{ fontSize: 22 }}>{opt.action === 'Start Chat' ? '💬' : '✅'}</span>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#065F46' }}>{opt.title} — Confirmed!</div>
-                      <div style={{ fontSize: 11, color: '#059669' }}>You'll receive a confirmation email within 5 minutes</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: opt.action === 'Start Chat' ? '#5B21B6' : '#065F46' }}>
+                        {opt.action === 'Start Chat' ? 'Agent Connected!' : `${opt.title} — Confirmed!`}
+                      </div>
+                      <div style={{ fontSize: 11, color: opt.action === 'Start Chat' ? '#7C3AED' : '#059669' }}>
+                        {opt.action === 'Start Chat' ? 'Support agent is ready — chat window opening now' : "Confirmation email sent within 5 minutes"}
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -549,10 +755,11 @@ function ServiceScreen({ onBack, onRestart, accent }) {
               </div>
             ))}
 
-            {actionStage === 'done' && (
+            {actionStage === 'done' && selectedAction !== 2 && (
               <div className="a-bounce" style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: 12, padding: '12px 14px', marginBottom: 10, textAlign: 'center' }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#065F46', marginBottom: 4 }}>✅ Action Completed Successfully</div>
-                <div style={{ fontSize: 11, color: '#059669' }}>Your new itinerary has been updated. Tap "View Booking" to see changes.</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#065F46', marginBottom: 4 }}>✅ Action Completed</div>
+                <div style={{ fontSize: 11, color: '#059669', marginBottom: 10 }}>Your updated itinerary has been synced across all devices.</div>
+                <button style={{ padding: '7px 18px', borderRadius: 8, border: '1.5px solid #10B981', background: 'white', color: '#065F46', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>View Updated Booking →</button>
               </div>
             )}
           </div>
